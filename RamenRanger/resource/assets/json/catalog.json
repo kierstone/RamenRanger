@@ -1,0 +1,30 @@
+{
+    "desc":"这是一个索引文件，下面都是每个json文件的文件名",
+    "area":[
+        
+    ],
+    "board":[
+
+    ],
+    "upg":[
+        
+    ],
+    "furniture":[
+
+    ],
+    "shop":[
+
+    ],
+    "recipt":[
+        "rec_recipt"
+    ],
+    "bowl":[
+        "bow_bowl"
+    ],
+    "ingredient":[
+        "ing_soup",
+        "ing_taste",
+        "ing_noodles",
+        "ing_cover0"
+    ]
+}

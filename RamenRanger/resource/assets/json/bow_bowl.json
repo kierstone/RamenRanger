@@ -1,0 +1,15 @@
+{
+    "data":[
+        {
+            "id":"bowl_normal",
+            "name":"普通小面碗",
+            "radius":200,
+            "taste":100,
+            "soup":170,
+            "cost":3,
+            "buff":[
+
+            ]
+        }
+    ]
+}

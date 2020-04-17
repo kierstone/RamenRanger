@@ -1,0 +1,42 @@
+{
+    "data":[
+        {
+            "id":"scallion", "name":"葱", "icon":"chopped_green_orion", 
+            "children":[
+                {
+                    "id":"chopped_green_orion", 
+                    "name":"葱花", 
+                    "taste":false, 
+                    "soup":true, 
+                    "noodle":false, 
+                    "ingredient":true, 
+                    "pungency":0,
+                    "sweet":0, 
+                    "salty":0, 
+                    "sourness":0, 
+                    "spicy":0,
+                    "price":1
+                }
+            ]
+        },
+        {
+            "id":"egg", "name":"鸡蛋", "icon":"poached_eggs", 
+            "children":[
+                {
+                    "id":"poached_eggs", 
+                    "name":"荷包蛋", 
+                    "taste":false, 
+                    "soup":false, 
+                    "noodle":false, 
+                    "ingredient":true, 
+                    "pungency":0,
+                    "sweet":0, 
+                    "salty":0, 
+                    "sourness":0, 
+                    "spicy":0,
+                    "price":3
+                }
+            ]
+        }
+    ]
+}

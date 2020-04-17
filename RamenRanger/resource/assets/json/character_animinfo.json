@@ -1,0 +1,121 @@
+{
+    "data":[
+        {
+            "key":"schoolgirl",
+            "empty_height":{
+                "head_upper":0,
+                "head_lower":0,
+                "body_upper":10,
+                "body_lower":10
+            },
+            "stand":{
+                "down":[
+                    {"head":"daiji_f_head0", "body":"daiji_f_0"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_1"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_2"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_3"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_4"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_5"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_6"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_7"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_8"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_9"}
+                ],
+                "left":[
+                    {"head":"daiji_l_head0", "body":"daiji_l_0"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_1"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_2"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_3"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_4"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_5"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_6"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_7"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_8"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_9"}
+                ],
+                "up":[
+                    {"head":"daiji_b_head0", "body":"daiji_b_0"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_1"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_2"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_3"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_4"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_5"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_6"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_7"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_8"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_9"}
+                ]
+            },
+            "stand_trick":{
+                "down":[
+                    {"head":"daiji_f_head0", "body":"daiji_f_0"},
+                    {"head":"daiji_f_head1", "body":"daiji_f_1"},
+                    {"head":"daiji_f_head2", "body":"daiji_f_2"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_3"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_4"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_5"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_6"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_7"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_8"},
+                    {"head":"daiji_f_head0", "body":"daiji_f_9"}
+                ],
+                "left":[
+                    {"head":"daiji_l_head0", "body":"daiji_l_0"},
+                    {"head":"daiji_l_head1", "body":"daiji_l_1"},
+                    {"head":"daiji_l_head2", "body":"daiji_l_2"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_3"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_4"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_5"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_6"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_7"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_8"},
+                    {"head":"daiji_l_head0", "body":"daiji_l_9"}
+                ],
+                "up":[
+                    {"head":"daiji_b_head0", "body":"daiji_b_0"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_1"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_2"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_3"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_4"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_5"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_6"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_7"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_8"},
+                    {"head":"daiji_b_head0", "body":"daiji_b_9"}
+                ]
+            },
+            "walk":{
+                "down":[
+                    {"head":"daiji_f_head0", "body":"walk_f_0"},
+                    {"head":"daiji_f_head0", "body":"walk_f_1"},
+                    {"head":"daiji_f_head0", "body":"walk_f_2"},
+                    {"head":"daiji_f_head0", "body":"walk_f_3"},
+                    {"head":"daiji_f_head0", "body":"walk_f_4"},
+                    {"head":"daiji_f_head0", "body":"walk_f_5"},
+                    {"head":"daiji_f_head0", "body":"walk_f_6"},
+                    {"head":"daiji_f_head0", "body":"walk_f_7"}
+                ],
+                "left":[
+                    {"head":"walk_l_head0", "body":"walk_l_0"},
+                    {"head":"walk_l_head0", "body":"walk_l_1"},
+                    {"head":"walk_l_head0", "body":"walk_l_2"},
+                    {"head":"walk_l_head0", "body":"walk_l_3"},
+                    {"head":"walk_l_head0", "body":"walk_l_4"},
+                    {"head":"walk_l_head0", "body":"walk_l_5"},
+                    {"head":"walk_l_head0", "body":"walk_l_6"},
+                    {"head":"walk_l_head0", "body":"walk_l_7"}
+                ],
+                "up":[
+                    {"head":"walk_b_head0", "body":"walk_b_0"},
+                    {"head":"walk_b_head0", "body":"walk_b_1"},
+                    {"head":"walk_b_head0", "body":"walk_b_2"},
+                    {"head":"walk_b_head0", "body":"walk_b_3"},
+                    {"head":"walk_b_head0", "body":"walk_b_4"},
+                    {"head":"walk_b_head0", "body":"walk_b_5"},
+                    {"head":"walk_b_head0", "body":"walk_b_6"},
+                    {"head":"walk_b_head0", "body":"walk_b_7"}
+                ]
+            }
+        }
+    ]
+}

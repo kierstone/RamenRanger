@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="DiningChairSkin" width="75" height="75" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="171722d81a9" ></w:Config>
+	<e:Image id="image" source="wooden_chair" horizontalCenter="0" verticalCenter="0"/>
+</e:Skin>

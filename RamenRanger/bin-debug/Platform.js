@@ -1,3 +1,9 @@
+/**
+ * 平台数据接口。
+ * 由于每款游戏通常需要发布到多个平台上，所以提取出一个统一的接口用于开发者获取平台数据信息
+ * 推荐开发者通过这种方式封装平台逻辑，以保证整体结构的稳定
+ * 由于不同平台的接口形式各有不同，白鹭推荐开发者将所有接口封装为基于 Promise 的异步形式
+ */
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
@@ -39,17 +45,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var DebugPlatform = (function () {
     function DebugPlatform() {
     }
-    DebugPlatform.prototype.getUserInfo = function () {
+    DebugPlatform.prototype.createLoginButton = function (nextFunc, thisObj) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, { nickName: "username" }];
+                if (nextFunc)
+                    nextFunc(thisObj);
+                return [2 /*return*/, { nickName: "施展", avatarUrl: "" }];
             });
         });
     };
     DebugPlatform.prototype.login = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/];
+                return [2 /*return*/, {
+                        code: "003BIecV1grOg01LT2aV1QDYbV1BIecw",
+                        errMsg: "login:ok"
+                    }];
+            });
+        });
+    };
+    DebugPlatform.prototype.getUserInfo = function (login) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, { nickName: "施展" }];
             });
         });
     };
@@ -59,3 +77,5 @@ __reflect(DebugPlatform.prototype, "DebugPlatform", ["Platform"]);
 if (!window.platform) {
     window.platform = new DebugPlatform();
 }
+console.log(window.platform, window.platform.getUserInfo);
+//# sourceMappingURL=Platform.js.map

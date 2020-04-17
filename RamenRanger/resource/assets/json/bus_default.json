@@ -1,0 +1,31 @@
+{
+    "data":{
+        "body":{
+            "name":"车内装潢",
+            "desc":"一样需要偏移",
+            "img":"bus_default_inner",
+            "offsetX":215,
+            "offsetY":126,
+            "characterAreaOffsetX":240,
+            "characterAreaOffsetY":225,
+            "characterAreaWidth":180
+        },
+        "top":{
+            "name":"面条车顶装饰",
+            "desc":"需要一个相对与图片的偏移来作和车顶的对接点",
+            "img":"bus_top_noddle",
+            "offsetX":60,
+            "offsetY":105
+        },
+        "paint":{
+            "name":"标准车喷漆",
+            "desc":"车的喷漆，现在贴图给我是整个也没问题，但是我还是按照7x3的单元格来，所以需要偏移量",
+            "img":"bus_default_paint",
+            "topCenterX":325,
+            "topCenterY":65,
+            "addon":[
+                {"img":"bus_eave", "offsetX":200, "offsetY":85}
+            ]
+        }
+    }
+}

@@ -1,0 +1,6 @@
+{"file":"bus_default.png","frames":{
+"advboard_test":{"x":725,"y":65,"w":90,"h":136,"offX":0,"offY":0,"sourceW":90,"sourceH":136},
+"bus_default_inner":{"x":725,"y":1,"w":225,"h":62,"offX":0,"offY":0,"sourceW":225,"sourceH":62},
+"bus_default_paint":{"x":1,"y":1,"w":515,"h":252,"offX":17,"offY":43,"sourceW":600,"sourceH":375},
+"bus_eave":{"x":518,"y":203,"w":262,"h":45,"offX":0,"offY":0,"sourceW":262,"sourceH":45},
+"bus_top_noddle":{"x":518,"y":1,"w":205,"h":106,"offX":0,"offY":0,"sourceW":205,"sourceH":106}}}

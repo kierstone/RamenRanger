@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="TrafficLightSkin" width="75" height="225" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="17168a7e7dc" ></w:Config>
+	<e:Image id="seat" source="trafficlight" y="2" x="16"/>
+	<e:Image id="red" x="0" y="0" source="trafficlight_red"/>
+	<e:Image id="yellow" x="0" y="0" source="trafficlight_yellow"/>
+	<e:Image id="green" x="0" y="0" source="trafficlight_green"/>
+</e:Skin>

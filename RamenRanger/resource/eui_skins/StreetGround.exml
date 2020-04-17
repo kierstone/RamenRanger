@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="StreetGroundSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="171682e2c56" ></w:Config>
+	<e:Image id="bkg" x="0" y="0" source="wooden_chair"/>
+	<e:Image id="ground" x="0" y="75" source="wooden_chair" fillMode="repeat"/>
+	<e:Image id="road" x="0" y="150" source="wooden_chair"/>
+	<e:Image id="streetside" x="0" y="225" source="wooden_chair"/>
+	<e:Image id="street" x="0" y="300" source="wooden_chair"/>
+</e:Skin>

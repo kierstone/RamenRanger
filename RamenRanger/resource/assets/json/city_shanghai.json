@@ -1,0 +1,77 @@
+{
+    "background":{
+        "img":"bkg_shanghai"
+    },
+    "traffic_light":{
+        "seat":"trafficlight",
+        "red":"trafficlight_red",
+        "green":"trafficlight_green",
+        "yellow":"trafficlight_yellow"
+    },
+    "restrant":{
+        "fill":"floor_shanghai"
+    },
+    "road":{
+        "fill":"road_shanghai",
+        "height":5
+    },
+    "street":{
+        "side":"street_side",
+        "fill":"street_middle"
+    },
+    "fixed_grounds":[
+        {"img":"parterre_upper", "x":0, "y":-1, "canPass":false},
+        {"img":"parterre_upper", "x":1, "y":-1, "canPass":false},
+        {"img":"parterre_upper", "x":2, "y":-1, "canPass":false},
+        {"img":"parterre_upper_right", "x":3, "y":-1, "canPass":false},
+        {"img":"parterre_road", "x":4, "y":-1, "canPass":false},
+        {"img":"parterre_road", "x":5, "y":-1, "canPass":false},
+        {"img":"parterre_road", "x":6, "y":-1, "canPass":false},
+        {"img":"parterre_road", "x":7, "y":-1, "canPass":false},
+        {"img":"parterre_upper_left", "x":8, "y":-1, "canPass":false},
+        {"img":"parterre_upper", "x":9, "y":-1, "canPass":false},
+
+        {"img":"parterre_middle1", "x":0, "y":7, "canPass":false},
+        {"img":"parterre_middle1", "x":1, "y":7, "canPass":false},
+        {"img":"parterre_middle1", "x":2, "y":7, "canPass":false},
+        {"img":"parterre_right1", "x":3, "y":7, "canPass":false},
+        {"img":"parterre_road1", "x":4, "y":7, "canPass":false},
+        {"img":"parterre_road1", "x":5, "y":7, "canPass":false},
+        {"img":"parterre_road1", "x":6, "y":7, "canPass":false},
+        {"img":"parterre_left1", "x":7, "y":7, "canPass":false},
+        {"img":"parterre_middle1", "x":8, "y":7, "canPass":false},
+        {"img":"parterre_middle1", "x":9, "y":7, "canPass":false},
+
+        {"img":"street_cross_lt", "x":0, "y":12, "canPass":true},
+        {"img":"street_cross_l", "x":0, "y":13, "canPass":true},
+        {"img":"street_cross_l", "x":0, "y":14, "canPass":true},
+        {"img":"street_cross_mt", "x":1, "y":12, "canPass":true},
+        {"img":"street_cross_m", "x":1, "y":13, "canPass":true},
+        {"img":"street_cross_m", "x":1, "y":14, "canPass":true},
+        {"img":"street_cross_rt", "x":2, "y":12, "canPass":true},
+        {"img":"street_cross_r", "x":2, "y":13, "canPass":true},
+        {"img":"street_cross_r", "x":2, "y":14, "canPass":true},
+        {"img":"street_line0", "x":3, "y":12, "canPass":true},
+        {"img":"street_line1", "x":4, "y":12, "canPass":true},
+        {"img":"street_line1", "x":5, "y":12, "canPass":true},
+        {"img":"street_line1", "x":6, "y":12, "canPass":true},
+        {"img":"street_line1", "x":7, "y":12, "canPass":true},
+        {"img":"street_line1", "x":8, "y":12, "canPass":true},
+        {"img":"street_line1", "x":9, "y":12, "canPass":true}
+    ],
+    "fixed_sprites":[
+        {"img":"parterre_middle0", "x":0, "y":6, "canPass":true},
+        {"img":"parterre_middle0", "x":1, "y":6, "canPass":true},
+        {"img":"parterre_middle0", "x":2, "y":6, "canPass":true},
+        {"img":"parterre_right0", "x":3, "y":6, "canPass":true},
+        {"img":"parterre_road0", "x":4, "y":6, "canPass":true},
+        {"img":"parterre_road0", "x":5, "y":6, "canPass":true},
+        {"img":"parterre_road0", "x":6, "y":6, "canPass":true},
+        {"img":"parterre_left0", "x":7, "y":6, "canPass":true},
+        {"img":"parterre_middle0", "x":8, "y":6, "canPass":true},
+        {"img":"parterre_middle0", "x":9, "y":6, "canPass":true}
+    ],
+    "advboard":{
+        "x":7, "y":9, "width":2
+    }
+}

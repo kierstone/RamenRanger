@@ -1,0 +1,30 @@
+{
+    "data":[
+        {
+            "id":"shanghai_simple_sauced_noodles_vegetable",
+            "name":"上海阳春面（素）",
+            "ingredient_id":[
+                "dark_soysauce", "lard_oil", "mushroom_sprouts_soup", "thin_noodles", "chopped_green_orion"
+            ],
+            "should_not_have_type":[
+
+            ],
+            "should_not_have_id":[
+               
+            ]
+        },
+        {
+            "id":"shanghai_simple_sauced_noodles_meat",
+            "name":"上海阳春面（荤）",
+            "ingredient":[
+                "dark_soysauce", "lard_oil", "chicken_soup", "thin_noodles", "chopped_green_orion"
+            ],
+            "should_not_have_type":[
+                
+            ],
+            "should_not_have_id":[
+               
+            ]
+        }
+    ]
+}

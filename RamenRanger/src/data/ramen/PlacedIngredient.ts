@@ -1,0 +1,4 @@
+class PlacedIngredient {
+	public constructor() {
+	}
+}
