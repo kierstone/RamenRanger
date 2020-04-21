@@ -1,8 +1,8 @@
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
-var DiningChairModel = (function () {
-    function DiningChairModel(downInfo, upInfo, leftInfo, rightInfo) {
+var ChairModel = (function () {
+    function ChairModel(downInfo, upInfo, leftInfo, rightInfo) {
         if (upInfo === void 0) { upInfo = null; }
         if (leftInfo === void 0) { leftInfo = null; }
         if (rightInfo === void 0) { rightInfo = null; }
@@ -21,19 +21,19 @@ var DiningChairModel = (function () {
         if (leftInfo)
             this.direction[Direction.Right] = leftInfo;
     }
-    DiningChairModel.prototype.SetChairDirectionInfo = function (dir, info) {
-        this.direction[dir] = info;
+    ChairModel.prototype.GetCurrentInfoByDirection = function (dir) {
+        return this.direction[dir];
     };
-    return DiningChairModel;
+    return ChairModel;
 }());
-__reflect(DiningChairModel.prototype, "DiningChairModel");
-var DiningChairDirectionInfo = (function () {
-    function DiningChairDirectionInfo(source, gridWidth, gridHeight) {
+__reflect(ChairModel.prototype, "ChairModel");
+var ChairDirImageInfo = (function () {
+    function ChairDirImageInfo(source, gridWidth, gridHeight) {
         this.source = source;
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
     }
-    return DiningChairDirectionInfo;
+    return ChairDirImageInfo;
 }());
-__reflect(DiningChairDirectionInfo.prototype, "DiningChairDirectionInfo");
-//# sourceMappingURL=DiningChairModel.js.map
+__reflect(ChairDirImageInfo.prototype, "ChairDirImageInfo");
+//# sourceMappingURL=ChairModel.js.map

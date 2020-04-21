@@ -1,12 +1,12 @@
-class DiningChairModel {
+class ChairModel {
 	public name:string;
-	public direction:Array<DiningChairDirectionInfo>;	//4个方向的资源，左边右边应该是一样的，Null代表没有这个方向
+	public direction:Array<ChairDirImageInfo>;	//4个方向的资源，左边右边应该是一样的，Null代表没有这个方向
 
 	public constructor(
-		downInfo:DiningChairDirectionInfo, 
-		upInfo:DiningChairDirectionInfo = null,
-		leftInfo:DiningChairDirectionInfo = null,
-		rightInfo:DiningChairDirectionInfo = null
+		downInfo:ChairDirImageInfo, 
+		upInfo:ChairDirImageInfo = null,
+		leftInfo:ChairDirImageInfo = null,
+		rightInfo:ChairDirImageInfo = null
 	) {
 		this.direction = [
 			null,
@@ -20,12 +20,12 @@ class DiningChairModel {
 		if (leftInfo) this.direction[Direction.Right] = leftInfo;
 	}
 
-	public SetChairDirectionInfo(dir:Direction, info:DiningChairDirectionInfo){
-		this.direction[dir] = info;
+	public GetCurrentInfoByDirection(dir:Direction):ChairDirImageInfo{
+		return this.direction[dir];
 	}
 }
 
-class DiningChairDirectionInfo{
+class ChairDirImageInfo{
 	public source:string;
 	public gridWidth:number;
 	public gridHeight:number;

@@ -9,3 +9,5 @@ var BusAreaWidth = 600; //小汽车的宽度
 var BusAreaHeight = 375;  //小车的高度
 var BusLeftInGrid = 2;  //小车的单元格坐标x=2
 var BusBottomInGrid = -1;  //小车的单元格坐标y，应该是地图区域往上1格
+
+var RenderUpdateEveryLogicTick = 3; //每3个逻辑tick，渲染走1个tick

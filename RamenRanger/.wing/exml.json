@@ -9,29 +9,9 @@
         "class": "Street",
         "parentPath": ""
     },
-    "1715804c99b": {
-        "path": "element/CharacterObj.ts",
-        "class": "CharacterObj",
-        "parentPath": ""
-    },
     "171682e2c56": {
         "path": "element/StreetGround.ts",
         "class": "StreetGround",
-        "parentPath": ""
-    },
-    "17168a7e7dc": {
-        "path": "element/TrafficLight.ts",
-        "class": "TrafficLight",
-        "parentPath": ""
-    },
-    "1716a1a6ff4": {
-        "path": "element/DiningTable.ts",
-        "class": "DiningTable",
-        "parentPath": ""
-    },
-    "171722d81a9": {
-        "path": "element/DiningChair.ts",
-        "class": "DiningChair",
         "parentPath": ""
     },
     "171724316f0": {

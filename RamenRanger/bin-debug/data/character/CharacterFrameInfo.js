@@ -3,9 +3,10 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 };
 //角色动画一帧的信息，目前来看，只要头跟身体的文件名
 var CharacterFrameInfo = (function () {
-    function CharacterFrameInfo(head, body) {
+    function CharacterFrameInfo(head, body, emote) {
         this.head = head;
         this.body = body;
+        this.emote = emote;
     }
     return CharacterFrameInfo;
 }());

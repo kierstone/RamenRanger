@@ -61,13 +61,19 @@ var Street = (function (_super) {
                 new DiningTableSeatSlot(0, 0, 38, 55, 0, -1, Direction.Down, 1, 0, Direction.Left) :
                 new DiningTableSeatSlot(0, 0, 38, 55, 0, -1, Direction.Down, -1, 0, Direction.Right);
             this.PlaceTable(new DiningTableModel(1, 1, "wooden_single_table", [slot]), gX, gY);
-            var lc = this.PlaceChair(new DiningChairModel(new DiningChairDirectionInfo("wooden_chair", 1, 1)), gX, gY - 1, Direction.Down);
-            console.log("chair", i, lc);
+            this.PlaceChair("wooden_chair", gX, gY - 1, Direction.Down);
         }
         //红绿灯
         this.PlaceTrafficLight(0, GameMapHeight + this.ground.roadHeightInGrid - 1);
         //测试角色
         this.PlaceDebugCharacter();
+        //测试clip
+        // let clip:SpriteClip = new SpriteClip();
+        // clip.texture = RES.getRes("wooden_chair");
+        // clip.x = 100;
+        // clip.y = 800;
+        // this.gameLayer.addChild(clip);
+        // this.sprites.push(clip);
         //开启一个update和fixedUpdate的计时器
         var t = new egret.Timer(30);
         t.addEventListener(egret.TimerEvent.TIMER, function () {
@@ -82,12 +88,15 @@ var Street = (function (_super) {
     };
     //用于动画刷新的Update
     Street.prototype.Update = function () {
-        //精灵层update
-        for (var i = 0; i < this.sprites.length; i++) {
-            var sg = this.sprites[i];
-            if (sg.Update) {
-                sg.Update();
+        //角色的
+        for (var i = 0; i < this.characters.length; i++) {
+            var cha = this.characters[i];
+            if (cha.Update) {
+                cha.Update();
             }
+        }
+        if (this.mainCharacter && this.mainCharacter.Update) {
+            this.mainCharacter.Update();
         }
         //红绿灯绘制
         for (var i = 0; i < this.trafficLights.length; i++) {
@@ -97,15 +106,29 @@ var Street = (function (_super) {
     };
     //用于逻辑刷新的Update
     Street.prototype.FixedUpdate = function () {
-        //精灵层总体逻辑
-        for (var i = 0; i < this.sprites.length; i++) {
-            var sg = this.sprites[i];
-            if (sg.FixedUpdate) {
-                if (sg.FixedUpdate() === true) {
-                    if (sg.Update)
-                        sg.Update();
+        //角色的
+        var idx = 0;
+        while (idx < this.characters.length) {
+            var cha = this.characters[idx];
+            //TODO 一个角色AI执行完毕就删除
+            if (cha.ai.plan.length <= 0) {
+                this.RemoveCharacter(cha);
+            }
+            else {
+                if (cha.FixedUpdate) {
+                    if (cha.FixedUpdate() === true && cha.Update) {
+                        cha.Update();
+                    }
+                    ;
                 }
-                ;
+                idx++;
+            }
+        }
+        console.log("Characters", this.characters.length);
+        //主角
+        if (this.mainCharacter && this.mainCharacter.FixedUpdate) {
+            if (this.mainCharacter.FixedUpdate() == true && this.mainCharacter.Update) {
+                this.mainCharacter.Update();
             }
         }
         //红绿灯换色
@@ -130,16 +153,45 @@ var Street = (function (_super) {
         if (!this.sprites || this.sprites.length <= 0)
             return;
         this.sprites.sort(function (a, b) {
-            //角色坐标要特殊处理，读取setToY
-            var acY = (a.setToY != null && a.setToY != undefined) ? a.setToY : (a.y + a.height);
-            var bcY = (b.setToY != null && b.setToY != undefined) ? b.setToY : (b.y + b.height);
-            return (acY < bcY) ? -1 : 1;
+            var needBack = a.NeedToSendMeBack(b);
+            return (needBack == true) ? -1 : 1;
         });
         for (var i = 0; i < this.sprites.length; i++) {
             var ts = this.sprites[i];
             ts.zIndex = i + this.zOrderBase;
         }
         this.gameLayer.sortChildren();
+    };
+    //删除某个角色
+    Street.prototype.RemoveCharacter = function (cha) {
+        if (cha) {
+            //gameLayer删除
+            if (cha.head && cha.head.parent)
+                cha.head.parent.removeChild(cha.head);
+            if (cha.body && cha.body.parent)
+                cha.body.parent.removeChild(cha.body);
+            if (cha.emote && cha.emote.parent)
+                cha.body.parent.removeChild(cha.emote);
+            //sprites删除
+            var i = 0;
+            while (i < this.sprites.length) {
+                if ((cha.head && this.sprites[i] == cha.head) ||
+                    (cha.body && this.sprites[i] == cha.body) ||
+                    (cha.emote && this.sprites[i] == cha.emote)) {
+                    this.sprites.splice(i, 1);
+                }
+                else {
+                    i += 1;
+                }
+            }
+            //角色列表删除
+            for (var i_1 = 0; i_1 < this.characters.length; i_1++) {
+                if (this.characters[i_1] == cha) {
+                    this.characters.splice(i_1, 1);
+                    break;
+                }
+            }
+        }
     };
     //根据json信息放置地面层元素和精灵层元素
     Street.prototype.PaintFixedTerrainByJson = function (json) {
@@ -201,7 +253,7 @@ var Street = (function (_super) {
                     this.gridCanPass[gX][gY] = false;
                 }
                 this.gameLayer.addChild(img);
-                this.sprites.push(img);
+                //this.sprites.push(img);		//TODO SpriteClip
                 this.fixedImage.push(img);
             }
         }
@@ -226,8 +278,11 @@ var Street = (function (_super) {
             }
         }
         this.busImage = new Array();
-        if (this.mainCharacter && this.mainCharacter.parent) {
-            this.mainCharacter.parent.removeChild(this.mainCharacter);
+        if (this.mainCharacter) {
+            if (this.mainCharacter.head && this.mainCharacter.head.parent)
+                this.mainCharacter.head.parent.removeChild(this.mainCharacter.head);
+            if (this.mainCharacter.body && this.mainCharacter.body.parent)
+                this.mainCharacter.body.parent.removeChild(this.mainCharacter.body);
         }
         //读取数据
         if (bJson) {
@@ -254,7 +309,8 @@ var Street = (function (_super) {
             //然后绘制主角(TODO 写死了现在，今后要传递)
             var mcX = (this.mainCharacterZoneRight - this.mainCharacterZoneLeft) / 2 + this.mainCharacterZoneLeft;
             this.mainCharacter = new CharacterObj(GetCharacterActionInfoByKey("schoolgirl"), mcX, this.mainCharacterZoneFloor);
-            this.gameLayer.addChild(this.mainCharacter);
+            this.gameLayer.addChild(this.mainCharacter.head);
+            this.gameLayer.addChild(this.mainCharacter.body);
             //接下来绘制车顶
             var topInfo = bJson["top"];
             var topImg = void 0;
@@ -304,62 +360,33 @@ var Street = (function (_super) {
     };
     //放一张桌子，这里可不管能不能放的下，只管放上去的
     Street.prototype.PlaceTable = function (table, gridX, gridY) {
-        var t = new DiningTable(table, gridX, gridY);
-        var tPos = this.GetPixelPosByGridPos(gridX, gridY);
-        t.x = tPos["x"];
-        t.y = tPos["y"];
-        this.gameLayer.addChild(t);
-        this.sprites.push(t);
+        var tPos = this.GetPixelPosByGridPos(gridX, gridY, true);
+        var t = new DiningTableObj(table, tPos["x"], tPos["y"]);
+        this.gameLayer.addChild(t.Image);
+        this.sprites.push(t.Image);
         this.diningTables.push(t);
-        for (var i = 0; i < table.widthInGrid; i++) {
-            for (var j = 0; j < table.heightInGrid; j++) {
-                this.gridCanPass[gridX + i][gridY + j] = false;
-            }
-        }
-        if (this.diningChairs && this.diningChairs.length > 0) {
-            for (var i = 0; i < this.diningChairs.length; i++) {
-                var c = this.diningChairs[i];
-                if (c.connectTable == null) {
-                    //不能连接上一个椅子就return，因为一个桌子可以连接多个椅子
-                    t.TryConnectChair(c);
-                }
-            }
-        }
+        //TODO桌子椅子连接状态等
     };
-    //放一张椅子，也是只负责放下去，不负责判断能不能放，返回连接到那个桌子了
-    Street.prototype.PlaceChair = function (chair, gridX, gridY, dir) {
-        var c = new DiningChair(chair, gridX, gridY, dir);
-        var cPos = this.GetPixelPosByGridPos(gridX, gridY);
-        c.x = cPos["x"];
-        c.y = cPos["y"];
-        this.gameLayer.addChild(c);
-        this.sprites.push(c);
+    //放一张椅子，也是只负责放下去，不负责判断能不能放
+    Street.prototype.PlaceChair = function (chairSource, gridX, gridY, dir) {
+        var cPos = this.GetPixelPosByGridPos(gridX, gridY, true);
+        var c = new ChairObj(chairSource, cPos["x"], cPos["y"], dir);
+        this.gameLayer.addChild(c.image);
+        this.sprites.push(c.image);
         this.diningChairs.push(c);
-        var res = null;
-        for (var i = 0; i < this.diningTables.length; i++) {
-            if (this.diningTables[i].TryConnectChair(c) == true) {
-                res = this.diningTables[i]; //连接上了就结束了
-                break;
-            }
-        }
-        if (res) {
-            var cInfo = chair.direction[c.direction];
-            for (var i = 0; i < cInfo.gridWidth; i++) {
-                for (var j = 0; j < cInfo.gridHeight; j++) {
-                    this.gridCanPass[gridX + i][gridY + j] = false;
-                }
-            }
-        }
-        return res;
     };
     //放红绿灯
     Street.prototype.PlaceTrafficLight = function (gridX, gridY) {
-        var tl = new TrafficLight();
         var tPos = this.GetPixelPosByGridPos(gridX, gridY);
-        tl.x = tPos["x"];
-        tl.y = tPos["y"] + tl.OffsetY();
-        this.gameLayer.addChild(tl);
-        this.sprites.push(tl);
+        var tl = new TrafficLight(tPos["x"] + GridWidth / 2, tPos["y"] + GridHeight / 2);
+        this.gameLayer.addChild(tl.seat);
+        this.gameLayer.addChild(tl.red);
+        this.gameLayer.addChild(tl.green);
+        this.gameLayer.addChild(tl.yellow);
+        this.sprites.push(tl.seat);
+        this.sprites.push(tl.green);
+        this.sprites.push(tl.yellow);
+        this.sprites.push(tl.red);
         this.trafficLights.push(tl);
         tl.LightOn(this.GetTrafficLightState()["light"]);
         tl.Draw();
@@ -368,8 +395,11 @@ var Street = (function (_super) {
     Street.prototype.PlaceCharacter = function (key, x, y) {
         if (key === void 0) { key = "schoolgirl"; }
         var cha = new CharacterObj(GetCharacterActionInfoByKey(key), x, y, new CharacterProperty());
-        this.gameLayer.addChild(cha);
-        this.sprites.push(cha);
+        this.gameLayer.addChild(cha.body);
+        this.gameLayer.addChild(cha.head);
+        this.sprites.push(cha.body);
+        this.sprites.push(cha.head);
+        this.characters.push(cha);
         return cha;
     };
     //TODO 随机产生一个npc
@@ -406,9 +436,9 @@ var Street = (function (_super) {
         }
         var cha1 = this.PlaceCharacter("schoolgirl", pos["x"] + 150, pos["y"] + 75);
         cha1.property.speed = Math.floor(Math.random() * 3) + 4;
-        cha1.ai.SetScripts(AIScripts.DebugStandTrickForDirection(cha));
+        cha1.ai.SetScripts(AIScripts.DebugDoAllAction(cha));
         for (var i = 0; i < 10; i++) {
-            cha1.ai.AddScripts(AIScripts.DebugStandTrickForDirection(cha));
+            cha1.ai.AddScripts(AIScripts.DebugDoAllAction(cha));
         }
     };
     /**
@@ -423,8 +453,8 @@ var Street = (function (_super) {
         var res = { x: -1, y: -1 };
         if (!this.ground)
             return res;
-        res["x"] = gridX * GridWidth + (forCharacter == true ? GridWidth / 2 : 0);
-        res["y"] = gridY * GridHeight + this.ground.groundTop + (forCharacter == true ? (GridHeight - 10) : 0);
+        res["x"] = Math.round(gridX * GridWidth + (forCharacter == true ? GridWidth / 2 : 0));
+        res["y"] = Math.round(gridY * GridHeight + this.ground.groundTop + (forCharacter == true ? (GridHeight - 10) : 0));
         return res;
     };
     /**

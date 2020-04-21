@@ -3,118 +3,81 @@
         {
             "key":"schoolgirl",
             "empty_height":{
-                "head_upper":0,
-                "head_lower":0,
+                "head_upper":10,
+                "head_lower":30,
                 "body_upper":10,
                 "body_lower":10
             },
             "stand":{
-                "down":[
-                    {"head":"daiji_f_head0", "body":"daiji_f_0"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_1"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_2"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_3"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_4"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_5"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_6"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_7"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_8"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_9"}
-                ],
-                "left":[
-                    {"head":"daiji_l_head0", "body":"daiji_l_0"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_1"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_2"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_3"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_4"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_5"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_6"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_7"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_8"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_9"}
-                ],
-                "up":[
-                    {"head":"daiji_b_head0", "body":"daiji_b_0"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_1"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_2"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_3"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_4"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_5"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_6"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_7"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_8"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_9"}
-                ]
+                "key":"daiji",
+                "down":{"dir":"f","head":[0,0,0,0,0,0,0,0,0,0],"body":[0,1,2,3,4,5,4,3,2,1]},
+                "left":{"dir":"l","head":[0,0,0,0,0,0,0,0,0,0],"body":[0,1,2,3,4,5,4,3,2,1]},
+                "up":{"dir":"b","head":[0,0,0,0,0,0,0,0,0,0],"body":[0,1,2,3,4,5,4,3,2,1]}
             },
             "stand_trick":{
-                "down":[
-                    {"head":"daiji_f_head0", "body":"daiji_f_0"},
-                    {"head":"daiji_f_head1", "body":"daiji_f_1"},
-                    {"head":"daiji_f_head2", "body":"daiji_f_2"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_3"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_4"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_5"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_6"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_7"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_8"},
-                    {"head":"daiji_f_head0", "body":"daiji_f_9"}
-                ],
-                "left":[
-                    {"head":"daiji_l_head0", "body":"daiji_l_0"},
-                    {"head":"daiji_l_head1", "body":"daiji_l_1"},
-                    {"head":"daiji_l_head2", "body":"daiji_l_2"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_3"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_4"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_5"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_6"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_7"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_8"},
-                    {"head":"daiji_l_head0", "body":"daiji_l_9"}
-                ],
-                "up":[
-                    {"head":"daiji_b_head0", "body":"daiji_b_0"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_1"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_2"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_3"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_4"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_5"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_6"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_7"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_8"},
-                    {"head":"daiji_b_head0", "body":"daiji_b_9"}
-                ]
+                "key":"daiji",
+                "down":{"dir":"f","head":[0,1,0,0,0,0,0,0,0,0],"body":[0,1,2,3,4,5,4,3,2,1]},
+                "left":{"dir":"l","head":[0,1,0,0,0,0,0,0,0,0],"body":[0,1,2,3,4,5,4,3,2,1]},
+                "up":{"dir":"b","head":[0,0,0,0,0,0,0,0,0,0],"body":[0,1,2,3,4,5,4,3,2,1]}
             },
             "walk":{
-                "down":[
-                    {"head":"daiji_f_head0", "body":"walk_f_0"},
-                    {"head":"daiji_f_head0", "body":"walk_f_1"},
-                    {"head":"daiji_f_head0", "body":"walk_f_2"},
-                    {"head":"daiji_f_head0", "body":"walk_f_3"},
-                    {"head":"daiji_f_head0", "body":"walk_f_4"},
-                    {"head":"daiji_f_head0", "body":"walk_f_5"},
-                    {"head":"daiji_f_head0", "body":"walk_f_6"},
-                    {"head":"daiji_f_head0", "body":"walk_f_7"}
-                ],
-                "left":[
-                    {"head":"walk_l_head0", "body":"walk_l_0"},
-                    {"head":"walk_l_head0", "body":"walk_l_1"},
-                    {"head":"walk_l_head0", "body":"walk_l_2"},
-                    {"head":"walk_l_head0", "body":"walk_l_3"},
-                    {"head":"walk_l_head0", "body":"walk_l_4"},
-                    {"head":"walk_l_head0", "body":"walk_l_5"},
-                    {"head":"walk_l_head0", "body":"walk_l_6"},
-                    {"head":"walk_l_head0", "body":"walk_l_7"}
-                ],
-                "up":[
-                    {"head":"walk_b_head0", "body":"walk_b_0"},
-                    {"head":"walk_b_head0", "body":"walk_b_1"},
-                    {"head":"walk_b_head0", "body":"walk_b_2"},
-                    {"head":"walk_b_head0", "body":"walk_b_3"},
-                    {"head":"walk_b_head0", "body":"walk_b_4"},
-                    {"head":"walk_b_head0", "body":"walk_b_5"},
-                    {"head":"walk_b_head0", "body":"walk_b_6"},
-                    {"head":"walk_b_head0", "body":"walk_b_7"}
-                ]
+               "key":"walk",
+                "down":{"dir":"f","head":[0,0,0,0,0,0,0,0],"body":[0,1,2,3,4,5,6,7]},
+                "left":{"dir":"l","head":[0,0,0,0,0,0,0,0],"body":[0,1,2,3,4,5,6,7]},
+                "up":{"dir":"b","head":[0,0,0,0,0,0,0,0],"body":[0,1,2,3,4,5,6,7]}
+            },
+            "ordering":{
+                "key":"diancai",
+                "down":{"dir":"f","head":[0,1,2,3,4,5,2,3,4,5],"body":[0,1,2,3,4,5,2,3,4,5]}
+            },
+            "eat":{
+                "key":"chimian",
+                "down":{"dir":"f","head":[0,1,2,1,0],"body":[0,1,2,1,0]}
+            },
+            "chew":{
+                "key":"jujue",
+                "down":{"dir":"f","head":[0,1,2,1],"body":[0,1,2,1]}
+            },
+            "think":{
+                "key":"chensi",
+                "down":{"dir":"f","head":[0,1,0],"body":[0,1,2]}
+            },
+            "discover":{
+                "key":"linggan",
+                "down":{"dir":"f","head":[0,1,2,3,4,5],"body":[0,1,2,3,4,5]}
+            },
+            "nod":{
+                "key":"diantou",
+                "down":{"dir":"f","head":[0,1,0,3],"body":[0,1,0,3]},
+                "up":{"dir":"b","head":[0,1,0,3],"body":[0,1,0,3]}
+            },
+            "clap":{
+                "key":"guzhang",
+                "down":{"dir":"f","head":[0,1,2,3],"body":[0,1,2,3]}
+            },
+            "spicy":{
+                "key":"mala",
+                "down":{"dir":"f","head":[0,1,2,3],"body":[0,1,0,3]}
+            },
+            "takephoto":{
+                "key":"paizhao",
+                "down":{"dir":"f","head":[0,1,2,3,4,5,5,5],"body":[0,1,2,3,4,5,6,7]}
+            },
+            "salty":{
+                "key":"taixian",
+                "down":{"dir":"f","head":[0,1,2,3],"body":[0,1,0,3]}
+            },
+            "sigh":{
+                "key":"tanqi",
+                "down":{"dir":"f","head":[0,1,2,3,4,5],"body":[0,1,0,3,3,3]}
+            },
+            "smile":{
+                "key":"xingfu",
+                "down":{"dir":"f","head":[0,1,2,1],"body":[0,1,2,1]}
+            },
+            "hate":{
+                "key":"yane",
+                "down":{"dir":"f","head":[0,1,2,3],"body":[0,1,0,3]}
             }
         }
     ]

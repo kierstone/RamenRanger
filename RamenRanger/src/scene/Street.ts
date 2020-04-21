@@ -12,7 +12,7 @@ class Street extends eui.Component implements  eui.UIComponent {
 	private mainCharacterZoneFloor:number;	//玩家角色的地板位置y坐标
 
 	private ground:StreetGround;
-	private sprites:Array<any>;	//所有sprite层图片
+	private sprites:Array<SpriteClip>;	//所有sprite层图片
 
 	private advBoardGridX:number;
 	private advBoardGridY:number;
@@ -20,8 +20,8 @@ class Street extends eui.Component implements  eui.UIComponent {
 
 	private characters:Array<CharacterObj>;	//所有角色
 	private trafficLights:Array<TrafficLight>;	//红绿灯
-	private diningTables:Array<DiningTable>;	//餐桌
-	private diningChairs:Array<DiningChair>;		//椅子
+	private diningTables:Array<DiningTableObj>;	//餐桌
+	private diningChairs:Array<ChairObj>;		//椅子
 	private fixedImage:Array<eui.Image>;		//一些固定的场景图片等资源
 	private busImage:Array<eui.Image>;		//小车相关的图形
 	private mainCharacter:CharacterObj;		//主角
@@ -51,10 +51,10 @@ class Street extends eui.Component implements  eui.UIComponent {
 	
 	private init(){
 		//初始化数组
-		this.sprites = new Array<any>();
+		this.sprites = new Array<SpriteClip>();
 		this.characters = new Array<CharacterObj>();
-		this.diningTables = new Array<DiningTable>();
-		this.diningChairs = new Array<DiningChair>();
+		this.diningTables = new Array<DiningTableObj>();
+		this.diningChairs = new Array<ChairObj>();
 		this.trafficLights = new Array<TrafficLight>();
 
 		//获得json配置
@@ -91,12 +91,7 @@ class Street extends eui.Component implements  eui.UIComponent {
 			this.PlaceTable(
 				new DiningTableModel(1,1,"wooden_single_table", [slot]),gX, gY
 			)
-			let lc = this.PlaceChair(
-				new DiningChairModel(
-					new DiningChairDirectionInfo("wooden_chair", 1, 1)
-				), gX, gY - 1, Direction.Down
-			)
-			console.log("chair", i ,lc);
+			this.PlaceChair("wooden_chair", gX, gY - 1, Direction.Down)
 		}
 
 		//红绿灯
@@ -105,7 +100,13 @@ class Street extends eui.Component implements  eui.UIComponent {
 		//测试角色
 		this.PlaceDebugCharacter();
 
-
+		//测试clip
+		// let clip:SpriteClip = new SpriteClip();
+		// clip.texture = RES.getRes("wooden_chair");
+		// clip.x = 100;
+		// clip.y = 800;
+		// this.gameLayer.addChild(clip);
+		// this.sprites.push(clip);
 
 
 		//开启一个update和fixedUpdate的计时器
@@ -113,7 +114,6 @@ class Street extends eui.Component implements  eui.UIComponent {
 		t.addEventListener(egret.TimerEvent.TIMER, ()=>{
 			this.FixedUpdate();
 			if (this.toUpdateTicker == 0) this.Update();
-			
 			this.RearrangeSpritesZOrder();	//ZOrder每个逻辑tick都会重新排列，所以FixedUpdate中可以不用
 			
 			this.tick += 1;
@@ -124,12 +124,15 @@ class Street extends eui.Component implements  eui.UIComponent {
 
 	//用于动画刷新的Update
 	private Update(){
-		//精灵层update
-		for (let i = 0; i < this.sprites.length; i++){
-			let sg = this.sprites[i];
-			if (sg.Update){
-				sg.Update();
+		//角色的
+		for (let i = 0; i < this.characters.length; i++){
+			let cha = this.characters[i];
+			if (cha.Update){
+				cha.Update();
 			}
+		}
+		if (this.mainCharacter && this.mainCharacter.Update){
+			this.mainCharacter.Update();
 		}
 		//红绿灯绘制
 		for (let i = 0; i < this.trafficLights.length; i++){
@@ -140,13 +143,28 @@ class Street extends eui.Component implements  eui.UIComponent {
 
 	//用于逻辑刷新的Update
 	private FixedUpdate(){
-		//精灵层总体逻辑
-		for (let i = 0; i < this.sprites.length; i++){
-			let sg = this.sprites[i];
-			if (sg.FixedUpdate){
-				if (sg.FixedUpdate() === true){
-					if (sg.Update) sg.Update();
-				};
+		//角色的
+		let idx = 0;
+		while (idx < this.characters.length){
+			let cha = this.characters[idx];
+			//TODO 一个角色AI执行完毕就删除
+			if (cha.ai.plan.length <= 0){
+				this.RemoveCharacter(cha);
+			}else{
+				if (cha.FixedUpdate){
+					if (cha.FixedUpdate() === true && cha.Update){
+						cha.Update();
+					};
+				}
+
+				idx ++;
+			}
+		}
+
+		//主角
+		if (this.mainCharacter && this.mainCharacter.FixedUpdate){
+			if (this.mainCharacter.FixedUpdate() == true && this.mainCharacter.Update){
+				this.mainCharacter.Update();
 			}
 		}
 		//红绿灯换色
@@ -169,11 +187,9 @@ class Street extends eui.Component implements  eui.UIComponent {
 	//重新排序zOrder
 	private RearrangeSpritesZOrder(){
 		if (!this.sprites || this.sprites.length <= 0) return;
-		this.sprites.sort((a:any, b:any)=>{
-			//角色坐标要特殊处理，读取setToY
-			let acY = (a.setToY!=null && a.setToY!=undefined) ? a.setToY : (a.y + a.height);
-			let bcY = (b.setToY!=null && b.setToY!=undefined) ? b.setToY : (b.y + b.height);
-			return (acY < bcY)?-1:1;
+		this.sprites.sort((a:SpriteClip, b:SpriteClip)=>{
+			let needBack = a.NeedToSendMeBack(b);
+			return (needBack == true)?-1:1;
 		});
 		for (let i = 0; i < this.sprites.length; i++){
 			let ts:eui.UIComponent = this.sprites[i];
@@ -183,6 +199,39 @@ class Street extends eui.Component implements  eui.UIComponent {
 		this.gameLayer.sortChildren();
 	}
 
+
+
+	//删除某个角色
+	private RemoveCharacter(cha:CharacterObj){
+		if (cha){
+			//gameLayer删除
+			if (cha.head && cha.head.parent) cha.head.parent.removeChild(cha.head);
+			if (cha.body && cha.body.parent) cha.body.parent.removeChild(cha.body);
+			if (cha.emote && cha.emote.parent) cha.body.parent.removeChild(cha.emote);
+
+			//sprites删除
+			let i = 0;
+			while (i < this.sprites.length){
+				if (
+					(cha.head && this.sprites[i] == cha.head) ||
+					(cha.body && this.sprites[i] == cha.body) ||
+					(cha.emote && this.sprites[i] == cha.emote)
+				){
+					this.sprites.splice(i, 1);
+				}else{
+					i += 1;
+				}
+			}
+
+			//角色列表删除
+			for (let i = 0; i < this.characters.length; i++){
+				if (this.characters[i] == cha){
+					this.characters.splice(i, 1);
+					break;
+				}
+			}
+		}
+	}
 
 	//根据json信息放置地面层元素和精灵层元素
 	private PaintFixedTerrainByJson(json:any){
@@ -251,7 +300,7 @@ class Street extends eui.Component implements  eui.UIComponent {
 				}
 				
 				this.gameLayer.addChild(img);
-				this.sprites.push(img);
+				//this.sprites.push(img);		//TODO SpriteClip
 				this.fixedImage.push(img);
 			}
 		}
@@ -279,8 +328,11 @@ class Street extends eui.Component implements  eui.UIComponent {
 			}
 		}
 		this.busImage = new Array<eui.Image>();
-		if (this.mainCharacter && this.mainCharacter.parent){
-			this.mainCharacter.parent.removeChild(this.mainCharacter);
+		if (this.mainCharacter){
+			if (this.mainCharacter.head && this.mainCharacter.head.parent)
+				this.mainCharacter.head.parent.removeChild(this.mainCharacter.head);
+			if (this.mainCharacter.body && this.mainCharacter.body.parent)
+				this.mainCharacter.body.parent.removeChild(this.mainCharacter.body);
 		}
 
 		//读取数据
@@ -314,7 +366,8 @@ class Street extends eui.Component implements  eui.UIComponent {
 			this.mainCharacter = new CharacterObj(
 				GetCharacterActionInfoByKey("schoolgirl"), mcX, this.mainCharacterZoneFloor
 			);
-			this.gameLayer.addChild(this.mainCharacter);
+			this.gameLayer.addChild(this.mainCharacter.head);
+			this.gameLayer.addChild(this.mainCharacter.body);
 
 			//接下来绘制车顶
 			let topInfo = bJson["top"];
@@ -373,67 +426,39 @@ class Street extends eui.Component implements  eui.UIComponent {
 
 	//放一张桌子，这里可不管能不能放的下，只管放上去的
 	private PlaceTable(table:DiningTableModel, gridX:number, gridY:number){
-		let t:DiningTable = new DiningTable(table, gridX, gridY);
-		let tPos = this.GetPixelPosByGridPos(gridX, gridY);
-		t.x = tPos["x"];
-		t.y = tPos["y"];
-		this.gameLayer.addChild(t);
-		this.sprites.push(t);
+		let tPos = this.GetPixelPosByGridPos(gridX, gridY, true);
+		let t:DiningTableObj = new DiningTableObj(table, tPos["x"], tPos["y"]);
+		this.gameLayer.addChild(t.Image);
+		this.sprites.push(t.Image);	
 		this.diningTables.push(t);
 
-		for (let i = 0; i < table.widthInGrid; i++){
-			for (let j = 0; j < table.heightInGrid; j++){
-				this.gridCanPass[gridX + i][gridY + j] = false;
-			}
-		}
-
-		if (this.diningChairs && this.diningChairs.length > 0){
-			for (let i = 0; i < this.diningChairs.length; i++){
-				let c = this.diningChairs[i];
-				if (c.connectTable == null){
-					//不能连接上一个椅子就return，因为一个桌子可以连接多个椅子
-					t.TryConnectChair(c);	
-				}
-			}
-		}
+		//TODO桌子椅子连接状态等
 	}
 
-	//放一张椅子，也是只负责放下去，不负责判断能不能放，返回连接到那个桌子了
-	private PlaceChair(chair:DiningChairModel, gridX:number, gridY:number, dir:Direction):DiningTable{
-		let c = new DiningChair(chair, gridX, gridY, dir);
-		let cPos = this.GetPixelPosByGridPos(gridX, gridY);
-		c.x = cPos["x"];
-		c.y = cPos["y"];
-		this.gameLayer.addChild(c);
-		this.sprites.push(c);
+	//放一张椅子，也是只负责放下去，不负责判断能不能放
+	private PlaceChair(chairSource:string, gridX:number, gridY:number, dir:Direction){
+		let cPos = this.GetPixelPosByGridPos(gridX, gridY, true);
+		let c = new ChairObj(chairSource, cPos["x"], cPos["y"], dir);
+		this.gameLayer.addChild(c.image);
+		this.sprites.push(c.image);
 		this.diningChairs.push(c);
-
-		let res = null;
-		for (let i = 0; i < this.diningTables.length; i++){
-			if (this.diningTables[i].TryConnectChair(c) == true){
-				res = this.diningTables[i];	//连接上了就结束了
-				break;
-			}
-		}
-		if (res){
-			let cInfo = chair.direction[c.direction];
-			for (let i = 0; i < cInfo.gridWidth; i++){
-				for (let j = 0; j < cInfo.gridHeight; j++){
-					this.gridCanPass[gridX + i][gridY + j] = false;
-				}
-			}
-		}
-		return res;
 	}
 
 	//放红绿灯
 	private PlaceTrafficLight(gridX:number, gridY:number){
-		let tl:TrafficLight = new TrafficLight();
+		
 		let tPos = this.GetPixelPosByGridPos(gridX, gridY);
-		tl.x = tPos["x"];
-		tl.y = tPos["y"] + tl.OffsetY();
-		this.gameLayer.addChild(tl);
-		this.sprites.push(tl);
+		let tl:TrafficLight = new TrafficLight(tPos["x"] + GridWidth/2, tPos["y"] + GridHeight/2);
+
+		this.gameLayer.addChild(tl.seat);
+		this.gameLayer.addChild(tl.red);
+		this.gameLayer.addChild(tl.green);
+		this.gameLayer.addChild(tl.yellow);
+		this.sprites.push(tl.seat);
+		this.sprites.push(tl.green);
+		this.sprites.push(tl.yellow);
+		this.sprites.push(tl.red);
+
 		this.trafficLights.push(tl);
 		tl.LightOn(this.GetTrafficLightState()["light"]);
 		tl.Draw();
@@ -446,8 +471,11 @@ class Street extends eui.Component implements  eui.UIComponent {
 			x, y,
 			new CharacterProperty()
 		)
-		this.gameLayer.addChild(cha);
-		this.sprites.push(cha);
+		this.gameLayer.addChild(cha.body);
+		this.gameLayer.addChild(cha.head);
+		this.sprites.push(cha.body);
+		this.sprites.push(cha.head);
+		this.characters.push(cha);
 		return cha;
 	}
 
@@ -491,9 +519,9 @@ class Street extends eui.Component implements  eui.UIComponent {
 
 		let cha1 = this.PlaceCharacter("schoolgirl", pos["x"] + 150, pos["y"] + 75);
 		cha1.property.speed = Math.floor(Math.random()*3) + 4;
-		cha1.ai.SetScripts(AIScripts.DebugStandTrickForDirection(cha));
+		cha1.ai.SetScripts(AIScripts.DebugDoAllAction(cha));
 		for (let i = 0; i < 10; i++){
-			cha1.ai.AddScripts(AIScripts.DebugStandTrickForDirection(cha));
+			cha1.ai.AddScripts(AIScripts.DebugDoAllAction(cha));
 		}
 	}
 
@@ -510,8 +538,8 @@ class Street extends eui.Component implements  eui.UIComponent {
 	public GetPixelPosByGridPos(gridX:number, gridY:number, forCharacter:boolean = false):Object{
 		let res = {x:-1, y:-1}
 		if (!this.ground) return res;
-		res["x"] = gridX * GridWidth + (forCharacter == true ? GridWidth/2 : 0);
-		res["y"] = gridY * GridHeight + this.ground.groundTop + (forCharacter == true ? (GridHeight - 10): 0);
+		res["x"] = Math.round(gridX * GridWidth + (forCharacter == true ? GridWidth/2 : 0));
+		res["y"] = Math.round(gridY * GridHeight + this.ground.groundTop + (forCharacter == true ? (GridHeight - 10): 0));
 		return res;
 	}
 

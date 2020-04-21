@@ -2,9 +2,11 @@
 class CharacterFrameInfo {
 	public head:string;
 	public body:string;
+	public emote:string;
 
-	public constructor(head:string, body:string) {
+	public constructor(head:string, body:string, emote:string) {
 		this.head = head;
 		this.body = body;
+		this.emote = emote;
 	}
 }

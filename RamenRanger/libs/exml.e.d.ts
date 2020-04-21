@@ -10,10 +10,6 @@ declare module skins{
 }
 declare class CraftNoodleSkin extends eui.Skin{
 }
-declare class DiningChairSkin extends eui.Skin{
-}
-declare class DiningTableSkin extends eui.Skin{
-}
 declare module skins{
 	class HScrollBarSkin extends eui.Skin{
 	}

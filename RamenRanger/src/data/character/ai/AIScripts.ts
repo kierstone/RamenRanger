@@ -3,14 +3,34 @@ namespace AIScripts{
     //测试用的， 4方向走路
     export var DebugWalkForDirection = function(cha:CharacterObj):Array<CharacterAIScript>{
         let res:Array<CharacterAIScript> = new Array<CharacterAIScript>();
-        let sX = cha.setToX;
-        let sY = cha.setToY;
+        let chaPos = cha.GetPos();
+        let sX = chaPos.x;
+        let sY = chaPos.y;
         let rX = sX + 6 * GridWidth;
         let rY = sY + 3 * GridWidth;
 		res.push(new CharacterAIScript(true, rX, sY, true, Direction.Right, CharacterAction.Walk, 1));
         res.push(new CharacterAIScript(true, rX, rY, true, Direction.Down, CharacterAction.Walk, 1));
         res.push(new CharacterAIScript(true, sX, rY, true, Direction.Left, CharacterAction.Walk, 1));
         res.push(new CharacterAIScript(true, sX, sY, true, Direction.Up, CharacterAction.Walk, 1));
+        return res;
+    }
+
+    export var DebugDoAllAction = function(cha:CharacterObj):Array<CharacterAIScript>{
+        let res:Array<CharacterAIScript> = new Array<CharacterAIScript>();
+
+        //先转头
+        res.push(new CharacterAIScript(
+            false, 0, 0, true, Direction.Down, CharacterAction.Stand, 
+            cha.GetActionFrameCount(Direction.Down, CharacterAction.Stand)
+        ));
+
+        for (let i = 3; i < 16; i++){
+            res.push(new CharacterAIScript(
+                false, 0, 0, false, Direction.Down, i, 
+                cha.GetActionFrameCount(Direction.Down, i)
+            ));
+        }
+
         return res;
     }
 
@@ -32,10 +52,11 @@ namespace AIScripts{
     //仅仅只是从左向右或者右向左路过一下
     export var JustPassThroughFromRoad = function(cha:CharacterObj, x:number):Array<CharacterAIScript>{
         let res:Array<CharacterAIScript> = new Array<CharacterAIScript>();
+        let chaPos = cha.GetPos();
 		res.push(
 			new CharacterAIScript(
-                true, x, cha.setToY, 
-                true, (x <= cha.setToX ? Direction.Left : Direction.Right),
+                true, x, chaPos.y, 
+                true, (x <= chaPos.x ? Direction.Left : Direction.Right),
 				CharacterAction.Walk, 1
 			)
 		);
@@ -50,9 +71,10 @@ namespace AIScripts{
         let cPos = street.GetPixelPosByGridPos(cornerX, cornerY, true);
         let cX = cPos["x"] + Math.floor(Math.random() * GridWidth - GridWidth/2);
         let cY = cPos["y"] - Math.floor(Math.random() * GridHeight / 2);
+        let chaPos = cha.GetPos();
         res.push(
             new CharacterAIScript(
-                false, cha.setToX, cha.setToY,
+                false, chaPos.x, chaPos.y,
                 true, cha.direction,
                 CharacterAction.Stand, toGreen
             )
