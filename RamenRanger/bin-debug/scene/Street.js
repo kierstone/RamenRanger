@@ -44,6 +44,7 @@ var Street = (function (_super) {
         this.ground.x = 0;
         this.ground.y = 0;
         this.gameLayer.addChild(this.ground);
+        console.log("GroundTop", this.ground.groundTop);
         this.PaintFixedTerrainByJson(jsonF);
         //小车可以先添加
         this.PlaceBusAndMainCharacter("bus_default_json");
@@ -124,7 +125,6 @@ var Street = (function (_super) {
                 idx++;
             }
         }
-        console.log("Characters", this.characters.length);
         //主角
         if (this.mainCharacter && this.mainCharacter.FixedUpdate) {
             if (this.mainCharacter.FixedUpdate() == true && this.mainCharacter.Update) {

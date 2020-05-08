@@ -10,7 +10,7 @@ var egret = window.egret;window.skins=window.skins||{};
                 window.generateEUI = window.generateEUI||{};
                 generateEUI.paths = generateEUI.paths||{};
                 generateEUI.styles = undefined;
-                generateEUI.skins = {"eui.Button":"resource/eui_skins/ButtonSkin.exml","eui.CheckBox":"resource/eui_skins/CheckBoxSkin.exml","eui.HScrollBar":"resource/eui_skins/HScrollBarSkin.exml","eui.HSlider":"resource/eui_skins/HSliderSkin.exml","eui.Panel":"resource/eui_skins/PanelSkin.exml","eui.TextInput":"resource/eui_skins/TextInputSkin.exml","eui.ProgressBar":"resource/eui_skins/ProgressBarSkin.exml","eui.RadioButton":"resource/eui_skins/RadioButtonSkin.exml","eui.Scroller":"resource/eui_skins/ScrollerSkin.exml","eui.ToggleSwitch":"resource/eui_skins/ToggleSwitchSkin.exml","eui.VScrollBar":"resource/eui_skins/VScrollBarSkin.exml","eui.VSlider":"resource/eui_skins/VSliderSkin.exml","eui.ItemRenderer":"resource/eui_skins/ItemRendererSkin.exml"};generateEUI.paths['resource/eui_skins/ButtonSkin.exml'] = window.skins.ButtonSkin = (function (_super) {
+                generateEUI.skins = {"eui.Button":"resource/eui_skins/ButtonSkin.exml","eui.CheckBox":"resource/eui_skins/CheckBoxSkin.exml","eui.HScrollBar":"resource/eui_skins/HScrollBarSkin.exml","eui.HSlider":"resource/eui_skins/HSliderSkin.exml","eui.Panel":"resource/eui_skins/PanelSkin.exml","eui.TextInput":"resource/eui_skins/TextInputSkin.exml","eui.ProgressBar":"resource/eui_skins/ProgressBarSkin.exml","eui.RadioButton":"resource/eui_skins/RadioButtonSkin.exml","eui.Scroller":"resource/eui_skins/ScrollerSkin.exml","eui.ToggleSwitch":"resource/eui_skins/ToggleSwitchSkin.exml","eui.VScrollBar":"resource/eui_skins/VScrollBarSkin.exml","eui.VSlider":"resource/eui_skins/VSliderSkin.exml","eui.ItemRenderer":"resource/eui_skins/ItemRendererSkin.exml","CraftNoodle":"resource/eui_skins/CraftNoodle.exml","Street":"resource/eui_skins/Street.exml","StreetGround":"resource/eui_skins/StreetGround.exml","RamenObj":"resource/eui_skins/RamenObj.exml"};generateEUI.paths['resource/eui_skins/ButtonSkin.exml'] = window.skins.ButtonSkin = (function (_super) {
 	__extends(ButtonSkin, _super);
 	function ButtonSkin() {
 		_super.call(this);
@@ -67,6 +67,35 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return ButtonSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/CharacterObj.exml'] = window.CharacterObjSkin = (function (_super) {
+	__extends(CharacterObjSkin, _super);
+	function CharacterObjSkin() {
+		_super.call(this);
+		this.skinParts = ["body","head"];
+		
+		this.height = 200;
+		this.width = 100;
+		this.elementsContent = [this.body_i(),this.head_i()];
+	}
+	var _proto = CharacterObjSkin.prototype;
+
+	_proto.body_i = function () {
+		var t = new eui.Image();
+		this.body = t;
+		t.source = "";
+		t.x = 10;
+		t.y = 62.8;
+		return t;
+	};
+	_proto.head_i = function () {
+		var t = new eui.Image();
+		this.head = t;
+		t.source = "";
+		t.x = 13;
+		t.y = 0;
+		return t;
+	};
+	return CharacterObjSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/CheckBoxSkin.exml'] = window.skins.CheckBoxSkin = (function (_super) {
 	__extends(CheckBoxSkin, _super);
 	function CheckBoxSkin() {
@@ -139,6 +168,18 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return CheckBoxSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/CraftNoodle.exml'] = window.CraftNoodleSkin = (function (_super) {
+	__extends(CraftNoodleSkin, _super);
+	function CraftNoodleSkin() {
+		_super.call(this);
+		this.skinParts = [];
+		
+		this.height = 1334;
+		this.width = 750;
+	}
+	var _proto = CraftNoodleSkin.prototype;
+
+	return CraftNoodleSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/HScrollBarSkin.exml'] = window.skins.HScrollBarSkin = (function (_super) {
 	__extends(HScrollBarSkin, _super);
 	function HScrollBarSkin() {
@@ -421,6 +462,27 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return RadioButtonSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/RamenObj.exml'] = window.RamenObjSkin = (function (_super) {
+	__extends(RamenObjSkin, _super);
+	function RamenObjSkin() {
+		_super.call(this);
+		this.skinParts = ["bowl"];
+		
+		this.height = 75;
+		this.width = 75;
+		this.elementsContent = [this.bowl_i()];
+	}
+	var _proto = RamenObjSkin.prototype;
+
+	_proto.bowl_i = function () {
+		var t = new eui.Image();
+		this.bowl = t;
+		t.bottom = 0;
+		t.horizontalCenter = 0;
+		t.source = "wooden_chair";
+		return t;
+	};
+	return RamenObjSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/ScrollerSkin.exml'] = window.skins.ScrollerSkin = (function (_super) {
 	__extends(ScrollerSkin, _super);
 	function ScrollerSkin() {
@@ -448,6 +510,82 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return ScrollerSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/Street.exml'] = window.StreetSkin = (function (_super) {
+	__extends(StreetSkin, _super);
+	function StreetSkin() {
+		_super.call(this);
+		this.skinParts = ["gameLayer"];
+		
+		this.height = 1334;
+		this.width = 750;
+		this.elementsContent = [this.gameLayer_i()];
+	}
+	var _proto = StreetSkin.prototype;
+
+	_proto.gameLayer_i = function () {
+		var t = new eui.Group();
+		this.gameLayer = t;
+		t.percentHeight = 100;
+		t.percentWidth = 100;
+		t.x = 0;
+		t.y = 0;
+		return t;
+	};
+	return StreetSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/StreetGround.exml'] = window.StreetGroundSkin = (function (_super) {
+	__extends(StreetGroundSkin, _super);
+	function StreetGroundSkin() {
+		_super.call(this);
+		this.skinParts = ["bkg","ground","road","streetside","street"];
+		
+		this.height = 1334;
+		this.width = 750;
+		this.elementsContent = [this.bkg_i(),this.ground_i(),this.road_i(),this.streetside_i(),this.street_i()];
+	}
+	var _proto = StreetGroundSkin.prototype;
+
+	_proto.bkg_i = function () {
+		var t = new eui.Image();
+		this.bkg = t;
+		t.source = "wooden_chair";
+		t.x = 0;
+		t.y = 0;
+		return t;
+	};
+	_proto.ground_i = function () {
+		var t = new eui.Image();
+		this.ground = t;
+		t.fillMode = "repeat";
+		t.source = "wooden_chair";
+		t.x = 0;
+		t.y = 75;
+		return t;
+	};
+	_proto.road_i = function () {
+		var t = new eui.Image();
+		this.road = t;
+		t.source = "wooden_chair";
+		t.x = 0;
+		t.y = 150;
+		return t;
+	};
+	_proto.streetside_i = function () {
+		var t = new eui.Image();
+		this.streetside = t;
+		t.source = "wooden_chair";
+		t.x = 0;
+		t.y = 225;
+		return t;
+	};
+	_proto.street_i = function () {
+		var t = new eui.Image();
+		this.street = t;
+		t.source = "wooden_chair";
+		t.x = 0;
+		t.y = 300;
+		return t;
+	};
+	return StreetGroundSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/TextInputSkin.exml'] = window.skins.TextInputSkin = (function (_super) {
 	__extends(TextInputSkin, _super);
 	function TextInputSkin() {
@@ -579,6 +717,51 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return ToggleSwitchSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/TrafficLight.exml'] = window.TrafficLightSkin = (function (_super) {
+	__extends(TrafficLightSkin, _super);
+	function TrafficLightSkin() {
+		_super.call(this);
+		this.skinParts = ["seat","red","yellow","green"];
+		
+		this.height = 225;
+		this.width = 75;
+		this.elementsContent = [this.seat_i(),this.red_i(),this.yellow_i(),this.green_i()];
+	}
+	var _proto = TrafficLightSkin.prototype;
+
+	_proto.seat_i = function () {
+		var t = new eui.Image();
+		this.seat = t;
+		t.source = "trafficlight";
+		t.x = 16;
+		t.y = 2;
+		return t;
+	};
+	_proto.red_i = function () {
+		var t = new eui.Image();
+		this.red = t;
+		t.source = "trafficlight_red";
+		t.x = 0;
+		t.y = 0;
+		return t;
+	};
+	_proto.yellow_i = function () {
+		var t = new eui.Image();
+		this.yellow = t;
+		t.source = "trafficlight_yellow";
+		t.x = 0;
+		t.y = 0;
+		return t;
+	};
+	_proto.green_i = function () {
+		var t = new eui.Image();
+		this.green = t;
+		t.source = "trafficlight_green";
+		t.x = 0;
+		t.y = 0;
+		return t;
+	};
+	return TrafficLightSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/VScrollBarSkin.exml'] = window.skins.VScrollBarSkin = (function (_super) {
 	__extends(VScrollBarSkin, _super);
 	function VScrollBarSkin() {

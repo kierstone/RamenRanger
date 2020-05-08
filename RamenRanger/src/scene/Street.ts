@@ -65,6 +65,7 @@ class Street extends eui.Component implements  eui.UIComponent {
 		this.ground.x = 0;
 		this.ground.y = 0;
 		this.gameLayer.addChild(this.ground);
+console.log("GroundTop", this.ground.groundTop)
 
 		this.PaintFixedTerrainByJson(jsonF);
 

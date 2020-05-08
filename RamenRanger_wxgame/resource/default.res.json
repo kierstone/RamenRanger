@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,bow_bowl_json,catalog_json,ing_cover0_json,ing_noodles_json,ing_soup_json,ing_taste_json,rec_recipt_json,bowls_json,icons_json,ingredients_json,character_animinfo_json,city_shanghai_json,bus_default_json,bus_default2_json,street_shanghai_json,character_schoolgirl_json",
 			"name": "preload"
 		}
 	],
@@ -130,6 +130,92 @@
 			"url": "assets/egret_icon.png",
 			"type": "image",
 			"name": "egret_icon_png"
+		},
+		{
+			"url": "assets/json/bow_bowl.json",
+			"type": "json",
+			"name": "bow_bowl_json"
+		},
+		{
+			"url": "assets/json/catalog.json",
+			"type": "json",
+			"name": "catalog_json"
+		},
+		{
+			"url": "assets/json/ing_cover0.json",
+			"type": "json",
+			"name": "ing_cover0_json"
+		},
+		{
+			"url": "assets/json/ing_noodles.json",
+			"type": "json",
+			"name": "ing_noodles_json"
+		},
+		{
+			"url": "assets/json/ing_soup.json",
+			"type": "json",
+			"name": "ing_soup_json"
+		},
+		{
+			"url": "assets/json/ing_taste.json",
+			"type": "json",
+			"name": "ing_taste_json"
+		},
+		{
+			"url": "assets/json/rec_recipt.json",
+			"type": "json",
+			"name": "rec_recipt_json"
+		},
+		{
+			"url": "assets/image/bowls.json",
+			"type": "sheet",
+			"name": "bowls_json",
+			"subkeys": "bowl_bowl_normal"
+		},
+		{
+			"url": "assets/image/icons.json",
+			"type": "sheet",
+			"name": "icons_json",
+			"subkeys": "icon_default,icon_ingredient_chopped_green_orion,icon_ingredient_lard_oil,icon_ingredient_poached_eggs,icon_ingredient_thin_noodles"
+		},
+		{
+			"url": "assets/image/ingredients.json",
+			"type": "sheet",
+			"name": "ingredients_json",
+			"subkeys": "ingredient_chopped_green_orion,ingredient_lard_oil,ingredient_poached_eggs,ingredient_thin_noodles"
+		},
+		{
+			"url": "assets/json/character_animinfo.json",
+			"type": "json",
+			"name": "character_animinfo_json"
+		},
+		{
+			"url": "assets/json/city_shanghai.json",
+			"type": "json",
+			"name": "city_shanghai_json"
+		},
+		{
+			"url": "assets/json/bus_default.json",
+			"type": "json",
+			"name": "bus_default_json"
+		},
+		{
+			"name": "bus_default2_json",
+			"type": "sheet",
+			"url": "assets/image/bus_default.json",
+			"subkeys": "advboard_test,bus_default_inner,bus_default_paint,bus_eave,bus_top_noddle"
+		},
+		{
+			"name": "street_shanghai_json",
+			"type": "sheet",
+			"url": "assets/image/street_shanghai.json",
+			"subkeys": "wooden_single_table,wooden_chair,trafficlight,trafficlight_yellow,trafficlight_red,trafficlight_green,street_side,street_middle,street_line1,street_line0,road_shanghai,parterre_upper,parterre_upper_right,parterre_upper_left,parterre_trafficcone,parterre_road1,parterre_road0,parterre_road,parterre_right1,parterre_right0,parterre_middle1,parterre_middle0,parterre_left1,parterre_left0,floor_shanghai,street_cross_l,street_cross_lt,street_cross_m,street_cross_mt,street_cross_r,street_cross_rt,bkg_shanghai"
+		},
+		{
+			"name": "character_schoolgirl_json",
+			"type": "sheet",
+			"url": "assets/image/character_schoolgirl.json",
+			"subkeys": "schoolgirl_mala_f_head_0,schoolgirl_mala_f_head_1,schoolgirl_mala_f_head_3,schoolgirl_mala_f_head_2,schoolgirl_mala_f_body_0,schoolgirl_mala_f_body_1,schoolgirl_mala_f_body_3,schoolgirl_daiji_f_body_3,schoolgirl_daiji_f_body_2,schoolgirl_daiji_f_body_0,schoolgirl_daiji_f_body_1,schoolgirl_daiji_f_body_5,schoolgirl_daiji_f_body_4,schoolgirl_daiji_f_head_0,schoolgirl_daiji_f_head_1,schoolgirl_chensi_f_head_1,schoolgirl_chensi_f_head_0,schoolgirl_chensi_f_head_2,schoolgirl_chensi_f_body_1,schoolgirl_chensi_f_body_0,schoolgirl_chensi_f_body_2,schoolgirl_linggan_f_head_0,schoolgirl_linggan_f_head_1,schoolgirl_linggan_f_head_3,schoolgirl_linggan_f_head_2,schoolgirl_linggan_f_head_5,schoolgirl_linggan_f_head_4,schoolgirl_linggan_f_body_0,schoolgirl_linggan_f_body_1,schoolgirl_linggan_f_body_3,schoolgirl_linggan_f_body_2,schoolgirl_linggan_f_body_5,schoolgirl_linggan_f_body_4,schoolgirl_daiji_b_body_0,schoolgirl_daiji_b_body_1,schoolgirl_daiji_b_body_3,schoolgirl_daiji_b_body_2,schoolgirl_daiji_b_body_5,schoolgirl_daiji_b_body_4,schoolgirl_daiji_b_head_0,schoolgirl_chimian_f_head_2,schoolgirl_chimian_f_head_0,schoolgirl_chimian_f_head_1,schoolgirl_jujue_f_head_0,schoolgirl_jujue_f_head_1,schoolgirl_jujue_f_head_3,schoolgirl_jujue_f_body_0,schoolgirl_jujue_f_body_1,schoolgirl_jujue_f_body_3,schoolgirl_chimian_f_body_2,schoolgirl_chimian_f_body_0,schoolgirl_chimian_f_body_1,schoolgirl_guzhang_f_head_0,schoolgirl_guzhang_f_head_1,schoolgirl_guzhang_f_head_3,schoolgirl_guzhang_f_head_2,schoolgirl_guzhang_f_body_0,schoolgirl_guzhang_f_body_1,schoolgirl_guzhang_f_body_3,schoolgirl_guzhang_f_body_2,schoolgirl_walk_l_body_0,schoolgirl_walk_l_body_1,schoolgirl_walk_l_body_3,schoolgirl_walk_l_body_2,schoolgirl_walk_l_body_6,schoolgirl_walk_l_body_7,schoolgirl_walk_l_body_5,schoolgirl_walk_l_body_4,schoolgirl_walk_l_head_0,schoolgirl_xingfu_f_head_0,schoolgirl_xingfu_f_head_1,schoolgirl_xingfu_f_head_2,schoolgirl_xingfu_f_body_0,schoolgirl_xingfu_f_body_1,schoolgirl_xingfu_f_body_2,schoolgirl_yane_f_head_2,schoolgirl_yane_f_head_3,schoolgirl_yane_f_head_1,schoolgirl_yane_f_head_0,schoolgirl_yane_f_body_3,schoolgirl_yane_f_body_1,schoolgirl_yane_f_body_0,schoolgirl_diancai_f_head_4,schoolgirl_diancai_f_head_5,schoolgirl_diancai_f_head_2,schoolgirl_diancai_f_head_3,schoolgirl_diancai_f_head_1,schoolgirl_diancai_f_head_0,schoolgirl_diancai_f_body_4,schoolgirl_diancai_f_body_5,schoolgirl_diancai_f_body_2,schoolgirl_diancai_f_body_3,schoolgirl_diancai_f_body_1,schoolgirl_diancai_f_body_0,schoolgirl_daiji_l_body_4,schoolgirl_daiji_l_body_5,schoolgirl_daiji_l_body_2,schoolgirl_daiji_l_body_3,schoolgirl_daiji_l_body_1,schoolgirl_daiji_l_body_0,schoolgirl_daiji_l_head_1,schoolgirl_daiji_l_head_0,schoolgirl_diantou_f_head_1,schoolgirl_diantou_f_head_0,schoolgirl_diantou_f_head_3,schoolgirl_diantou_f_body_1,schoolgirl_diantou_f_body_0,schoolgirl_diantou_f_body_3,schoolgirl_diantou_b_head_3,schoolgirl_diantou_b_head_1,schoolgirl_diantou_b_head_0,schoolgirl_diantou_b_body_3,schoolgirl_diantou_b_body_1,schoolgirl_diantou_b_body_0,schoolgirl_tanqi_f_head_3,schoolgirl_tanqi_f_head_2,schoolgirl_tanqi_f_head_0,schoolgirl_tanqi_f_head_1,schoolgirl_tanqi_f_head_5,schoolgirl_tanqi_f_head_4,schoolgirl_tanqi_f_body_3,schoolgirl_tanqi_f_body_0,schoolgirl_tanqi_f_body_1,schoolgirl_paizhao_f_head_3,schoolgirl_paizhao_f_head_2,schoolgirl_paizhao_f_head_0,schoolgirl_paizhao_f_head_1,schoolgirl_paizhao_f_head_5,schoolgirl_paizhao_f_head_4,schoolgirl_paizhao_f_body_3,schoolgirl_paizhao_f_body_2,schoolgirl_paizhao_f_body_0,schoolgirl_paizhao_f_body_1,schoolgirl_paizhao_f_body_5,schoolgirl_paizhao_f_body_4,schoolgirl_paizhao_f_body_6,schoolgirl_paizhao_f_body_7,schoolgirl_taixian_f_head_1,schoolgirl_taixian_f_head_0,schoolgirl_taixian_f_head_2,schoolgirl_taixian_f_head_3,schoolgirl_taixian_f_body_1,schoolgirl_taixian_f_body_0,schoolgirl_taixian_f_body_3,schoolgirl_walk_f_body_7,schoolgirl_walk_f_body_6,schoolgirl_walk_f_body_4,schoolgirl_walk_f_body_5,schoolgirl_walk_f_body_1,schoolgirl_walk_f_body_0,schoolgirl_walk_f_body_2,schoolgirl_walk_f_body_3,schoolgirl_walk_f_head_0,schoolgirl_walk_b_body_4,schoolgirl_walk_b_body_5,schoolgirl_walk_b_body_7,schoolgirl_walk_b_body_6,schoolgirl_walk_b_body_2,schoolgirl_walk_b_body_3,schoolgirl_walk_b_body_1,schoolgirl_walk_b_body_0,schoolgirl_walk_b_head_0"
 		}
 	]
 }
