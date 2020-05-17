@@ -1,0 +1,51 @@
+{
+	"member": [],
+	"function": [
+		{
+			"kind": "function",
+			"name": "RamenObj",
+			"memberof": "RamenObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "void",
+			"name": "childrenCreated",
+			"memberof": "RamenObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "void",
+			"name": "partAdded",
+			"memberof": "RamenObj",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "partName",
+					"type": "string",
+					"description": ""
+				},
+				{
+					"name": "instance",
+					"type": "any",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "RamenObj",
+		"memberof": "",
+		"filename": "element\\RamenObj.ts",
+		"augments": [],
+		"implements": []
+	},
+	"pType": "public"
+}

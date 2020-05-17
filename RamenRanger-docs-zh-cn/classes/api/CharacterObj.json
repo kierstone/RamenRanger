@@ -1,0 +1,203 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "CharacterAI",
+			"name": "ai",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "SpriteClip",
+			"name": "body",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "Direction",
+			"name": "direction",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "SpriteClip",
+			"name": "emote",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "SpriteClip",
+			"name": "head",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "CharacterProperty",
+			"name": "property",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "CharacterObj",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "characterActionInfo",
+					"type": "CharacterActionInfo",
+					"description": ""
+				},
+				{
+					"name": "x",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "y",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "property",
+					"question": true,
+					"type": "CharacterProperty",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "ChangeAction",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"description": "更换动作和方向",
+			"params": [
+				{
+					"name": "direction",
+					"type": "Direction",
+					"description": ""
+				},
+				{
+					"name": "action",
+					"type": "CharacterAction",
+					"description": ""
+				},
+				{
+					"name": "forceChange",
+					"type": "boolean",
+					"default": "false",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "boolean",
+			"name": "Draw",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"description": "//返回是否达成一个loop了",
+			"params": [
+				{
+					"name": "incFrame",
+					"type": "boolean",
+					"default": "true",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "boolean",
+			"name": "FixedUpdate",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"description": "逻辑update。返回是否需要立即渲染一下",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "number",
+			"name": "GetActionFrameCount",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"description": "获得某个方向的某个动作需要的帧数",
+			"params": [
+				{
+					"name": "direction",
+					"type": "Direction",
+					"description": ""
+				},
+				{
+					"name": "action",
+					"type": "CharacterAction",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "egret.Point",
+			"name": "GetPos",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"description": "获得逻辑坐标{x:0,y:0}",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "SetPosition",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"description": "设置逻辑坐标",
+			"params": [
+				{
+					"name": "x",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "y",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "Update",
+			"memberof": "CharacterObj",
+			"scope": "instance",
+			"description": "渲染update",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "CharacterObj",
+		"memberof": "",
+		"filename": "data\\character\\CharacterObj.ts"
+	},
+	"pType": "public"
+}

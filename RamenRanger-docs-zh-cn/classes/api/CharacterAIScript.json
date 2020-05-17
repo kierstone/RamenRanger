@@ -1,0 +1,152 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "boolean",
+			"name": "changeDirection",
+			"memberof": "CharacterAIScript",
+			"scope": "instance",
+			"pType": "public",
+			"default": "false"
+		},
+		{
+			"kind": "member",
+			"type": "Direction",
+			"name": "directionTo",
+			"memberof": "CharacterAIScript",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "CharacterAction",
+			"name": "doAction",
+			"memberof": "CharacterAIScript",
+			"scope": "instance",
+			"pType": "public",
+			"default": "CharacterAction.Stand"
+		},
+		{
+			"kind": "member",
+			"type": "boolean",
+			"name": "doMove",
+			"memberof": "CharacterAIScript",
+			"scope": "instance",
+			"pType": "public",
+			"default": "false"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "inTick",
+			"memberof": "CharacterAIScript",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "moveToX",
+			"memberof": "CharacterAIScript",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "moveToY",
+			"memberof": "CharacterAIScript",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "CharacterAIScript",
+			"memberof": "CharacterAIScript",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "doMove",
+					"type": "boolean",
+					"description": ""
+				},
+				{
+					"name": "moveToX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "moveToY",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "changeDirection",
+					"type": "boolean",
+					"description": ""
+				},
+				{
+					"name": "directionTo",
+					"type": "Direction",
+					"description": ""
+				},
+				{
+					"name": "doAction",
+					"type": "CharacterAction",
+					"description": ""
+				},
+				{
+					"name": "inTick",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "CharacterAIScript",
+			"name": "Clone",
+			"memberof": "CharacterAIScript",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "SetMoveTarget",
+			"memberof": "CharacterAIScript",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "moveToX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "moveToY",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "inTick",
+					"type": "number",
+					"default": "0",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "CharacterAIScript",
+		"memberof": "",
+		"filename": "data\\character\\ai\\CharacterAIScript.ts",
+		"description": "//AI脚本的每一条信息"
+	},
+	"pType": "public"
+}

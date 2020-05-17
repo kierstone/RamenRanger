@@ -1,0 +1,51 @@
+{
+	"member": [],
+	"function": [
+		{
+			"kind": "function",
+			"name": "CraftNoodle",
+			"memberof": "CraftNoodle",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "void",
+			"name": "childrenCreated",
+			"memberof": "CraftNoodle",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "void",
+			"name": "partAdded",
+			"memberof": "CraftNoodle",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "partName",
+					"type": "string",
+					"description": ""
+				},
+				{
+					"name": "instance",
+					"type": "any",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "CraftNoodle",
+		"memberof": "",
+		"filename": "scene\\CraftNoodle.ts",
+		"augments": [],
+		"implements": []
+	},
+	"pType": "public"
+}

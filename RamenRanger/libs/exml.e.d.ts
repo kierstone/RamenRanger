@@ -1,3 +1,9 @@
+declare class Button_Craft_Next extends eui.Skin{
+}
+declare class Button_IngredientBox_Right extends eui.Skin{
+}
+declare class Button_IngredientBoxLeft extends eui.Skin{
+}
 declare module skins{
 	class ButtonSkin extends eui.Skin{
 	}
@@ -17,6 +23,10 @@ declare module skins{
 declare module skins{
 	class HSliderSkin extends eui.Skin{
 	}
+}
+declare class IngredientBoxSkin extends eui.Skin{
+}
+declare class IngredientIconInBoxSkin extends eui.Skin{
 }
 declare module skins{
 	class ItemRendererSkin extends eui.Skin{

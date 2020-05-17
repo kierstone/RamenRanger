@@ -22,9 +22,9 @@
         "bow_bowl"
     ],
     "ingredient":[
-        "ing_soup",
-        "ing_taste",
-        "ing_noodles",
-        "ing_cover0"
+        "ingredient_test"
+    ],
+    "broth":[
+        "broth"
     ]
 }

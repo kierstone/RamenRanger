@@ -1,0 +1,64 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "buffId",
+			"memberof": "CharacterBuffTrigger",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "stack",
+			"memberof": "CharacterBuffTrigger",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "turns",
+			"memberof": "CharacterBuffTrigger",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "CharacterBuffTrigger",
+			"memberof": "CharacterBuffTrigger",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "buffId",
+					"type": "string",
+					"description": ""
+				},
+				{
+					"name": "stack",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "turns",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "CharacterBuffTrigger",
+		"memberof": "",
+		"filename": "data\\buff\\CharacterBuffTrigger.ts",
+		"description": "//添加角色buff到角色身上需要的信息"
+	},
+	"pType": "public"
+}

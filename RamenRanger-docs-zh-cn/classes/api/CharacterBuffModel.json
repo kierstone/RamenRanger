@@ -1,0 +1,39 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "id",
+			"memberof": "CharacterBuffModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "maxStack",
+			"memberof": "CharacterBuffModel",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "CharacterBuffModel",
+			"memberof": "CharacterBuffModel",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "CharacterBuffModel",
+		"memberof": "",
+		"filename": "data\\buff\\CharacterBuffModel.ts",
+		"description": "//食客的buff的model"
+	},
+	"pType": "public"
+}

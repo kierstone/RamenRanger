@@ -1,0 +1,50 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "x",
+			"memberof": "GridPosition",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "y",
+			"memberof": "GridPosition",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "GridPosition",
+			"memberof": "GridPosition",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "x",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "y",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "GridPosition",
+		"memberof": "",
+		"filename": "data\\tilebased\\GridPosition.ts"
+	},
+	"pType": "public"
+}

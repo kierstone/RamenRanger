@@ -1,0 +1,70 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "icon",
+			"memberof": "IngredientClass",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "id",
+			"memberof": "IngredientClass",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "Array<IngredientModel>",
+			"name": "items",
+			"memberof": "IngredientClass",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "name",
+			"memberof": "IngredientClass",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "IngredientClass",
+			"memberof": "IngredientClass",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "fromJson",
+			"memberof": "IngredientClass",
+			"scope": "instance",
+			"description": "从json的Object获取到数据",
+			"returns": "是否成功，如果id有异常则不会成功",
+			"params": [
+				{
+					"name": "json",
+					"type": "Object",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "IngredientClass",
+		"memberof": "",
+		"filename": "data\\ramen\\IngredientClass.ts"
+	},
+	"pType": "public"
+}

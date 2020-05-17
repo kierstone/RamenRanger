@@ -1,0 +1,31 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "speed",
+			"memberof": "CharacterProperty",
+			"scope": "instance",
+			"pType": "public",
+			"default": "3"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "CharacterProperty",
+			"memberof": "CharacterProperty",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "CharacterProperty",
+		"memberof": "",
+		"filename": "data\\character\\CharacterProperty.ts"
+	},
+	"pType": "public"
+}

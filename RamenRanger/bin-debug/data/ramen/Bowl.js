@@ -15,17 +15,9 @@ var BowlModel = (function () {
         }
         this.id = json["id"];
         this.name = json["name"] ? json["name"] : json["id"];
+        this.img = json["img"] ? json["img"] : json["id"];
         this.radius = json["radius"] ? json["radius"] : 200;
-        this.tasteRadius = json["taste"] ? json["taste"] : 50;
-        this.soupRadius = json["soup"] ? json["soup"] : 170;
         this.cost = json["cost"] ? json["cost"] : 1;
-        this.buffs = new Array();
-        if (json["buff"] && json["buff"].length && json["buff"].length > 0) {
-            for (var i = 0; i < json["buff"].length; i++) {
-                var bObj = json["buff"][i];
-                this.buffs.push(new CharacterBuffTrigger(bObj["id"], bObj["stack"], bObj["turns"]));
-            }
-        }
         return true;
     };
     /**
@@ -33,20 +25,21 @@ var BowlModel = (function () {
      * @returns {string} 资源名称
      */
     BowlModel.prototype.Image = function () {
-        return "bowl_" + this.id;
+        return this.img;
     };
     /**
      * 获取icon的资源名
      * @returns {string} icon的名称
      */
     BowlModel.prototype.Icon = function () {
-        return "icon_bowl_" + this.id;
+        return this.img;
     };
     return BowlModel;
 }());
 __reflect(BowlModel.prototype, "BowlModel");
 var BowlObj = (function () {
-    function BowlObj() {
+    function BowlObj(model) {
+        this.model = model;
     }
     return BowlObj;
 }());

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="IngredientBoxSkin" width="750" height="505" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="172140b872e" ></w:Config>
+	<e:Image horizontalCenter="0" verticalCenter="0" source="ui_craft_ingredientbox" locked="true"/>
+</e:Skin>

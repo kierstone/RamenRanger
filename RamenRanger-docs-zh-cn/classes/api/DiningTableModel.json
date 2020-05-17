@@ -1,0 +1,84 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "heightInGrid",
+			"memberof": "DiningTableModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "Array<DiningTableSeatSlot>",
+			"name": "seats",
+			"memberof": "DiningTableModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "source",
+			"memberof": "DiningTableModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "widthInGrid",
+			"memberof": "DiningTableModel",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "DiningTableModel",
+			"memberof": "DiningTableModel",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "widthInGrid",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "heightInGrid",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "source",
+					"type": "string",
+					"description": ""
+				},
+				{
+					"name": "seats",
+					"type": "Array<DiningTableSeatSlot>",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "DiningTableModel",
+			"name": "Clone",
+			"memberof": "DiningTableModel",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "DiningTableModel",
+		"memberof": "",
+		"filename": "data\\street\\DiningTableModel.ts"
+	},
+	"pType": "public"
+}

@@ -18,5 +18,15 @@
         "path": "element/RamenObj.ts",
         "class": "RamenObj",
         "parentPath": ""
+    },
+    "172140b872e": {
+        "path": "element/IngredientBox.ts",
+        "class": "IngredientBox",
+        "parentPath": ""
+    },
+    "172141378d8": {
+        "path": "element/IngredientIconInBox.ts",
+        "class": "IngredientIconInBox",
+        "parentPath": ""
     }
 }

@@ -1,0 +1,21 @@
+{
+	"member": [],
+	"function": [
+		{
+			"kind": "function",
+			"name": "PlacedIngredient",
+			"memberof": "PlacedIngredient",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "PlacedIngredient",
+		"memberof": "",
+		"filename": "data\\ramen\\PlacedIngredient.ts"
+	},
+	"pType": "public"
+}

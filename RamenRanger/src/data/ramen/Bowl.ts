@@ -1,11 +1,9 @@
 class BowlModel {
 	public id:string;
+	private img:string;
 	public name:string;
 	public radius:number;
-	public tasteRadius:number;
-	public soupRadius:number;
 	public cost:number;
-	public buffs:Array<CharacterBuffTrigger>;
 
 	public constructor() {
 
@@ -23,20 +21,9 @@ class BowlModel {
 
 		this.id = json["id"];
 		this.name = json["name"] ? json["name"] : json["id"];
+		this.img = json["img"] ? json["img"] : json["id"];
 		this.radius = json["radius"] ? json["radius"] : 200;
-		this.tasteRadius = json["taste"] ? json["taste"] : 50;
-		this.soupRadius = json["soup"] ? json["soup"] : 170;
 		this.cost = json["cost"] ? json["cost"] : 1;
-
-		this.buffs = new Array<CharacterBuffTrigger>();
-		if (json["buff"] && json["buff"].length && json["buff"].length > 0){
-			for (let i = 0; i < json["buff"].length; i++){
-				let bObj = json["buff"][i];
-				this.buffs.push(
-					new CharacterBuffTrigger(bObj["id"], bObj["stack"], bObj["turns"])
-				)
-			}
-		}
 
 		return true;
 	}
@@ -46,7 +33,7 @@ class BowlModel {
 	 * @returns {string} 资源名称
 	 */
 	public Image():string{
-		return "bowl_" + this.id;
+		return this.img;
 	}
 
 	/**
@@ -54,10 +41,13 @@ class BowlModel {
 	 * @returns {string} icon的名称
 	 */
 	public Icon():string{
-		return "icon_bowl_" + this.id;
+		return this.img;
 	}
 }
 
 class BowlObj{
 	public model:BowlModel;
+	constructor(model:BowlModel){
+		this.model = model;
+	}
 }

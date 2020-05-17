@@ -1,0 +1,87 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "alpha",
+			"memberof": "LiquidInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "b",
+			"memberof": "LiquidInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "g",
+			"memberof": "LiquidInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "r",
+			"memberof": "LiquidInfo",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "LiquidInfo",
+			"memberof": "LiquidInfo",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "a",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "r",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "g",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "b",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "number",
+			"name": "Color",
+			"memberof": "LiquidInfo",
+			"scope": "instance",
+			"description": "获得颜色的数值",
+			"returns": "返回RGB值",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "LiquidInfo",
+		"memberof": "",
+		"filename": "data\\ramen\\LiquidInfo.ts",
+		"description": "//如果是汤汁类的，它应该是液体，如果是液体，就应该有液体信息"
+	},
+	"pType": "public"
+}

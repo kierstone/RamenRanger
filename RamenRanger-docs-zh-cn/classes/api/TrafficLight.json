@@ -1,0 +1,95 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "SpriteClip",
+			"name": "green",
+			"memberof": "TrafficLight",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "SpriteClip",
+			"name": "red",
+			"memberof": "TrafficLight",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "SpriteClip",
+			"name": "seat",
+			"memberof": "TrafficLight",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "SpriteClip",
+			"name": "yellow",
+			"memberof": "TrafficLight",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "TrafficLight",
+			"memberof": "TrafficLight",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "x",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "y",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "Draw",
+			"memberof": "TrafficLight",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "incFrame",
+					"type": "boolean",
+					"default": "true",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "LightOn",
+			"memberof": "TrafficLight",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "state",
+					"type": "TrafficLightState",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "TrafficLight",
+		"memberof": "",
+		"filename": "data\\street\\TrafficLight.ts"
+	},
+	"pType": "public"
+}

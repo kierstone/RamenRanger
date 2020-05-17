@@ -1,0 +1,103 @@
+{
+	"member": [],
+	"function": [
+		{
+			"kind": "function",
+			"name": "Street",
+			"memberof": "Street",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "startTick",
+					"type": "number",
+					"default": "0",
+					"description": ""
+				},
+				{
+					"name": "cityJson",
+					"type": "string",
+					"default": "\"city_shanghai_json\"",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "Object",
+			"name": "GetPixelPosByGridPos",
+			"memberof": "Street",
+			"scope": "instance",
+			"description": "根据单元格坐标，获得在gameLayer上的坐标",
+			"returns": "返回坐标{x:number, y:number};",
+			"params": [
+				{
+					"name": "gridX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "gridY",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "forCharacter",
+					"type": "boolean",
+					"default": "false",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "Object",
+			"name": "GetTrafficLightState",
+			"memberof": "Street",
+			"scope": "instance",
+			"description": "根据tick获得红绿灯的状态",
+			"returns": "[\"light\":TrafficLightState, \"toGreen\":距离绿灯的tick数]",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "void",
+			"name": "childrenCreated",
+			"memberof": "Street",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "void",
+			"name": "partAdded",
+			"memberof": "Street",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "partName",
+					"type": "string",
+					"description": ""
+				},
+				{
+					"name": "instance",
+					"type": "any",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "Street",
+		"memberof": "",
+		"filename": "scene\\Street.ts",
+		"augments": [],
+		"implements": []
+	},
+	"pType": "public"
+}

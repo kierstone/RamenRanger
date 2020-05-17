@@ -1,0 +1,142 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "BowlObj",
+			"name": "bowl",
+			"memberof": "RamenModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "Array<IngredientObj>",
+			"name": "broth",
+			"memberof": "RamenModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "name",
+			"memberof": "RamenModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "Array<IngredientObj>",
+			"name": "noodles",
+			"memberof": "RamenModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "reciptId",
+			"memberof": "RamenModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "Array<IngredientObj>",
+			"name": "tare",
+			"memberof": "RamenModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "Array<IngredientObj>",
+			"name": "topping",
+			"memberof": "RamenModel",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "RamenModel",
+			"memberof": "RamenModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "boolean",
+			"name": "CanAddTopping",
+			"memberof": "RamenModel",
+			"scope": "instance",
+			"description": "是否还能添加新的浇头",
+			"returns": "是否还能",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "CanPlaceTopping",
+			"memberof": "RamenModel",
+			"scope": "instance",
+			"description": "是否可以在某个位置加入某个食材，这里的坐标是对应于碗的中心点的",
+			"returns": "是否可以放",
+			"params": [
+				{
+					"name": "topping",
+					"type": "IngredientObj",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "IngredientObj",
+			"name": "TouchedTopping",
+			"memberof": "RamenModel",
+			"scope": "instance",
+			"description": "判断坐标点在哪个Topping上了",
+			"returns": "点中的那个，null代表没有",
+			"params": [
+				{
+					"name": "x",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "y",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "thisX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "thisY",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "removeTouchOne",
+					"type": "boolean",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "RamenModel",
+		"memberof": "",
+		"filename": "data\\ramen\\RamenModel.ts",
+		"description": "//虽然叫model，但并不来自表，这个model是玩家制作的时候调整出来的，生成RamenObj用的"
+	},
+	"pType": "public"
+}

@@ -1,0 +1,51 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Down",
+			"memberof": "Direction",
+			"scope": "static",
+			"pType": "public",
+			"default": "1"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Left",
+			"memberof": "Direction",
+			"scope": "static",
+			"pType": "public",
+			"default": "2"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Right",
+			"memberof": "Direction",
+			"scope": "static",
+			"pType": "public",
+			"default": "3"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Up",
+			"memberof": "Direction",
+			"scope": "static",
+			"pType": "public",
+			"default": "0"
+		}
+	],
+	"function": [],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "enum",
+		"name": "Direction",
+		"memberof": "",
+		"filename": "data\\Enum.ts",
+		"description": "//角色方向枚举"
+	},
+	"pType": "public"
+}

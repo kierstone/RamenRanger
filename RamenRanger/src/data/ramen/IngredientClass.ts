@@ -26,7 +26,6 @@ class IngredientClass {
 			for (let i = 0; i < json["children"].length; i++){
 				let bObj = json["children"][i];
 				let im:IngredientModel = new IngredientModel();
-				im.fromJson(bObj, this.id);
 				this.items.push(im);
 			}
 		}

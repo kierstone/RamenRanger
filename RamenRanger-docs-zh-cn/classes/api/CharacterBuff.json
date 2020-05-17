@@ -1,0 +1,55 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "CharacterBuffModel",
+			"name": "model",
+			"memberof": "CharacterBuff",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "stack",
+			"memberof": "CharacterBuff",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "turns",
+			"memberof": "CharacterBuff",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "uniqueId",
+			"memberof": "CharacterBuff",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "CharacterBuff",
+			"memberof": "CharacterBuff",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "CharacterBuff",
+		"memberof": "",
+		"filename": "data\\buff\\CharacterBuff.ts",
+		"description": "//吃饭的npc身上的buff，而不是玩家店铺的buff，是buffObj"
+	},
+	"pType": "public"
+}

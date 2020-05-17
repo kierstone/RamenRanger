@@ -1,0 +1,54 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "CharacterObj",
+			"name": "character",
+			"memberof": "DiningTableSeatInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "RamenObj",
+			"name": "ramen",
+			"memberof": "DiningTableSeatInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "DiningTableSeatSlot",
+			"name": "seatSlot",
+			"memberof": "DiningTableSeatInfo",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "DiningTableSeatInfo",
+			"memberof": "DiningTableSeatInfo",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "seatSlot",
+					"type": "DiningTableSeatSlot",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "DiningTableSeatInfo",
+		"memberof": "",
+		"filename": "data\\street\\DiningTableSeatInfo.ts",
+		"description": "//当前的某个桌子栏位的状态"
+	},
+	"pType": "public"
+}

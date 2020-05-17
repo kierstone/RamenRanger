@@ -43,56 +43,84 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var BowlModel = (function () {
-    function BowlModel() {
+var BrothModel = (function () {
+    function BrothModel() {
     }
     /**
      * 从json的Object获取到数据
      * @param {Object} json 存盘的json文件，参看“数据结构/面碗”文档。
      * @returns {boolean} 是否成功，如果id有异常则不会成功
      */
-    BowlModel.prototype.fromJson = function (json) {
+    BrothModel.prototype.fromJson = function (json) {
         if (!json || !json["id"]) {
             return false;
         }
         this.id = json["id"];
         this.name = json["name"] ? json["name"] : json["id"];
-        this.radius = json["radius"] ? json["radius"] : 200;
-        this.tasteRadius = json["taste"] ? json["taste"] : 50;
-        this.soupRadius = json["soup"] ? json["soup"] : 170;
-        this.cost = json["cost"] ? json["cost"] : 1;
-        this.buffs = new Array();
-        if (json["buff"] && json["buff"].length && json["buff"].length > 0) {
-            for (var i = 0; i < json["buff"].length; i++) {
-                var bObj = json["buff"][i];
-                this.buffs.push(new CharacterBuffTrigger(bObj["id"], bObj["stack"], bObj["turns"]));
+        this.backColor = json["backColor"] ? json["backColor"] : 0x000000;
+        this.coverAlpha = json["coverAlpha"] ? json["coverAlpha"] : 0.18;
+        this.coverColor = new Array();
+        if (json["coverColor"]) {
+            var cc = json["coverColor"];
+            for (var i = 0; i < cc.length; i++) {
+                this.coverColor.push(cc[i]);
             }
         }
         return true;
     };
     /**
-     * 获取图片资源名
-     * @returns {string} 资源名称
+     * 获取用于制作面条时候的图形
+     * @param {number} centerX 中心x坐标
+     * @param {number} centerY 中心y坐标
+     * @param {number} radius 半径
+     * @returns {egret.Shape} 用于制作面条时候的图形
      */
-    BowlModel.prototype.Image = function () {
-        return "bowl_" + this.id;
+    BrothModel.prototype.ImageShape = function (centerX, centerY, radius) {
+        return this.GatherShape(centerX, centerY, radius);
     };
     /**
-     * 获取icon的资源名
-     * @returns {string} icon的名称
+     * 获取用于icon的shape
+     * @param {number} centerX 中心x坐标
+     * @param {number} centerY 中心y坐标
+     * @param {number} radius 半径
+     * @returns {egret.Shape} 用于icon的shape
      */
-    BowlModel.prototype.Icon = function () {
-        return "icon_bowl_" + this.id;
+    BrothModel.prototype.IconShape = function (centerX, centerY, radius) {
+        return this.GatherShape(centerX, centerY, radius);
     };
-    return BowlModel;
+    BrothModel.prototype.GatherShape = function (centerX, centerY, radius) {
+        var brothMatrix = new egret.Matrix();
+        brothMatrix.createGradientBox(radius * 2, radius * 2, 0, centerX - radius, centerY - radius);
+        var shp = new egret.Shape();
+        shp.x = centerX;
+        shp.y = centerY;
+        //底色
+        shp.graphics.lineStyle(1, this.backColor);
+        shp.graphics.beginFill(this.backColor, 1);
+        shp.graphics.drawCircle(0, 0, radius);
+        shp.graphics.endFill();
+        //烫的渐变cover
+        var alphas = new Array();
+        var sizes = new Array();
+        for (var i = 0; i < this.coverColor.length; i++) {
+            alphas.push(this.coverAlpha);
+            sizes.push(i / this.coverColor.length * 255);
+        }
+        shp.graphics.beginGradientFill(egret.GradientType.RADIAL, [0xff6e02, 0xffff00, 0xff6e02], [0.18, 0.18, 0.18], [255 / 3, 255 * 2 / 3, 255], brothMatrix);
+        shp.graphics.drawCircle(0, 0, radius);
+        shp.graphics.endFill();
+        return shp;
+    };
+    return BrothModel;
 }());
-__reflect(BowlModel.prototype, "BowlModel");
-var BowlObj = (function () {
-    function BowlObj() {
+__reflect(BrothModel.prototype, "BrothModel");
+var BrothObj = (function () {
+    function BrothObj(model) {
+        this.model = model;
     }
-    return BowlObj;
+    return BrothObj;
 }());
-__reflect(BowlObj.prototype, "BowlObj");
+__reflect(BrothObj.prototype, "BrothObj");
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -288,13 +316,29 @@ var Main = (function (_super) {
      */
     Main.prototype.createGameScene = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var i, j, i;
             return __generator(this, function (_a) {
                 LoadGameData();
-                console.log(GameData_Ingredients, GameData_Bowl);
-                if (!GameScene_Street) {
-                    GameScene_Street = new Street();
+                Utils.UIRoot = this;
+                playerInfo = new PlayerInfo();
+                for (i = 0; i < 3; i++) {
+                    //强行学习3次
+                    for (j = 0; j < GameData_Ingredients.length; j++) {
+                        playerInfo.unlockedIngredients.push(GameData_Ingredients[j]);
+                    }
                 }
-                this.addChild(GameScene_Street);
+                for (i = 0; i < GameData_Broth.length; i++) {
+                    playerInfo.unlockedBroth.push(GameData_Broth[i]);
+                }
+                console.log(GameData_Ingredients, GameData_Bowl);
+                // if (!GameScene_Street){
+                //     GameScene_Street = new Street();
+                // }
+                // this.addChild(GameScene_Street);
+                if (!GameScene_CraftNoodle) {
+                    GameScene_CraftNoodle = new CraftNoodle();
+                }
+                this.addChild(GameScene_CraftNoodle);
                 return [2 /*return*/];
             });
         });
@@ -302,7 +346,9 @@ var Main = (function (_super) {
     return Main;
 }(eui.UILayer));
 __reflect(Main.prototype, "Main");
+var playerInfo;
 var GameScene_Street;
+var GameScene_CraftNoodle;
 /**
  * 平台数据接口。
  * 由于每款游戏通常需要发布到多个平台上，所以提取出一个统一的接口用于开发者获取平台数据信息
@@ -440,6 +486,22 @@ var ThemeAdapter = (function () {
     return ThemeAdapter;
 }());
 __reflect(ThemeAdapter.prototype, "ThemeAdapter", ["eui.IThemeAdapter"]);
+var Utils = (function () {
+    function Utils() {
+    }
+    Utils.GetEuiScreenPos = function (item) {
+        var res = { x: item.x, y: item.y };
+        var p = item.parent;
+        while (p && p != Utils.UIRoot) {
+            res["x"] += p.x - (p.anchorOffsetX ? p.anchorOffsetX : 0);
+            res["y"] += p.y - (p.anchorOffsetY ? p.anchorOffsetY : 0);
+            p = p.parent;
+        }
+        return res;
+    };
+    return Utils;
+}());
+__reflect(Utils.prototype, "Utils");
 //角色方向枚举
 var Direction;
 (function (Direction) {
@@ -483,54 +545,51 @@ var SpriteClipLayer;
     SpriteClipLayer[SpriteClipLayer["Noodle"] = 1] = "Noodle";
     SpriteClipLayer[SpriteClipLayer["EatingHead"] = 2] = "EatingHead";
 })(SpriteClipLayer || (SpriteClipLayer = {}));
+//拉面制作界面状态
+var CraftNoodleState;
+(function (CraftNoodleState) {
+    CraftNoodleState[CraftNoodleState["ChooseBowl"] = 0] = "ChooseBowl";
+    CraftNoodleState[CraftNoodleState["PutTare"] = 1] = "PutTare";
+    CraftNoodleState[CraftNoodleState["TareList"] = 2] = "TareList";
+    CraftNoodleState[CraftNoodleState["SoupToBroth"] = 3] = "SoupToBroth";
+    CraftNoodleState[CraftNoodleState["Noodles"] = 4] = "Noodles";
+    CraftNoodleState[CraftNoodleState["SelectTopping"] = 5] = "SelectTopping";
+    CraftNoodleState[CraftNoodleState["PlaceTopping"] = 6] = "PlaceTopping";
+})(CraftNoodleState || (CraftNoodleState = {}));
 var PlayerInfo = (function () {
     function PlayerInfo() {
-        this.unlockedIngredients = new Object;
+        this.unlockedIngredients = new Array();
+        this.unlockedBroth = new Array();
     }
     /**
      * 获取学会了某个素材，如果返回null就是没学会
      * @param {string} ingredientId 查询的ingredient的id
-     * @param {string} ingredientClassId 所属的分类的id，可以是空的或者""代表不关心所属分类
      * @returns {IngredientModel} 返回要查询的素材model，如果Null代表没学会
      */
-    PlayerInfo.prototype.getLearnedIngredient = function (ingredientId, ingredientClassId) {
-        if (ingredientClassId === void 0) { ingredientClassId = ""; }
-        if (ingredientId == "")
+    PlayerInfo.prototype.getLearnedIngredient = function (ingredientId) {
+        if (ingredientId == "" || !this.unlockedIngredients || this.unlockedIngredients.length <= 0)
             return null;
-        if (!ingredientId || ingredientClassId == "") {
-            for (var _i = 0, _a = Object.keys(this.unlockedIngredients); _i < _a.length; _i++) {
-                var key = _a[_i];
-                if (this.unlockedIngredients[key] && this.unlockedIngredients[key].length > 0) {
-                    for (var i = 0; i < this.unlockedIngredients[key].length; i++) {
-                        if (this.unlockedIngredients[key][i]["id"] && this.unlockedIngredients[key][i]["id"] == ingredientId) {
-                            return this.unlockedIngredients[key][i];
-                        }
-                    }
-                }
-            }
-        }
-        else {
-            var key = ingredientClassId;
-            if (!this.unlockedIngredients[key] || this.unlockedIngredients[key].length <= 0)
-                return null;
-            for (var i = 0; i < this.unlockedIngredients[key].length; i++) {
-                if (this.unlockedIngredients[key][i]["id"] && this.unlockedIngredients[key][i]["id"] == ingredientId) {
-                    return this.unlockedIngredients[key][i];
-                }
+        for (var i = 0; i < this.unlockedIngredients.length; i++) {
+            if (this.unlockedIngredients[i].id == ingredientId) {
+                return this.unlockedIngredients[i];
             }
         }
         return null;
     };
     /**
-     * 学习一个素材
-     * @param {IngredientModel} ingredient 要学的素材
+     * 获取学会了某个汤底，如果返回null就是没学会
+     * @param {string} brothId 查询的broth的id
+     * @returns {BrothModel} 返回要查询的汤底model，如果Null代表没学会
      */
-    PlayerInfo.prototype.learnIngredient = function (ingredient) {
-        if (this.getLearnedIngredient(ingredient.id, ingredient.ingredientClassId) != null)
-            return;
-        if (!this.unlockedIngredients[ingredient.ingredientClassId])
-            this.unlockedIngredients[ingredient.ingredientClassId] = new Array();
-        this.unlockedIngredients[ingredient.ingredientClassId].push(ingredient);
+    PlayerInfo.prototype.getLearnedBroth = function (brothId) {
+        if (brothId == "" || !this.unlockedBroth || this.unlockedBroth.length <= 0)
+            return null;
+        for (var i = 0; i < this.unlockedBroth.length; i++) {
+            if (this.unlockedBroth[i].id == brothId) {
+                return this.unlockedBroth[i];
+            }
+        }
+        return null;
     };
     return PlayerInfo;
 }());
@@ -539,6 +598,8 @@ __reflect(PlayerInfo.prototype, "PlayerInfo");
 var GameData_Ingredients;
 //面碗
 var GameData_Bowl;
+//汤底
+var GameData_Broth;
 //角色动画
 var GameData_CharacterAction;
 //读取数据
@@ -554,9 +615,8 @@ var LoadGameData = function () {
             var loadingIJ = RES.getRes(iJsons[i] + "_json");
             var fData = loadingIJ["data"];
             for (var n = 0; n < fData.length; n++) {
-                var ic = new IngredientClass();
-                ic.fromJson(fData[n]);
-                GameData_Ingredients.push(ic);
+                var ing = new IngredientModel(fData[n]);
+                GameData_Ingredients.push(ing);
             }
         }
         console.log("Ingredient >> Loaded");
@@ -583,6 +643,25 @@ var LoadGameData = function () {
     else {
         console.log("Bowl >> No Data");
     }
+    //汤底
+    console.log("Start Load >> Broth");
+    GameData_Broth = new Array();
+    if (catalog["broth"] && catalog["broth"].length > 0) {
+        var iJsons = catalog["broth"];
+        for (var i = 0; i < iJsons.length; i++) {
+            var loadingIJ = RES.getRes(iJsons[i] + "_json");
+            var fData = loadingIJ["data"];
+            for (var n = 0; n < fData.length; n++) {
+                var broth = new BrothModel();
+                broth.fromJson(fData[n]);
+                GameData_Broth.push(broth);
+            }
+        }
+        console.log("Broth >> Loaded");
+    }
+    else {
+        console.log("Broth >> No Data");
+    }
     //角色动画
     var actionJson = RES.getRes("character_animinfo_json");
     GameData_CharacterAction = new Array();
@@ -599,6 +678,16 @@ var GetCharacterActionInfoByKey = function (key) {
     for (var i = 0; i < GameData_CharacterAction.length; i++) {
         if (GameData_CharacterAction[i].key == key) {
             return GameData_CharacterAction[i];
+        }
+    }
+    return null;
+};
+var GetIngredientModelById = function (id) {
+    if (!GameData_Ingredients)
+        return null;
+    for (var i = 0; i < GameData_Ingredients.length; i++) {
+        if (GameData_Ingredients[i].id == id) {
+            return GameData_Ingredients[i];
         }
     }
     return null;
@@ -1062,6 +1151,49 @@ var CharacterAIScript = (function () {
     return CharacterAIScript;
 }());
 __reflect(CharacterAIScript.prototype, "CharacterAIScript");
+var BowlModel = (function () {
+    function BowlModel() {
+    }
+    /**
+     * 从json的Object获取到数据
+     * @param {Object} json 存盘的json文件，参看“数据结构/面碗”文档。
+     * @returns {boolean} 是否成功，如果id有异常则不会成功
+     */
+    BowlModel.prototype.fromJson = function (json) {
+        if (!json || !json["id"]) {
+            return false;
+        }
+        this.id = json["id"];
+        this.name = json["name"] ? json["name"] : json["id"];
+        this.img = json["img"] ? json["img"] : json["id"];
+        this.radius = json["radius"] ? json["radius"] : 200;
+        this.cost = json["cost"] ? json["cost"] : 1;
+        return true;
+    };
+    /**
+     * 获取图片资源名
+     * @returns {string} 资源名称
+     */
+    BowlModel.prototype.Image = function () {
+        return this.img;
+    };
+    /**
+     * 获取icon的资源名
+     * @returns {string} icon的名称
+     */
+    BowlModel.prototype.Icon = function () {
+        return this.img;
+    };
+    return BowlModel;
+}());
+__reflect(BowlModel.prototype, "BowlModel");
+var BowlObj = (function () {
+    function BowlObj(model) {
+        this.model = model;
+    }
+    return BowlObj;
+}());
+__reflect(BowlObj.prototype, "BowlObj");
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -1131,7 +1263,6 @@ var IngredientClass = (function () {
             for (var i = 0; i < json["children"].length; i++) {
                 var bObj = json["children"][i];
                 var im = new IngredientModel();
-                im.fromJson(bObj, this.id);
                 this.items.push(im);
             }
         }
@@ -1142,47 +1273,29 @@ var IngredientClass = (function () {
 __reflect(IngredientClass.prototype, "IngredientClass");
 //从json读取的ingredient数据
 var IngredientModel = (function () {
-    function IngredientModel() {
+    function IngredientModel(data) {
+        if (data)
+            this.FromJson(data);
     }
     /**
      * 从json的Object获取到数据
      * @param {Object} json 存盘的json文件，参看“数据结构/食材的结构”文档。
-     * @param {string} classId 所在的素材组的id
      * @returns {boolean} 是否成功，如果id有异常则不会成功
      */
-    IngredientModel.prototype.fromJson = function (json, classId) {
+    IngredientModel.prototype.FromJson = function (json) {
         if (!json || !json["id"]) {
             return false;
         }
         this.id = json["id"];
         this.name = json["name"] ? json["name"] : json["id"];
+        this.img = json["img"] ? json["img"] : "";
         this.radius = json["radius"] ? json["radius"] : 0;
-        this.canBeTaste = json["taste"] ? json["taste"] : false;
-        this.canBeSoup = json["soup"] ? json["soup"] : false;
-        this.canBeNoodle = json["noodle"] ? json["noodle"] : false;
-        this.canBeIngredient = json["ingredient"] ? json["ingredient"] : false;
+        this.canBeUsed = json["using"] ? json["using"] : 0;
         this.pungency = json["pungency"] ? json["pungency"] : 0;
         this.sweet = json["sweet"] ? json["sweet"] : 0;
         this.salty = json["salty"] ? json["salty"] : 0;
-        this.sourness = json["sourness"] ? json["sourness"] : 0;
+        this.sour = json["sour"] ? json["sour"] : 0;
         this.spicy = json["spicy"] ? json["spicy"] : 0;
-        this.price = json["price"] ? json["price"] : 0;
-        this.ingredientClassId = classId;
-        this.buffs = new Array();
-        if (json["buff"] && json["buff"].length && json["buff"].length > 0) {
-            for (var i = 0; i < json["buff"].length; i++) {
-                var bObj = json["buff"][i];
-                this.buffs.push(new CharacterBuffTrigger(bObj["id"], bObj["stack"], bObj["turns"]));
-            }
-        }
-        this.liquid = null;
-        if (json["liquid"]) {
-            if (json["liquid"]["color"]) {
-                var lcInfo = json["liquid"]["color"];
-                this.liquid = new LiquidInfo(lcInfo["a"], lcInfo["r"], lcInfo["g"], lcInfo["b"]);
-            }
-            this.radius = 0;
-        }
         return true;
     };
     /**
@@ -1190,26 +1303,43 @@ var IngredientModel = (function () {
      * @returns {string} 资源名称
      */
     IngredientModel.prototype.Image = function () {
-        return "ingredient_" + this.id;
+        return "ingredient_" + this.img;
     };
     /**
      * 获取icon的资源名
      * @returns {string} icon的名称
      */
     IngredientModel.prototype.Icon = function () {
-        return "icon_ingredient_" + this.id;
+        return "ingredient_" + this.img;
     };
     /**
-     * 返回这个材料是否是液体
-     * @returns {boolean} 是否是液体
+     * 材料能否做着味
+     * @returns {boolean} 是否可以做着味
      */
-    IngredientModel.prototype.IsLiquid = function () {
-        return this.liquid != null && this.radius <= 0;
+    IngredientModel.prototype.CanBeTare = function () {
+        return (this.canBeUsed & IngredientUseType.UseType_Tare) > 0;
     };
-    IngredientModel.UseType_Taste = 1;
-    IngredientModel.UseType_Soup = 2;
-    IngredientModel.UseType_Noodle = 4;
-    IngredientModel.UseType_Ingredient = 8;
+    /**
+     * 材料能否做汤底
+     * @returns {boolean} 是否可以做汤底
+     */
+    IngredientModel.prototype.CanBeBroth = function () {
+        return (this.canBeUsed & IngredientUseType.UseType_Broth) > 0;
+    };
+    /**
+     * 材料能否做面条
+     * @returns {boolean} 是否可以做面条
+     */
+    IngredientModel.prototype.CanBeNoodle = function () {
+        return (this.canBeUsed & IngredientUseType.UseType_Noodle) > 0;
+    };
+    /**
+     * 材料能否做盖浇
+     * @returns {boolean} 是否可以做盖浇
+     */
+    IngredientModel.prototype.CanBeTopping = function () {
+        return (this.canBeUsed & IngredientUseType.UseType_Topping) > 0;
+    };
     return IngredientModel;
 }());
 __reflect(IngredientModel.prototype, "IngredientModel");
@@ -1219,14 +1349,93 @@ var IngredientObj = (function () {
         if (x === void 0) { x = 0; }
         if (y === void 0) { y = 0; }
         if (rotation === void 0) { rotation = 0; }
+        this.size = 1; //From 0.5 to 2，放大倍数
         this.model = model;
         this.x = x;
         this.y = y;
         this.rotation = rotation;
+        this.xFlip = false;
+        this.size = 1;
     }
+    /**
+     * 根据当前情况创建一个新的eui.Image
+     * @param {eui.Group} parent 要放到什么父亲
+     * @param {number} centerX 面碗中心的x坐标
+     * @param {number} centerY 面碗中心的y坐标
+     * @returns {eui.Image} 创建出来的image
+     */
+    IngredientObj.prototype.GatherImage = function (parent, centerX, centerY) {
+        if (!parent)
+            return null;
+        var res = new eui.Image(RES.getRes(this.model.Image()));
+        parent.addChild(res);
+        res.anchorOffsetX = res.width / 2;
+        res.anchorOffsetY = res.height / 2;
+        res.x = this.x + centerX;
+        res.y = this.y + centerY;
+        res.rotation = this.rotation;
+        res.scaleX = (this.xFlip == true ? -1 : 1) * this.size;
+        res.scaleY = this.size;
+        return res;
+    };
+    /**
+     * 将属性设置到eui.Image
+     * @param {eui.Image} img 要设置的图形
+     * @param {number} centerX 面碗中心的x坐标
+     * @param {number} centerY 面碗中心的y坐标
+     */
+    IngredientObj.prototype.SetToImage = function (img, centerX, centerY) {
+        if (!img)
+            return;
+        img.x = this.x + centerX;
+        img.y = this.y + centerY;
+        img.rotation = this.rotation;
+        img.scaleX = (this.xFlip == true ? -1 : 1) * this.size;
+        img.scaleY = this.size;
+    };
+    /**
+     * 某个点是否算碰到我了（点击用）
+     * @param {number} x 坐标点x
+     * @param {number} y 坐标点y
+     * @param {number} centerX 面碗中心的x坐标
+     * @param {number} centerY 面碗中心的y坐标
+     * @returns {boolean} 算不算点到
+     */
+    IngredientObj.prototype.TouchOnMe = function (x, y, centerX, centerY) {
+        var clickRadius = this.ClickRadius();
+        var rX = x - centerX;
+        var rY = y - centerY;
+        return (Math.pow(rX - this.x, 2) + Math.pow(rY - this.y, 2)) <= Math.pow(clickRadius * this.size, 2);
+    };
+    /**
+     * 点选半径，为了以后可以维护，要考虑是否需要变成一个单独属性
+     * @returns {number} 点选半径
+     */
+    IngredientObj.prototype.ClickRadius = function () {
+        return this.model.radius * 5;
+    };
+    /**
+     * 克隆一个自己
+     * @returns {IngredientObj} 克隆体
+     */
+    IngredientObj.prototype.Clone = function () {
+        var res = new IngredientObj(this.model, this.x, this.y, this.rotation);
+        res.xFlip = this.xFlip;
+        res.size = this.size;
+        return res;
+    };
     return IngredientObj;
 }());
 __reflect(IngredientObj.prototype, "IngredientObj");
+//素材用途
+var IngredientUseType;
+(function (IngredientUseType) {
+    IngredientUseType[IngredientUseType["UseType_None"] = 0] = "UseType_None";
+    IngredientUseType[IngredientUseType["UseType_Tare"] = 1] = "UseType_Tare";
+    IngredientUseType[IngredientUseType["UseType_Broth"] = 2] = "UseType_Broth";
+    IngredientUseType[IngredientUseType["UseType_Noodle"] = 4] = "UseType_Noodle";
+    IngredientUseType[IngredientUseType["UseType_Topping"] = 8] = "UseType_Topping";
+})(IngredientUseType || (IngredientUseType = {}));
 //如果是汤汁类的，它应该是液体，如果是液体，就应该有液体信息
 var LiquidInfo = (function () {
     function LiquidInfo(a, r, g, b) {
@@ -1254,61 +1463,65 @@ __reflect(PlacedIngredient.prototype, "PlacedIngredient");
 //虽然叫model，但并不来自表，这个model是玩家制作的时候调整出来的，生成RamenObj用的
 var RamenModel = (function () {
     function RamenModel() {
-        this.broth = new Array();
         this.tare = new Array();
-        this.noodles = new Array();
         this.topping = new Array();
         this.reciptId = "";
     }
     /**
-     * 这碗面的标价（当然就是灵感值，逻辑上还是钱）
-     * @returns {number} 返回价格数，也就是灵感值
-     */
-    RamenModel.prototype.Price = function () {
-        var res = 0;
-        for (var i = 0; i < this.broth.length; i++) {
-            res += this.broth[i].model.price;
-        }
-        for (var i = 0; i < this.tare.length; i++) {
-            res += this.tare[i].model.price;
-        }
-        for (var i = 0; i < this.noodles.length; i++) {
-            res += this.noodles[i].model.price;
-        }
-        for (var i = 0; i < this.topping.length; i++) {
-            res += this.topping[i].model.price;
-        }
-        return res;
-    };
-    /**
      * 是否还能添加新的浇头
      * @returns {boolean} 是否还能
      */
-    RamenModel.prototype.CanAddCover = function () {
+    RamenModel.prototype.CanAddTopping = function () {
         return this.topping.length < this.bowl.model.cost;
     };
     /**
      * 是否可以在某个位置加入某个食材，这里的坐标是对应于碗的中心点的
-     * @param {IngredientModel} coverIngredient 浇头的model
-     * @param {number} x 准备放的x坐标，这个坐标对应的是coverIngredient的中心，相对于碗的中心（0，0）的偏移
-     * @param {number} y 准备放的y坐标，这个坐标对应的是coverIngredient的中心，相对于碗的中心（0，0）的偏移
+     * @param {IngredientObj} topping 浇头
      * @returns {boolean} 是否可以放
      */
-    RamenModel.prototype.CanPlaceCover = function (coverIngredient, x, y) {
+    RamenModel.prototype.CanPlaceTopping = function (topping) {
         //判断是否在范围，不在就不行了
-        var br = this.bowl.model.radius - coverIngredient.radius;
+        var br = this.bowl.model.radius - topping.model.radius;
+        var x = topping.x;
+        var y = topping.y;
         if (x * x + y * y > br * br)
             return false; //如果放到碗外面，那断然是不行的
         //没有在碗的外面，就判断重叠
         for (var i = 0; i < this.topping.length; i++) {
             var tc = this.topping[i];
-            if (tc.model.IsLiquid() == true || tc.model.radius <= 0)
+            if (tc.model.radius <= 0)
                 continue;
-            if (Math.pow(tc.x - x, 2) + Math.pow(tc.y - y, 2) <= Math.pow(tc.model.radius + coverIngredient.radius, 2))
+            if (Math.pow(tc.x - x, 2) + Math.pow(tc.y - y, 2) <= Math.pow(tc.model.radius + topping.model.radius, 2))
                 return false;
         }
         //可以放（这里只负责位置）
         return true;
+    };
+    /**
+     * 判断坐标点在哪个Topping上了
+     * @param {number} x 坐标点x
+     * @param {number} y 坐标点y
+     * @param {number} thisX 拉面的x坐标
+     * @param {number} thisY 拉面的y坐标
+     * @param {boolean} removeTouchOne 是否从toppings里面移除掉这个
+     * @returns {IngredientObj} 点中的那个，null代表没有
+     */
+    RamenModel.prototype.TouchedTopping = function (x, y, thisX, thisY, removeTouchOne) {
+        if (!this.topping || this.topping.length <= 0)
+            return null;
+        //越后面的在越上面，越容易被点到
+        for (var i = this.topping.length - 1; i >= 0; i--) {
+            var tp = this.topping[i];
+            if (tp.TouchOnMe(x, y, thisX, thisY) == true) {
+                if (removeTouchOne == true) {
+                    return this.topping.splice(i, 1)[0];
+                }
+                else {
+                    return tp;
+                }
+            }
+        }
+        return null;
     };
     return RamenModel;
 }());
@@ -1544,6 +1757,77 @@ var GridPosition = (function () {
     return GridPosition;
 }());
 __reflect(GridPosition.prototype, "GridPosition");
+var IngredientBox = (function (_super) {
+    __extends(IngredientBox, _super);
+    function IngredientBox(items) {
+        var _this = _super.call(this) || this;
+        _this.listItems = items;
+        return _this;
+    }
+    IngredientBox.prototype.partAdded = function (partName, instance) {
+        _super.prototype.partAdded.call(this, partName, instance);
+    };
+    IngredientBox.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        this.init();
+    };
+    IngredientBox.prototype.init = function () {
+        var xs = [62, 230, 396, 562];
+        var ys = [20, 182, 345];
+        var looplen = Math.min(this.listItems.length, 12);
+        for (var i = 0; i < looplen; i++) {
+            var iconItem = this.listItems[i];
+            iconItem.x = xs[Math.floor(i % 4)];
+            iconItem.y = ys[Math.floor(i / 4)];
+            this.addChild(iconItem);
+        }
+        this.anchorOffsetY = this.height;
+        this.anchorOffsetX = this.width / 2;
+    };
+    IngredientBox.prototype.SetSelect = function (id) {
+        for (var i = 0; i < this.listItems.length; i++) {
+            this.listItems[i].SetSelected(this.listItems[i].id == id);
+        }
+    };
+    return IngredientBox;
+}(eui.Component));
+__reflect(IngredientBox.prototype, "IngredientBox", ["eui.UIComponent", "egret.DisplayObject"]);
+var IngredientIconInBox = (function (_super) {
+    __extends(IngredientIconInBox, _super);
+    function IngredientIconInBox(id, ingredient, icon, caller, func) {
+        var _this = _super.call(this) || this;
+        _this.selected = false;
+        _this.ingredient = ingredient;
+        _this.eveCaller = caller;
+        _this.eveFunc = func;
+        _this.icon = icon;
+        return _this;
+    }
+    IngredientIconInBox.prototype.partAdded = function (partName, instance) {
+        _super.prototype.partAdded.call(this, partName, instance);
+    };
+    IngredientIconInBox.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        this.init();
+    };
+    IngredientIconInBox.prototype.init = function () {
+        var _this = this;
+        this.Img_Icon.source = this.icon;
+        this.Label_Name.text = this.ingredient.name;
+        this.SetSelected(false);
+        this.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.eveCaller && _this.eveFunc) {
+                _this.eveFunc(_this.eveCaller, _this.ingredient);
+            }
+        }, this);
+    };
+    IngredientIconInBox.prototype.SetSelected = function (s) {
+        this.selected = s;
+        this.Img_Select.visible = s;
+    };
+    return IngredientIconInBox;
+}(eui.Component));
+__reflect(IngredientIconInBox.prototype, "IngredientIconInBox", ["eui.UIComponent", "egret.DisplayObject"]);
 var RamenObj = (function (_super) {
     __extends(RamenObj, _super);
     function RamenObj() {
@@ -1712,9 +1996,13 @@ var CraftNoodle = (function (_super) {
     __extends(CraftNoodle, _super);
     function CraftNoodle() {
         var _this = _super.call(this) || this;
+        _this.canControl = false;
         _this.stepId = 0; //0=着味，1=配汤，2=选面，3=浇头
         _this.pickingOffsetX = 0;
         _this.pickingOffsetY = 0;
+        _this.draggingIng = false;
+        _this.ingredientIndex = 0;
+        _this.orderRotateTopping = false;
         return _this;
     }
     CraftNoodle.prototype.partAdded = function (partName, instance) {
@@ -1722,6 +2010,549 @@ var CraftNoodle = (function (_super) {
     };
     CraftNoodle.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
+        this.init();
+    };
+    CraftNoodle.prototype.init = function () {
+        var _this = this;
+        this.ramenCenterX = this.stage.stageWidth / 2;
+        this.ramenCenterY = 500;
+        this.Img_BKG.width = this.stage.stageWidth;
+        this.Img_BKG.height = this.stage.stageHeight;
+        this.Img_BottomBorder.y = this.stage.stageHeight;
+        this.Group_IngBox.y = this.stage.stageHeight;
+        //先写死就是这个饭碗的数据
+        this.craftingRamen = new RamenModel();
+        this.craftingRamen.bowl = new BowlObj(GameData_Bowl[0]);
+        //this.craftingRamen.broth = new BrothObj(playerInfo.getLearnedBroth("broth0"));
+        this.ChangeToState(CraftNoodleState.SoupToBroth);
+        this.UpdateRamen();
+        this.Group_UILayer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.StagePointerDown, this);
+        this.Group_UILayer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.StagePointerMove, this);
+        this.Group_UILayer.addEventListener(egret.TouchEvent.TOUCH_END, this.StagePointerUp, this);
+        this.Group_UILayer.addEventListener(egret.TouchEvent.TOUCH_TAP, this.StagePointerTap, this);
+        //单个topping的工具组
+        this.HSilider_Size.addEventListener(egret.Event.CHANGE, function () {
+            if (_this.placingIngredient) {
+                _this.placingIngredient.size = _this.HSilider_Size.value * 0.25 + 0.5;
+                if (_this.placingIngImage) {
+                    _this.placingIngredient.SetToImage(_this.placingIngImage, _this.ramenCenterX, _this.ramenCenterY);
+                }
+            }
+        }, this);
+        this.Button_Rotate.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function () {
+            _this.orderRotateTopping = true;
+        }, this);
+        this.Button_Rotate.addEventListener(egret.TouchEvent.TOUCH_END, function () {
+            _this.orderRotateTopping = false;
+        }, this);
+        this.Button_Rotate.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, function () {
+            _this.orderRotateTopping = false;
+        }, this);
+        this.Button_Rotate.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.orderRotateTopping == true) {
+                if (_this.placingIngredient) {
+                    _this.placingIngredient.rotation = (_this.placingIngredient.rotation + 182) % 360 - 180;
+                    if (_this.placingIngImage) {
+                        _this.placingIngredient.SetToImage(_this.placingIngImage, _this.ramenCenterX, _this.ramenCenterY);
+                    }
+                }
+            }
+        }, this);
+        this.Button_Flip.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.placingIngredient) {
+                _this.placingIngredient.xFlip = !_this.placingIngredient.xFlip;
+                if (_this.placingIngImage) {
+                    _this.placingIngredient.SetToImage(_this.placingIngImage, _this.ramenCenterX, _this.ramenCenterY);
+                }
+            }
+        }, this);
+        this.Button_Delete.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.uiState == CraftNoodleState.PlaceTopping)
+                _this.ChangeToState(CraftNoodleState.SelectTopping);
+        }, this);
+        this.Button_OK.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.uiState == CraftNoodleState.PlaceTopping)
+                _this.PlaceIngredientToRamen();
+        }, this);
+        //翻页按钮
+        this.Button_NextPage.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.canControl == false)
+                return;
+            _this.ChangeIngredientBoxPage((_this.ingredientIndex <= _this.ingredientPage.length - 1) ?
+                (_this.ingredientIndex + 1) : (_this.ingredientPage.length - 1));
+        }, this);
+        this.Button_PrevPage.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.canControl == false)
+                return;
+            _this.ChangeIngredientBoxPage(_this.ingredientIndex > 0 ?
+                (_this.ingredientIndex - 1) : 0);
+        }, this);
+        //下一步按钮
+        this.Button_NextStep.addEventListener(egret.TouchEvent.TOUCH_TAP, this.OnNextButtonClick, this);
+        var t = new egret.Timer(50);
+        t.addEventListener(egret.TimerEvent.TIMER, function () {
+            _this.Update();
+        }, this);
+        t.start();
+    };
+    //下一步函数
+    CraftNoodle.prototype.OnNextButtonClick = function () {
+        switch (this.uiState) {
+            case CraftNoodleState.ChooseBowl:
+                {
+                }
+                break;
+            case CraftNoodleState.SoupToBroth:
+                {
+                    if (this.canControl == true && this.craftingRamen.broth) {
+                        //TODO 先跳过放面条，写死的
+                        this.craftingRamen.noodles = new IngredientObj(GetIngredientModelById("noodle0"), this.ramenCenterX, this.ramenCenterY, 0);
+                        this.ChangeToState(CraftNoodleState.SelectTopping);
+                        this.UpdateRamen(false, true, true);
+                    }
+                }
+                break;
+        }
+    };
+    //计时器函数
+    CraftNoodle.prototype.Update = function () {
+        switch (this.uiState) {
+            case CraftNoodleState.PlaceTopping:
+                {
+                    //按住旋转按钮就会一直转
+                    if (this.orderRotateTopping == true) {
+                        if (this.placingIngredient) {
+                            this.placingIngredient.rotation = (this.placingIngredient.rotation + 182) % 360 - 180;
+                            if (this.placingIngImage) {
+                                this.placingIngredient.SetToImage(this.placingIngImage, this.ramenCenterX, this.ramenCenterY);
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+    };
+    //手指Tap事件
+    CraftNoodle.prototype.StagePointerTap = function (e) {
+        switch (this.uiState) {
+            case CraftNoodleState.SelectTopping:
+                {
+                    var touchOne = this.craftingRamen.TouchedTopping(e.stageX, e.stageY, this.ramenCenterX, this.ramenCenterY, true);
+                    if (touchOne) {
+                        this.UpdateRamen(false, false, false);
+                        this.placingIngredient = touchOne;
+                        this.ChangeToState(CraftNoodleState.PlaceTopping);
+                    }
+                }
+                break;
+            case CraftNoodleState.PlaceTopping:
+                {
+                }
+                break;
+        }
+    };
+    //手指按下事件
+    CraftNoodle.prototype.StagePointerDown = function (e) {
+        switch (this.uiState) {
+            case CraftNoodleState.SelectTopping:
+                {
+                }
+                break;
+            case CraftNoodleState.PlaceTopping:
+                {
+                    if (this.placingIngImage && this.placingIngredient && this.placingIngredient.TouchOnMe(e.stageX, e.stageY, this.ramenCenterX, this.ramenCenterY) == true) {
+                        this.draggingIng = true;
+                        this.pickingOffsetX = this.placingIngredient.x - e.stageX;
+                        this.pickingOffsetY = this.placingIngredient.y - e.stageY;
+                        console.log("draggingIng", this.draggingIng = true);
+                    }
+                    console.log("down", e.stageX, e.stageY);
+                }
+                break;
+        }
+    };
+    //手指拖动
+    CraftNoodle.prototype.StagePointerMove = function (e) {
+        switch (this.uiState) {
+            case CraftNoodleState.SelectTopping:
+                {
+                }
+                break;
+            case CraftNoodleState.PlaceTopping:
+                {
+                    if (this.draggingIng == true) {
+                        this.placingIngredient.x = this.pickingOffsetX + e.stageX;
+                        this.placingIngredient.y = this.pickingOffsetY + e.stageY;
+                        this.placingIngredient.SetToImage(this.placingIngImage, this.ramenCenterX, this.ramenCenterY);
+                        this.PlacingToolSynchronize();
+                    }
+                    console.log("draggin", e.stageX, e.stageY);
+                }
+                break;
+        }
+    };
+    //手指挪开
+    CraftNoodle.prototype.StagePointerUp = function (e) {
+        switch (this.uiState) {
+            case CraftNoodleState.SelectTopping:
+                {
+                }
+                break;
+            case CraftNoodleState.PlaceTopping:
+                {
+                    this.draggingIng = false;
+                    this.PlacingToolSynchronize();
+                }
+                break;
+        }
+    };
+    //按钮根据PlacingIngredient变化
+    CraftNoodle.prototype.PlacingToolSynchronize = function () {
+        if (!this.placingIngredient)
+            return;
+        this.Button_OK.enabled = this.craftingRamen.CanPlaceTopping(this.placingIngredient);
+    };
+    //创造一个正在拖拽的图形
+    CraftNoodle.prototype.CreatePlacingIngImg = function () {
+        if (this.placingIngImage)
+            this.RemovePlacingIngImage();
+        this.placingIngImage = this.placingIngredient.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
+    };
+    //删除正在拖曳的图形和逻辑
+    CraftNoodle.prototype.RemovePlacingIngImage = function () {
+        if (this.placingIngImage) {
+            if (this.placingIngImage.parent)
+                this.placingIngImage.parent.removeChild(this.placingIngImage);
+            this.placingIngImage = null;
+        }
+    };
+    //把正在拖曳的变成正式的素材
+    CraftNoodle.prototype.PlaceIngredientToRamen = function () {
+        if (!this.placingIngredient || !this.craftingRamen)
+            return;
+        this.craftingRamen.topping.push(this.placingIngredient.Clone());
+        this.UpdateRamen(false, false, false);
+        this.ChangeToState(CraftNoodleState.SelectTopping);
+    };
+    /**
+     * 切换状态
+     * @param {CraftNoodleState} toState 要切换到的状态
+     */
+    CraftNoodle.prototype.ChangeToState = function (toState) {
+        var _this = this;
+        this.canControl = false;
+        egret.Tween.removeAllTweens();
+        //退出当前状态
+        switch (this.uiState) {
+            case CraftNoodleState.TareList:
+                {
+                }
+                break;
+            case CraftNoodleState.ChooseBowl,
+                CraftNoodleState.PutTare,
+                CraftNoodleState.SoupToBroth,
+                CraftNoodleState.Noodles,
+                CraftNoodleState.SelectTopping:
+                {
+                    egret.Tween.get(this.Group_IngBox)
+                        .to({ y: this.stage.stageHeight + 600 }, 200, egret.Ease.quadOut);
+                    this.ingredientIndex = 0;
+                }
+                break;
+            case CraftNoodleState.PlaceTopping:
+                {
+                    this.draggingIng = false;
+                    this.RemovePlacingIngImage();
+                    this.placingIngredient = null;
+                    egret.Tween.get(this.Group_PlaceTool)
+                        .to({ y: this.stage.stageHeight + 600 }, 200, egret.Ease.quadOut);
+                }
+                break;
+        }
+        //同时进入新的状态
+        switch (toState) {
+            case CraftNoodleState.ChooseBowl:
+                {
+                }
+                break;
+            case CraftNoodleState.PutTare:
+                {
+                    this.ResetIngredientBox(IngredientUseType.UseType_Tare);
+                }
+                break;
+            case CraftNoodleState.TareList:
+                {
+                }
+                break;
+            case CraftNoodleState.SoupToBroth:
+                {
+                    this.ResetBrothBox();
+                    egret.Tween.get(this.Group_IngBox)
+                        .to({ y: this.stage.stageHeight }, 200, egret.Ease.quadIn)
+                        .call(function () {
+                        _this.canControl = true;
+                    }, this);
+                }
+                break;
+            case CraftNoodleState.Noodles:
+                {
+                    this.ResetIngredientBox(IngredientUseType.UseType_Noodle);
+                }
+                break;
+            case CraftNoodleState.SelectTopping:
+                {
+                    this.ResetIngredientBox(IngredientUseType.UseType_Topping);
+                    egret.Tween.get(this.Group_IngBox)
+                        .to({ y: this.stage.stageHeight }, 200, egret.Ease.quadIn)
+                        .call(function () {
+                        _this.canControl = true;
+                    }, this);
+                }
+                break;
+            case CraftNoodleState.PlaceTopping:
+                {
+                    this.draggingIng = false;
+                    this.CreatePlacingIngImg();
+                    this.HSilider_Size.value = Math.floor((this.placingIngredient.size - 0.5) / 0.25);
+                    this.PlacingToolSynchronize();
+                    egret.Tween.get(this.Group_PlaceTool)
+                        .to({ y: this.stage.stageHeight - 500 }, 200, egret.Ease.quadOut)
+                        .call(function () {
+                        _this.uiState = CraftNoodleState.PlaceTopping;
+                        _this.canControl = true;
+                    }, this);
+                }
+                break;
+        }
+        this.uiState = toState;
+        //根据状态设置图标
+        this.Img_Step0.scaleX = this.Img_Step0.scaleY = (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2 : 1;
+        this.Img_Step1.scaleX = this.Img_Step1.scaleY =
+            (this.uiState == CraftNoodleState.PutTare || this.uiState == CraftNoodleState.TareList) ? 1.2 : 1;
+        this.Img_Step2.scaleX = this.Img_Step2.scaleY = (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2 : 1;
+        this.Img_Step3.scaleX = this.Img_Step3.scaleY = (this.uiState == CraftNoodleState.Noodles) ? 1.2 : 1;
+        this.Img_Step4.scaleX = this.Img_Step4.scaleY =
+            (this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2 : 1;
+    };
+    CraftNoodle.prototype.ClearIngredientBoxes = function () {
+        if (this.ingredientPage && this.ingredientPage.length > 0) {
+            for (var i = 0; i < this.ingredientPage.length; i++) {
+                if (this.ingredientPage[i] && this.ingredientPage[i].parent) {
+                    this.ingredientPage[i].parent.removeChild(this.ingredientPage[i]);
+                }
+            }
+        }
+        this.ingredientPage = new Array();
+    };
+    /**
+     * 设置汤底盒子
+     */
+    CraftNoodle.prototype.ResetBrothBox = function () {
+        this.ClearIngredientBoxes();
+        var me = this;
+        //先把所有的列出来了
+        var selectedIndex = -1;
+        var pageI = [new Array()];
+        var cgI = 0;
+        for (var i = 0; i < playerInfo.unlockedBroth.length; i++) {
+            var broth = playerInfo.unlockedBroth[i];
+            if (pageI[cgI].length >= 12) {
+                //一页12个，超过了就Push新的一页
+                pageI.push(new Array());
+                cgI = pageI.length - 1;
+            }
+            pageI[cgI].push(broth);
+        }
+        //根据pageI制作所有的ingredientBox
+        for (var i = 0; i < pageI.length; i++) {
+            var pis = new Array();
+            for (var j = 0; j < pageI[i].length; j++) {
+                pis.push(new IngredientIconInBox(pageI[i][j].id, pageI[i][j], "icon_default", me, me.ClickOnIngredientIcon));
+            }
+            var ip = new IngredientBox(pis);
+            this.ingredientPage.push(ip);
+        }
+        this.ChangeIngredientBoxPage(Math.min(this.ingredientIndex, pageI.length - 1));
+    };
+    /**
+     * 设置Ingredient盒子
+     * @param {IngredientUseType} type 要设置盒子的材料是什么类型的
+     */
+    CraftNoodle.prototype.ResetIngredientBox = function (type) {
+        this.ClearIngredientBoxes();
+        var me = this;
+        //先把所有的列出来了
+        var pageI = [new Array()];
+        var cgI = 0;
+        for (var i = 0; i < playerInfo.unlockedIngredients.length; i++) {
+            var ing = playerInfo.unlockedIngredients[i];
+            if ((ing.canBeUsed & type) > 0) {
+                if (pageI[cgI].length >= 12) {
+                    //一页12个，超过了就Push新的一页
+                    pageI.push(new Array());
+                    cgI = pageI.length - 1;
+                }
+                pageI[cgI].push(ing);
+            }
+        }
+        //根据pageI制作所有的ingredientBox
+        for (var i = 0; i < pageI.length; i++) {
+            var pis = new Array();
+            for (var j = 0; j < pageI[i].length; j++) {
+                pis.push(new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].Icon(), me, me.ClickOnIngredientIcon));
+            }
+            var ip = new IngredientBox(pis);
+            this.ingredientPage.push(ip);
+        }
+        this.ChangeIngredientBoxPage(this.ingredientIndex);
+    };
+    //切换到ingredientBox的index
+    CraftNoodle.prototype.ChangeIngredientBoxPage = function (toIndex) {
+        var _this = this;
+        if (toIndex < 0 || toIndex >= this.ingredientPage.length)
+            return;
+        var centerX = this.stage.stageWidth / 2;
+        if (toIndex == this.ingredientIndex) {
+            //就是当前页，判断没有parent，就添加到舞台
+            if (!this.ingredientPage[toIndex].parent) {
+                this.Group_Box.addChild(this.ingredientPage[toIndex]);
+            }
+            this.ingredientPage[toIndex].x = centerX;
+            this.ingredientPage[toIndex].y = this.Group_Box.height - 30;
+            this.Button_PrevPage.visible = this.Button_PrevPage.enabled = toIndex > 0;
+            this.Button_NextPage.visible =
+                this.Button_NextPage.enabled = toIndex < this.ingredientPage.length - 1;
+        }
+        else {
+            //不是当前页，就翻页动画
+            var leftX = centerX - this.stage.stageWidth;
+            var rightX = centerX + this.stage.stageWidth;
+            var fromRight = toIndex > this.ingredientIndex;
+            this.Group_Box.addChild(this.ingredientPage[toIndex]);
+            this.ingredientPage[toIndex].x = fromRight == true ? rightX : leftX;
+            this.ingredientPage[toIndex].y = this.Group_Box.height - 30;
+            this.canControl = false;
+            var cII = this.ingredientIndex;
+            var cip_1 = this.ingredientPage[cII];
+            this.Button_PrevPage.visible = this.Button_PrevPage.enabled = false;
+            this.Button_NextPage.visible = this.Button_NextPage.enabled = false;
+            egret.Tween.get(this.ingredientPage[cII])
+                .to({ x: (fromRight == true ? leftX : rightX) }, 200, egret.Ease.quadIn)
+                .call(function () {
+                if (cip_1 && cip_1.parent)
+                    cip_1.parent.removeChild(cip_1);
+            });
+            egret.Tween.get(this.ingredientPage[toIndex])
+                .to({ x: centerX }, 200, egret.Ease.quadIn)
+                .call(function () {
+                _this.ingredientIndex = toIndex;
+                _this.canControl = true;
+                _this.Button_PrevPage.visible =
+                    _this.Button_PrevPage.enabled = toIndex > 0;
+                _this.Button_NextPage.visible =
+                    _this.Button_NextPage.enabled = toIndex < _this.ingredientPage.length - 1;
+            });
+        }
+    };
+    /**
+     * 调料盒子里的东西点击以后的效果函数
+     * @param {CraftNoodle} caller 约定的this
+     * @param {IngredientModel} ing 素材
+     */
+    CraftNoodle.prototype.ClickOnIngredientIcon = function (caller, ing) {
+        if (caller.canControl == false)
+            return;
+        switch (caller.uiState) {
+            case CraftNoodleState.ChooseBowl:
+                {
+                }
+                break;
+            case CraftNoodleState.PutTare:
+                {
+                }
+                break;
+            case CraftNoodleState.SoupToBroth:
+                {
+                    caller.craftingRamen.broth = new BrothObj(ing);
+                    caller.UpdateRamen(false, true, false);
+                    //TODO 选中还没
+                    caller.canControl = true;
+                }
+                break;
+            case CraftNoodleState.Noodles:
+                {
+                }
+                break;
+            case CraftNoodleState.SelectTopping:
+                {
+                    caller.placingIngredient = new IngredientObj(ing, 0, 400);
+                    caller.ChangeToState(CraftNoodleState.PlaceTopping);
+                }
+                break;
+            case CraftNoodleState.PlaceTopping:
+                {
+                }
+                break;
+        }
+    };
+    /**
+     * 重新根据数据绘制一下拉面，正在拖曳的肯定不鸟他
+     */
+    CraftNoodle.prototype.UpdateRamen = function (bowlChanged, brothChanged, noodleChanged) {
+        if (bowlChanged === void 0) { bowlChanged = true; }
+        if (brothChanged === void 0) { brothChanged = true; }
+        if (noodleChanged === void 0) { noodleChanged = true; }
+        //先全部去掉
+        this.Group_GameLayer.removeChildren();
+        //面碗
+        if (this.craftingRamen.bowl) {
+            if (!this.bowlImage) {
+                this.bowlImage = new eui.Image(RES.getRes(this.craftingRamen.bowl.model.Image()));
+            }
+            else if (bowlChanged == true) {
+                this.bowlImage.source = RES.getRes(this.craftingRamen.bowl.model.Image());
+            }
+            this.Group_GameLayer.addChild(this.bowlImage);
+            this.bowlImage.anchorOffsetX = this.bowlImage.width / 2;
+            this.bowlImage.anchorOffsetY = this.bowlImage.height / 2;
+            this.bowlImage.x = this.ramenCenterX;
+            this.bowlImage.y = this.ramenCenterY;
+        }
+        //汤底
+        if (this.craftingRamen.broth) {
+            if (!this.brothImage || brothChanged == true) {
+                this.brothImage = this.craftingRamen.broth.model.ImageShape(this.ramenCenterX, this.ramenCenterY, this.craftingRamen.bowl.model.radius);
+            }
+            this.Group_GameLayer.addChild(this.brothImage);
+        }
+        //汤上面的油光
+        var sC = new eui.Image(RES.getRes("test_broth_highlight"));
+        this.Group_GameLayer.addChild(sC);
+        sC.anchorOffsetX = sC.width / 2;
+        sC.anchorOffsetY = sC.height / 2;
+        sC.x = this.ramenCenterX;
+        sC.y = this.ramenCenterY;
+        //return;
+        //面条
+        if (this.craftingRamen.noodles) {
+            if (!this.noodleImage) {
+                this.noodleImage = new eui.Image(RES.getRes(this.craftingRamen.noodles.model.Image()));
+            }
+            else if (noodleChanged == true) {
+                this.noodleImage.source = RES.getRes(this.craftingRamen.noodles.model.Image());
+            }
+            this.Group_GameLayer.addChild(this.noodleImage);
+            this.noodleImage.anchorOffsetX = this.noodleImage.width / 2;
+            this.noodleImage.anchorOffsetY = this.noodleImage.height / 2;
+            this.noodleImage.x = this.ramenCenterX;
+            this.noodleImage.y = this.ramenCenterY;
+        }
+        var me = this;
+        //Toppings
+        for (var i = 0; i < this.craftingRamen.topping.length; i++) {
+            var tp = this.craftingRamen.topping[i];
+            var img = tp.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
+        }
     };
     return CraftNoodle;
 }(eui.Component));
@@ -1762,6 +2593,7 @@ var Street = (function (_super) {
         this.ground.x = 0;
         this.ground.y = 0;
         this.gameLayer.addChild(this.ground);
+        console.log("GroundTop", this.ground.groundTop);
         this.PaintFixedTerrainByJson(jsonF);
         //小车可以先添加
         this.PlaceBusAndMainCharacter("bus_default_json");

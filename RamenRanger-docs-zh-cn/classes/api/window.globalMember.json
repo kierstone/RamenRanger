@@ -1,0 +1,196 @@
+{
+	"globalMember": [
+		{
+			"filename": "data\\Variant.ts",
+			"kind": "globalMember",
+			"name": "BusAreaHeight",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\Variant.ts",
+			"kind": "globalMember",
+			"name": "BusAreaWidth",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\Variant.ts",
+			"kind": "globalMember",
+			"name": "BusBottomInGrid",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\Variant.ts",
+			"kind": "globalMember",
+			"name": "BusLeftInGrid",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\TableData.ts",
+			"kind": "globalMember",
+			"type": "Array<BowlModel>",
+			"name": "GameData_Bowl",
+			"memberof": "window",
+			"scope": "instance",
+			"description": "//面碗",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\TableData.ts",
+			"kind": "globalMember",
+			"type": "Array<CharacterActionInfo>",
+			"name": "GameData_CharacterAction",
+			"memberof": "window",
+			"scope": "instance",
+			"description": "//角色动画",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\TableData.ts",
+			"kind": "globalMember",
+			"type": "Array<IngredientModel>",
+			"name": "GameData_Ingredients",
+			"memberof": "window",
+			"scope": "instance",
+			"description": "//食材",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\Variant.ts",
+			"kind": "globalMember",
+			"name": "GameMapHeight",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\Variant.ts",
+			"kind": "globalMember",
+			"name": "GameMapWidth",
+			"memberof": "window",
+			"scope": "instance",
+			"description": "//吃饭区域宽高（单元格），和单元格宽高（像素）",
+			"pType": "public"
+		},
+		{
+			"filename": "Main.ts",
+			"kind": "globalMember",
+			"type": "CraftNoodle",
+			"name": "GameScene_CraftNoodle",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "Main.ts",
+			"kind": "globalMember",
+			"type": "Street",
+			"name": "GameScene_Street",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\TableData.ts",
+			"kind": "globalMember",
+			"name": "GetCharacterActionInfoByKey",
+			"memberof": "window",
+			"scope": "instance",
+			"description": "//根据key获得对应造型的动画信息",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\Variant.ts",
+			"kind": "globalMember",
+			"name": "GridHeight",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\Variant.ts",
+			"kind": "globalMember",
+			"name": "GridWidth",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\TableData.ts",
+			"kind": "globalMember",
+			"name": "LoadGameData",
+			"memberof": "window",
+			"scope": "instance",
+			"description": "//读取数据",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\Variant.ts",
+			"kind": "globalMember",
+			"name": "RenderUpdateEveryLogicTick",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\Variant.ts",
+			"kind": "globalMember",
+			"name": "StreetHeight",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "ThemeAdapter.ts",
+			"kind": "globalMember",
+			"type": "{paths:string[],skins:any}",
+			"name": "generateEUI",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "ThemeAdapter.ts",
+			"kind": "globalMember",
+			"type": "{paths:string[],skins:any}",
+			"name": "generateEUI2",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "ThemeAdapter.ts",
+			"kind": "globalMember",
+			"type": "{paths:string[],skins:any}",
+			"name": "generateJSON",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "Platform.ts",
+			"kind": "globalMember",
+			"type": "Platform",
+			"name": "platform",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "Main.ts",
+			"kind": "globalMember",
+			"type": "PlayerInfo",
+			"name": "playerInfo",
+			"memberof": "window",
+			"scope": "instance",
+			"pType": "public"
+		}
+	]
+}

@@ -1,0 +1,83 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "Array<CharacterAIScript>",
+			"name": "plan",
+			"memberof": "CharacterAI",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "CharacterAI",
+			"memberof": "CharacterAI",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "master",
+					"type": "CharacterObj",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "AddScripts",
+			"memberof": "CharacterAI",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "scripts",
+					"type": "Array<CharacterAIScript>",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "SetScripts",
+			"memberof": "CharacterAI",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "scripts",
+					"type": "Array<CharacterAIScript>",
+					"default": "[]",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "CharacterAIScript",
+			"name": "WhatToDo",
+			"memberof": "CharacterAI",
+			"scope": "instance",
+			"description": "//获得这一帧应该干啥",
+			"params": [
+				{
+					"name": "tickInc",
+					"type": "boolean",
+					"default": "true",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "CharacterAI",
+		"memberof": "",
+		"filename": "data\\character\\ai\\CharacterAI.ts"
+	},
+	"pType": "public"
+}

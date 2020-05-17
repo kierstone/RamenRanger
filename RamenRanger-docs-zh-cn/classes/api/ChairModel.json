@@ -1,0 +1,78 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "Array<ChairDirImageInfo>",
+			"name": "direction",
+			"memberof": "ChairModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "name",
+			"memberof": "ChairModel",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "ChairModel",
+			"memberof": "ChairModel",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "downInfo",
+					"type": "ChairDirImageInfo",
+					"description": ""
+				},
+				{
+					"name": "upInfo",
+					"type": "ChairDirImageInfo",
+					"default": "null",
+					"description": ""
+				},
+				{
+					"name": "leftInfo",
+					"type": "ChairDirImageInfo",
+					"default": "null",
+					"description": ""
+				},
+				{
+					"name": "rightInfo",
+					"type": "ChairDirImageInfo",
+					"default": "null",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "ChairDirImageInfo",
+			"name": "GetCurrentInfoByDirection",
+			"memberof": "ChairModel",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "dir",
+					"type": "Direction",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "ChairModel",
+		"memberof": "",
+		"filename": "data\\street\\ChairModel.ts"
+	},
+	"pType": "public"
+}

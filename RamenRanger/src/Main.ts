@@ -107,14 +107,36 @@ class Main extends eui.UILayer {
      */
     protected async createGameScene() {
         LoadGameData();
+        Utils.UIRoot = this;
+
+        playerInfo = new PlayerInfo();
+        for (let i = 0; i < 3; i++){
+            //强行学习3次
+            for (let j = 0; j < GameData_Ingredients.length; j++){
+                playerInfo.unlockedIngredients.push(GameData_Ingredients[j]);
+            }
+        }
+        for (let i = 0; i < GameData_Broth.length; i++){
+            playerInfo.unlockedBroth.push(GameData_Broth[i]);
+        }
 
         console.log(GameData_Ingredients, GameData_Bowl);
 
-        if (!GameScene_Street){
-            GameScene_Street = new Street();
+        // if (!GameScene_Street){
+        //     GameScene_Street = new Street();
+        // }
+        // this.addChild(GameScene_Street);
+
+        if (!GameScene_CraftNoodle){
+            GameScene_CraftNoodle = new CraftNoodle();
         }
-        this.addChild(GameScene_Street);
+        this.addChild(GameScene_CraftNoodle);
+
     }
 }
 
+var playerInfo:PlayerInfo;
 var GameScene_Street:Street;
+var GameScene_CraftNoodle:CraftNoodle
+
+

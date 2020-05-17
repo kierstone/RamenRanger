@@ -1,0 +1,322 @@
+{
+	"api": {
+		"": {
+			"class": [
+				{
+					"name": "AssetAdapter",
+					"description": "//////////////////////////////////////////////////////////////////////////////////////"
+				},
+				{
+					"name": "LoadingUI",
+					"description": "//////////////////////////////////////////////////////////////////////////////////////"
+				},
+				{
+					"name": "Main",
+					"description": "//////////////////////////////////////////////////////////////////////////////////////"
+				},
+				{
+					"name": "DebugPlatform",
+					"description": ""
+				},
+				{
+					"name": "ThemeAdapter",
+					"description": "//////////////////////////////////////////////////////////////////////////////////////"
+				},
+				{
+					"name": "Utils",
+					"description": ""
+				},
+				{
+					"name": "PlayerInfo",
+					"description": ""
+				},
+				{
+					"name": "CharacterBuff",
+					"description": "//吃饭的npc身上的buff，而不是玩家店铺的buff，是buffObj"
+				},
+				{
+					"name": "CharacterBuffModel",
+					"description": "//食客的buff的model"
+				},
+				{
+					"name": "CharacterBuffTrigger",
+					"description": "//添加角色buff到角色身上需要的信息"
+				},
+				{
+					"name": "CharacterActionInfo",
+					"description": "//一个角色的动画信息文件"
+				},
+				{
+					"name": "CharacterFrameInfo",
+					"description": "//角色动画一帧的信息，目前来看，只要头跟身体的文件名"
+				},
+				{
+					"name": "CharacterObj",
+					"description": ""
+				},
+				{
+					"name": "CharacterProperty",
+					"description": ""
+				},
+				{
+					"name": "CharacterAI",
+					"description": ""
+				},
+				{
+					"name": "CharacterAIScript",
+					"description": "//AI脚本的每一条信息"
+				},
+				{
+					"name": "BowlModel",
+					"description": ""
+				},
+				{
+					"name": "BowlObj",
+					"description": ""
+				},
+				{
+					"name": "IngredientClass",
+					"description": ""
+				},
+				{
+					"name": "IngredientModel",
+					"description": "//从json读取的ingredient数据"
+				},
+				{
+					"name": "IngredientObj",
+					"description": "//实际使用的ingredient"
+				},
+				{
+					"name": "LiquidInfo",
+					"description": "//如果是汤汁类的，它应该是液体，如果是液体，就应该有液体信息"
+				},
+				{
+					"name": "PlacedIngredient",
+					"description": ""
+				},
+				{
+					"name": "RamenModel",
+					"description": "//虽然叫model，但并不来自表，这个model是玩家制作的时候调整出来的，生成RamenObj用的"
+				},
+				{
+					"name": "ChairModel",
+					"description": ""
+				},
+				{
+					"name": "ChairDirImageInfo",
+					"description": ""
+				},
+				{
+					"name": "ChairObj",
+					"description": ""
+				},
+				{
+					"name": "DiningTableModel",
+					"description": ""
+				},
+				{
+					"name": "DiningTableObj",
+					"description": ""
+				},
+				{
+					"name": "DiningTableSeatInfo",
+					"description": "//当前的某个桌子栏位的状态"
+				},
+				{
+					"name": "DiningTableSeatSlot",
+					"description": "//桌子上的位置信息"
+				},
+				{
+					"name": "TrafficLight",
+					"description": ""
+				},
+				{
+					"name": "GridPosition",
+					"description": ""
+				},
+				{
+					"name": "RamenObj",
+					"description": ""
+				},
+				{
+					"name": "SpriteClip",
+					"description": ""
+				},
+				{
+					"name": "StreetGround",
+					"description": ""
+				},
+				{
+					"name": "CraftNoodle",
+					"description": ""
+				},
+				{
+					"name": "Street",
+					"description": ""
+				}
+			],
+			"interface": [
+				{
+					"name": "Platform",
+					"description": "平台数据接口。由于每款游戏通常需要发布到多个平台上，所以提取出一个统一的接口用于开发者获取平台数据信息推荐开发者通过这种方式封装平台逻辑，以保证整体结构的稳定由于不同平台的接口形式各有不同，白鹭推荐开发者将所有接口封装为基于 Promise 的异步形式"
+				},
+				{
+					"name": "Window",
+					"description": ""
+				}
+			],
+			"enum": [
+				{
+					"name": "Direction",
+					"description": "//角色方向枚举"
+				},
+				{
+					"name": "CharacterAction",
+					"description": "//角色动作枚举"
+				},
+				{
+					"name": "TrafficLightState",
+					"description": "//红绿灯状态"
+				},
+				{
+					"name": "SpriteClipLayer",
+					"description": "//贴图层次"
+				},
+				{
+					"name": "IngredientUseType",
+					"description": "//素材用途"
+				},
+				{
+					"name": "CraftNoodleState",
+					"description": ""
+				}
+			]
+		},
+		"window": {
+			"globalMember": [
+				{
+					"name": "BusAreaHeight",
+					"description": ""
+				},
+				{
+					"name": "BusAreaWidth",
+					"description": ""
+				},
+				{
+					"name": "BusBottomInGrid",
+					"description": ""
+				},
+				{
+					"name": "BusLeftInGrid",
+					"description": ""
+				},
+				{
+					"name": "GameData_Bowl",
+					"description": "//面碗"
+				},
+				{
+					"name": "GameData_CharacterAction",
+					"description": "//角色动画"
+				},
+				{
+					"name": "GameData_Ingredients",
+					"description": "//食材"
+				},
+				{
+					"name": "GameMapHeight",
+					"description": ""
+				},
+				{
+					"name": "GameMapWidth",
+					"description": "//吃饭区域宽高（单元格），和单元格宽高（像素）"
+				},
+				{
+					"name": "GameScene_CraftNoodle",
+					"description": ""
+				},
+				{
+					"name": "GameScene_Street",
+					"description": ""
+				},
+				{
+					"name": "GetCharacterActionInfoByKey",
+					"description": "//根据key获得对应造型的动画信息"
+				},
+				{
+					"name": "GridHeight",
+					"description": ""
+				},
+				{
+					"name": "GridWidth",
+					"description": ""
+				},
+				{
+					"name": "LoadGameData",
+					"description": "//读取数据"
+				},
+				{
+					"name": "RenderUpdateEveryLogicTick",
+					"description": ""
+				},
+				{
+					"name": "StreetHeight",
+					"description": ""
+				},
+				{
+					"name": "generateEUI",
+					"description": ""
+				},
+				{
+					"name": "generateEUI2",
+					"description": ""
+				},
+				{
+					"name": "generateJSON",
+					"description": ""
+				},
+				{
+					"name": "platform",
+					"description": ""
+				},
+				{
+					"name": "playerInfo",
+					"description": ""
+				}
+			]
+		},
+		"AIScripts": {
+			"globalMember": [
+				{
+					"name": "DebugDoAllAction",
+					"description": ""
+				},
+				{
+					"name": "DebugStandTrickForDirection",
+					"description": ""
+				},
+				{
+					"name": "DebugWalkForDirection",
+					"description": "//测试用的， 4方向走路"
+				},
+				{
+					"name": "JustPassThroughFromRoad",
+					"description": "//仅仅只是从左向右或者右向左路过一下"
+				},
+				{
+					"name": "JustPassThroughFromTrafficLight",
+					"description": ""
+				}
+			]
+		}
+	},
+	"other": {
+		"global": {
+			"class": [
+				{
+					"name": "Types",
+					"description": "基础类型介绍"
+				}
+			]
+		}
+	}
+}

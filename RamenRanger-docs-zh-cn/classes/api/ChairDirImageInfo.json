@@ -1,0 +1,63 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "gridHeight",
+			"memberof": "ChairDirImageInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "gridWidth",
+			"memberof": "ChairDirImageInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "source",
+			"memberof": "ChairDirImageInfo",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "ChairDirImageInfo",
+			"memberof": "ChairDirImageInfo",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "source",
+					"type": "string",
+					"description": ""
+				},
+				{
+					"name": "gridWidth",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "gridHeight",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "ChairDirImageInfo",
+		"memberof": "",
+		"filename": "data\\street\\ChairModel.ts"
+	},
+	"pType": "public"
+}

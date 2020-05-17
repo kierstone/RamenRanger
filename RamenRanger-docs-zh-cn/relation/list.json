@@ -1,0 +1,65 @@
+{
+	"api": {
+		"class": [
+			"AssetAdapter",
+			"BowlModel",
+			"BowlObj",
+			"ChairDirImageInfo",
+			"ChairModel",
+			"ChairObj",
+			"CharacterAI",
+			"CharacterAIScript",
+			"CharacterActionInfo",
+			"CharacterBuff",
+			"CharacterBuffModel",
+			"CharacterBuffTrigger",
+			"CharacterFrameInfo",
+			"CharacterObj",
+			"CharacterProperty",
+			"CraftNoodle",
+			"DebugPlatform",
+			"DiningTableModel",
+			"DiningTableObj",
+			"DiningTableSeatInfo",
+			"DiningTableSeatSlot",
+			"GridPosition",
+			"IngredientClass",
+			"IngredientModel",
+			"IngredientObj",
+			"LiquidInfo",
+			"LoadingUI",
+			"Main",
+			"PlacedIngredient",
+			"PlayerInfo",
+			"RamenModel",
+			"RamenObj",
+			"SpriteClip",
+			"Street",
+			"StreetGround",
+			"ThemeAdapter",
+			"TrafficLight",
+			"Utils"
+		],
+		"interface": [
+			"Platform",
+			"Window"
+		],
+		"enum": [
+			"CharacterAction",
+			"CraftNoodleState",
+			"Direction",
+			"IngredientUseType",
+			"SpriteClipLayer",
+			"TrafficLightState"
+		],
+		"globalMember": [
+			"window.globalMember",
+			"AIScripts.globalMember"
+		]
+	},
+	"other": {
+		"class": [
+			"global.Types"
+		]
+	}
+}

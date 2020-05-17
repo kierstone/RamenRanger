@@ -21,7 +21,6 @@ var IngredientClass = (function () {
             for (var i = 0; i < json["children"].length; i++) {
                 var bObj = json["children"][i];
                 var im = new IngredientModel();
-                im.fromJson(bObj, this.id);
                 this.items.push(im);
             }
         }

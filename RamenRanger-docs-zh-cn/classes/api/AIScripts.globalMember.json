@@ -1,0 +1,46 @@
+{
+	"globalMember": [
+		{
+			"filename": "data\\character\\ai\\AIScripts.ts",
+			"kind": "globalMember",
+			"name": "DebugDoAllAction",
+			"memberof": "AIScripts",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\character\\ai\\AIScripts.ts",
+			"kind": "globalMember",
+			"name": "DebugStandTrickForDirection",
+			"memberof": "AIScripts",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\character\\ai\\AIScripts.ts",
+			"kind": "globalMember",
+			"name": "DebugWalkForDirection",
+			"memberof": "AIScripts",
+			"scope": "instance",
+			"description": "//测试用的， 4方向走路",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\character\\ai\\AIScripts.ts",
+			"kind": "globalMember",
+			"name": "JustPassThroughFromRoad",
+			"memberof": "AIScripts",
+			"scope": "instance",
+			"description": "//仅仅只是从左向右或者右向左路过一下",
+			"pType": "public"
+		},
+		{
+			"filename": "data\\character\\ai\\AIScripts.ts",
+			"kind": "globalMember",
+			"name": "JustPassThroughFromTrafficLight",
+			"memberof": "AIScripts",
+			"scope": "instance",
+			"pType": "public"
+		}
+	]
+}

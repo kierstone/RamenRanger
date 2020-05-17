@@ -1,0 +1,167 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "Direction",
+			"name": "maidDirection",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "maidOffsetX",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"description": "//服务生信息：服务员站在什么位置上菜，当然客人也是在这里跳进座位的",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "maidOffsetY",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "ramenOffsetX",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"description": "//拉面的下方中央点应该位于整个桌子的坐标（像素）",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "ramenOffsetY",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "Direction",
+			"name": "seatDirection",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "seatOffsetX",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"description": "//座位信息",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "seatOffsetY",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "tableX",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"description": "//这是桌子的什么位置",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "tableY",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "DiningTableSeatSlot",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "tableX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "tableY",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "ramenX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "ramenY",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "seatOffsetX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "seatOffsetY",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "seatDirection",
+					"type": "Direction",
+					"description": ""
+				},
+				{
+					"name": "maidOffsetX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "maidOffsetY",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "maidDirection",
+					"type": "Direction",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "DiningTableSeatSlot",
+			"name": "Clone",
+			"memberof": "DiningTableSeatSlot",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "DiningTableSeatSlot",
+		"memberof": "",
+		"filename": "data\\street\\DiningTableSeatSlot.ts",
+		"description": "//桌子上的位置信息"
+	},
+	"pType": "public"
+}

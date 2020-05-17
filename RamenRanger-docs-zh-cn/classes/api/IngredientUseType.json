@@ -1,0 +1,60 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "UseType_Broth",
+			"memberof": "IngredientUseType",
+			"scope": "static",
+			"pType": "public",
+			"default": "2"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "UseType_None",
+			"memberof": "IngredientUseType",
+			"scope": "static",
+			"pType": "public",
+			"default": "0"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "UseType_Noodle",
+			"memberof": "IngredientUseType",
+			"scope": "static",
+			"pType": "public",
+			"default": "4"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "UseType_Tare",
+			"memberof": "IngredientUseType",
+			"scope": "static",
+			"pType": "public",
+			"default": "1"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "UseType_Topping",
+			"memberof": "IngredientUseType",
+			"scope": "static",
+			"pType": "public",
+			"default": "8"
+		}
+	],
+	"function": [],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "enum",
+		"name": "IngredientUseType",
+		"memberof": "",
+		"filename": "data\\ramen\\Ingredients.ts",
+		"description": "//素材用途"
+	},
+	"pType": "public"
+}

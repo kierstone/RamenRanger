@@ -1,0 +1,105 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "Direction",
+			"name": "direction",
+			"memberof": "ChairObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "egret.Point",
+			"name": "enterance",
+			"memberof": "ChairObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "SpriteClip",
+			"name": "image",
+			"memberof": "ChairObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "CharacterObj",
+			"name": "sittingCha",
+			"memberof": "ChairObj",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "ChairObj",
+			"memberof": "ChairObj",
+			"scope": "instance",
+			"description": "//public canSitGrid:Array<GridPosition>;\t//可以坐的格子",
+			"params": [
+				{
+					"name": "img",
+					"type": "string",
+					"description": ""
+				},
+				{
+					"name": "x",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "y",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "direction",
+					"type": "Direction",
+					"default": "Direction.Down",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "Redraw",
+			"memberof": "ChairObj",
+			"scope": "instance",
+			"description": "椅子需要被重绘的频率非常低",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "SetPos",
+			"memberof": "ChairObj",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "x",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "y",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "ChairObj",
+		"memberof": "",
+		"filename": "data\\street\\ChairObj.ts"
+	},
+	"pType": "public"
+}

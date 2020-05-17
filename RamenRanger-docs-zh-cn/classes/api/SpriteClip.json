@@ -1,0 +1,94 @@
+{
+	"member": [],
+	"function": [
+		{
+			"kind": "function",
+			"name": "SpriteClip",
+			"memberof": "SpriteClip",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "boolean",
+			"name": "ChangeToPreloadTexture",
+			"memberof": "SpriteClip",
+			"scope": "instance",
+			"description": "设置当前图形为preload的某一个",
+			"returns": "是否成功",
+			"params": [
+				{
+					"name": "key",
+					"type": "string",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "boolean",
+			"name": "NeedToSendMeBack",
+			"memberof": "SpriteClip",
+			"scope": "instance",
+			"description": "经过比较，我是否改到下面一层",
+			"returns": "true代表我该去下一层",
+			"params": [
+				{
+					"name": "compareSpritClip",
+					"type": "SpriteClip",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "SetPreloadTextureByKeys",
+			"memberof": "SpriteClip",
+			"scope": "instance",
+			"description": "根据string预加载这些texture",
+			"params": [
+				{
+					"name": "keys",
+					"type": "Array<string>",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "SetPreloadTexturesFromObject",
+			"memberof": "SpriteClip",
+			"scope": "instance",
+			"description": "预加载这些textures",
+			"params": [
+				{
+					"name": "textures",
+					"type": "Object",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "void",
+			"name": "childrenCreated",
+			"memberof": "SpriteClip",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "SpriteClip",
+		"memberof": "",
+		"filename": "element\\SpriteClip.ts",
+		"augments": []
+	},
+	"pType": "public"
+}

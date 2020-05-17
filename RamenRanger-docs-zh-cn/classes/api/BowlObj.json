@@ -1,0 +1,22 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "BowlModel",
+			"name": "model",
+			"memberof": "BowlObj",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "BowlObj",
+		"memberof": "",
+		"filename": "data\\ramen\\Bowl.ts"
+	},
+	"pType": "public"
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="IngredientIconInBoxSkin" width="132" height="145" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="172141378d8" ></w:Config>
+	<e:Image id="Img_Icon" width="100" height="100" top="0" horizontalCenter="0"/>
+	<e:Image source="ui_craft_ingredientname" horizontalCenter="0" bottom="0"/>
+	<e:Label id="Label_Name" text="Label" y="100" size="20" anchorOffsetX="0" width="124" anchorOffsetY="0" height="34" verticalAlign="middle" textAlign="center" textColor="0x000000" horizontalCenter="0"/>
+	<e:Image id="Img_Select" width="72" height="67" x="28" y="35" anchorOffsetX="0" anchorOffsetY="0"/>
+</e:Skin>

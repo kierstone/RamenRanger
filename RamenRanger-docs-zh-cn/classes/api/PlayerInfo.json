@@ -1,0 +1,47 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "Array<IngredientModel>",
+			"name": "unlockedIngredients",
+			"memberof": "PlayerInfo",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "PlayerInfo",
+			"memberof": "PlayerInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "IngredientModel",
+			"name": "getLearnedIngredient",
+			"memberof": "PlayerInfo",
+			"scope": "instance",
+			"description": "获取学会了某个素材，如果返回null就是没学会",
+			"returns": "返回要查询的素材model，如果Null代表没学会",
+			"params": [
+				{
+					"name": "ingredientId",
+					"type": "string",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "PlayerInfo",
+		"memberof": "",
+		"filename": "data\\PlayerInfo.ts"
+	},
+	"pType": "public"
+}

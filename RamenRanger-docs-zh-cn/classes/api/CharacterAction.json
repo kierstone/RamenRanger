@@ -1,0 +1,159 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Chew",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "5"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Clap",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "9"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Discover",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "7"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Eat",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "4"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Hate",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "15"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Nod",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "8"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Order",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "3"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Salty",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "12"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Sigh",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "13"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Smile",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "14"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Spicy",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "10"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Stand",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "0"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "StandTrick",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "1"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "TakePhoto",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "11"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Think",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "6"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Walk",
+			"memberof": "CharacterAction",
+			"scope": "static",
+			"pType": "public",
+			"default": "2"
+		}
+	],
+	"function": [],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "enum",
+		"name": "CharacterAction",
+		"memberof": "",
+		"filename": "data\\Enum.ts",
+		"description": "//角色动作枚举"
+	},
+	"pType": "public"
+}

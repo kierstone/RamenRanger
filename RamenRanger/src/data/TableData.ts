@@ -1,9 +1,12 @@
 
 //食材
-var GameData_Ingredients:Array<IngredientClass>;
+var GameData_Ingredients:Array<IngredientModel>;
 
 //面碗
 var GameData_Bowl:Array<BowlModel>;
+
+//汤底
+var GameData_Broth:Array<BrothModel>;
 
 //角色动画
 var GameData_CharacterAction:Array<CharacterActionInfo>;
@@ -18,16 +21,15 @@ var LoadGameData = function(){
 
     //食材
     console.log("Start Load >> Ingredient")
-    GameData_Ingredients = new Array<IngredientClass>();
+    GameData_Ingredients = new Array<IngredientModel>();
     if (catalog["ingredient"] && catalog["ingredient"].length > 0){
         let iJsons:Array<string> = catalog["ingredient"];
         for (let i = 0; i < iJsons.length; i++){
             let loadingIJ = RES.getRes(iJsons[i] + "_json");
             let fData = loadingIJ["data"];
             for (let n = 0; n < fData.length; n++){
-                let ic:IngredientClass = new IngredientClass();
-                ic.fromJson(fData[n]);
-                GameData_Ingredients.push(ic);
+                let ing:IngredientModel = new IngredientModel(fData[n]);
+                GameData_Ingredients.push(ing);
             }
         }
         console.log("Ingredient >> Loaded");
@@ -54,6 +56,25 @@ var LoadGameData = function(){
         console.log("Bowl >> No Data");
     }
 
+    //汤底
+    console.log("Start Load >> Broth")
+    GameData_Broth = new Array<BrothModel>();
+    if (catalog["broth"] && catalog["broth"].length > 0){
+        let iJsons:Array<string> = catalog["broth"];
+        for (let i = 0; i < iJsons.length; i++){
+            let loadingIJ = RES.getRes(iJsons[i] + "_json");
+            let fData = loadingIJ["data"];
+            for (let n = 0; n < fData.length; n++){
+                let broth:BrothModel = new BrothModel();
+                broth.fromJson(fData[n]);
+                GameData_Broth.push(broth);
+            }
+        }
+        console.log("Broth >> Loaded");
+    }else{
+        console.log("Broth >> No Data");
+    }
+
 
     //角色动画
     let actionJson = RES.getRes("character_animinfo_json");
@@ -71,6 +92,16 @@ var GetCharacterActionInfoByKey = function(key:string):CharacterActionInfo{
     for (let i = 0; i < GameData_CharacterAction.length; i++){
         if (GameData_CharacterAction[i].key == key){
             return GameData_CharacterAction[i];
+        }
+    }
+    return null;
+}
+
+var GetIngredientModelById = function(id:string):IngredientModel{
+    if (!GameData_Ingredients) return null;
+    for (let i = 0; i < GameData_Ingredients.length; i++){
+        if (GameData_Ingredients[i].id == id){
+            return GameData_Ingredients[i];
         }
     }
     return null;

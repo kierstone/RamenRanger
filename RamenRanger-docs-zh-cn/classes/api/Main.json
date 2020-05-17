@@ -1,0 +1,32 @@
+{
+	"member": [],
+	"function": [
+		{
+			"kind": "function",
+			"type": "void",
+			"name": "createChildren",
+			"memberof": "Main",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "createGameScene",
+			"memberof": "Main",
+			"scope": "instance",
+			"description": "创建场景界面Create scene interface",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "Main",
+		"memberof": "",
+		"filename": "Main.ts",
+		"description": "//////////////////////////////////////////////////////////////////////////////////////",
+		"augments": []
+	},
+	"pType": "public"
+}

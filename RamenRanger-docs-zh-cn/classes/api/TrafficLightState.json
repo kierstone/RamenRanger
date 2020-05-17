@@ -1,0 +1,51 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Green",
+			"memberof": "TrafficLightState",
+			"scope": "static",
+			"pType": "public",
+			"default": "3"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "GreenShine",
+			"memberof": "TrafficLightState",
+			"scope": "static",
+			"pType": "public",
+			"default": "2"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Red",
+			"memberof": "TrafficLightState",
+			"scope": "static",
+			"pType": "public",
+			"default": "0"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Yellow",
+			"memberof": "TrafficLightState",
+			"scope": "static",
+			"pType": "public",
+			"default": "1"
+		}
+	],
+	"function": [],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "enum",
+		"name": "TrafficLightState",
+		"memberof": "",
+		"filename": "data\\Enum.ts",
+		"description": "//红绿灯状态"
+	},
+	"pType": "public"
+}

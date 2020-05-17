@@ -1,0 +1,56 @@
+{
+	"member": [],
+	"function": [
+		{
+			"kind": "function",
+			"name": "createLoginButton",
+			"memberof": "DebugPlatform",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "nextFunc",
+					"description": ""
+				},
+				{
+					"name": "thisObj",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "getUserInfo",
+			"memberof": "DebugPlatform",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "login",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "login",
+			"memberof": "DebugPlatform",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "DebugPlatform",
+		"memberof": "",
+		"filename": "Platform.ts",
+		"implements": [
+			{
+				"name": "Platform"
+			}
+		]
+	},
+	"pType": "public"
+}

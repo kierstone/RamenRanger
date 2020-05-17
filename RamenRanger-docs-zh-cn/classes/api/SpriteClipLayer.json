@@ -1,0 +1,42 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "EatingHead",
+			"memberof": "SpriteClipLayer",
+			"scope": "static",
+			"pType": "public",
+			"default": "2"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Noodle",
+			"memberof": "SpriteClipLayer",
+			"scope": "static",
+			"pType": "public",
+			"default": "1"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "Normal",
+			"memberof": "SpriteClipLayer",
+			"scope": "static",
+			"pType": "public",
+			"default": "0"
+		}
+	],
+	"function": [],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "enum",
+		"name": "SpriteClipLayer",
+		"memberof": "",
+		"filename": "data\\Enum.ts",
+		"description": "//贴图层次"
+	},
+	"pType": "public"
+}

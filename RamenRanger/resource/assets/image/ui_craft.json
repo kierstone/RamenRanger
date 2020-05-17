@@ -1,0 +1,17 @@
+{"file":"ui_craft.png","frames":{
+"ui_craft_button_back":{"x":916,"y":651,"w":64,"h":83,"offX":2,"offY":2,"sourceW":68,"sourceH":87},
+"ui_craft_button_left":{"x":898,"y":121,"w":64,"h":118,"offX":2,"offY":2,"sourceW":68,"sourceH":122},
+"ui_craft_button_next":{"x":753,"y":636,"w":161,"h":69,"offX":2,"offY":2,"sourceW":165,"sourceH":72},
+"ui_craft_button_right":{"x":898,"y":1,"w":64,"h":118,"offX":2,"offY":2,"sourceW":68,"sourceH":122},
+"ui_craft_hint_back":{"x":1,"y":1844,"w":676,"h":71,"offX":1,"offY":1,"sourceW":678,"sourceH":73},
+"ui_craft_ingredientbox":{"x":1,"y":1337,"w":750,"h":505,"offX":0,"offY":0,"sourceW":750,"sourceH":505},
+"ui_craft_ingredientname":{"x":753,"y":707,"w":128,"h":48,"offX":2,"offY":2,"sourceW":132,"sourceH":52},
+"ui_craft_tab0":{"x":916,"y":487,"w":79,"h":80,"offX":0,"offY":0,"sourceW":80,"sourceH":80},
+"ui_craft_tab1":{"x":898,"y":405,"w":79,"h":80,"offX":0,"offY":0,"sourceW":80,"sourceH":80},
+"ui_craft_tab2":{"x":898,"y":241,"w":80,"h":80,"offX":0,"offY":0,"sourceW":80,"sourceH":80},
+"ui_craft_tab3":{"x":916,"y":569,"w":79,"h":80,"offX":0,"offY":0,"sourceW":80,"sourceH":80},
+"ui_craft_tab4":{"x":898,"y":323,"w":79,"h":80,"offX":0,"offY":0,"sourceW":80,"sourceH":80},
+"ui_bowl_stick1":{"x":753,"y":1,"w":143,"h":562,"offX":4,"offY":4,"sourceW":147,"sourceH":566},
+"ui_craft_back":{"x":1,"y":1,"w":750,"h":1334,"offX":0,"offY":0,"sourceW":750,"sourceH":1334},
+"ui_craft_border":{"x":1,"y":1917,"w":768,"h":48,"offX":1,"offY":2,"sourceW":770,"sourceH":52},
+"ui_craft_button_next1":{"x":753,"y":565,"w":161,"h":69,"offX":2,"offY":2,"sourceW":165,"sourceH":72}}}

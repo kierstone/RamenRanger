@@ -1,0 +1,64 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "body",
+			"memberof": "CharacterFrameInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "emote",
+			"memberof": "CharacterFrameInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "head",
+			"memberof": "CharacterFrameInfo",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "CharacterFrameInfo",
+			"memberof": "CharacterFrameInfo",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "head",
+					"type": "string",
+					"description": ""
+				},
+				{
+					"name": "body",
+					"type": "string",
+					"description": ""
+				},
+				{
+					"name": "emote",
+					"type": "string",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "CharacterFrameInfo",
+		"memberof": "",
+		"filename": "data\\character\\CharacterFrameInfo.ts",
+		"description": "//角色动画一帧的信息，目前来看，只要头跟身体的文件名"
+	},
+	"pType": "public"
+}

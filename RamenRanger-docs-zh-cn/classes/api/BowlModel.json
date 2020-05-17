@@ -1,0 +1,114 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "Array<CharacterBuffTrigger>",
+			"name": "buffs",
+			"memberof": "BowlModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "cost",
+			"memberof": "BowlModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "id",
+			"memberof": "BowlModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "name",
+			"memberof": "BowlModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "radius",
+			"memberof": "BowlModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "soupRadius",
+			"memberof": "BowlModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "tasteRadius",
+			"memberof": "BowlModel",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "BowlModel",
+			"memberof": "BowlModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "string",
+			"name": "Icon",
+			"memberof": "BowlModel",
+			"scope": "instance",
+			"description": "获取icon的资源名",
+			"returns": "icon的名称",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "string",
+			"name": "Image",
+			"memberof": "BowlModel",
+			"scope": "instance",
+			"description": "获取图片资源名",
+			"returns": "资源名称",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "fromJson",
+			"memberof": "BowlModel",
+			"scope": "instance",
+			"description": "从json的Object获取到数据",
+			"returns": "是否成功，如果id有异常则不会成功",
+			"params": [
+				{
+					"name": "json",
+					"type": "Object",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "BowlModel",
+		"memberof": "",
+		"filename": "data\\ramen\\Bowl.ts"
+	},
+	"pType": "public"
+}

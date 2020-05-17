@@ -1,0 +1,201 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "IngredientModel",
+			"name": "model",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "rotation",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "size",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"pType": "public",
+			"default": "1"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "x",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"description": "//放在浇头上的位置，如果在汤里、面里、作为着味就不会有这个",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "boolean",
+			"name": "xFlip",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "y",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "IngredientObj",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "model",
+					"type": "IngredientModel",
+					"description": ""
+				},
+				{
+					"name": "x",
+					"type": "number",
+					"default": "0",
+					"description": ""
+				},
+				{
+					"name": "y",
+					"type": "number",
+					"default": "0",
+					"description": ""
+				},
+				{
+					"name": "rotation",
+					"type": "number",
+					"default": "0",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "number",
+			"name": "ClickRadius",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"description": "点选半径，为了以后可以维护，要考虑是否需要变成一个单独属性",
+			"returns": "点选半径",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "Clone",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"description": "克隆一个自己",
+			"returns": "克隆体",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "eui.Image",
+			"name": "GatherImage",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"description": "根据当前情况创建一个新的eui.Image",
+			"returns": "创建出来的image",
+			"params": [
+				{
+					"name": "parent",
+					"type": "eui.Group",
+					"description": ""
+				},
+				{
+					"name": "centerX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "centerY",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "SetToImage",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"description": "将属性设置到eui.Image",
+			"params": [
+				{
+					"name": "img",
+					"type": "eui.Image",
+					"description": ""
+				},
+				{
+					"name": "centerX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "centerY",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "boolean",
+			"name": "TouchOnMe",
+			"memberof": "IngredientObj",
+			"scope": "instance",
+			"description": "某个点是否算碰到我了（点击用）",
+			"returns": "算不算点到",
+			"params": [
+				{
+					"name": "x",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "y",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "centerX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "centerY",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "IngredientObj",
+		"memberof": "",
+		"filename": "data\\ramen\\Ingredients.ts",
+		"description": "//实际使用的ingredient"
+	},
+	"pType": "public"
+}

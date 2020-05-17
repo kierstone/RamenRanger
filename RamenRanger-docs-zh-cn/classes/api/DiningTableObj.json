@@ -1,0 +1,91 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "SpriteClip",
+			"name": "Image",
+			"memberof": "DiningTableObj",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "DiningTableObj",
+			"memberof": "DiningTableObj",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "tableModel",
+					"type": "DiningTableModel",
+					"description": ""
+				},
+				{
+					"name": "x",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "y",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "DiningTableSeatInfo",
+			"name": "GetSeatInfo",
+			"memberof": "DiningTableObj",
+			"scope": "instance",
+			"description": "有些单元格允许有多个slot，比如1x1的桌子，4面都可以放椅子，所以应该对应4个slot但是最终被用到的只能是1个info，所以可以先通过这个函数看看这个单元格对应的info是否已经存在",
+			"returns": "被使用的单元格，如果是null，代表还没椅子对应这个位置",
+			"params": [
+				{
+					"name": "gridX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "gridY",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "Array<DiningTableSeatSlot>",
+			"name": "GetSeatSlot",
+			"memberof": "DiningTableObj",
+			"scope": "instance",
+			"description": "有些单元格允许有多个slot，比如1x1的桌子，4面都可以放椅子，所以应该对应4个slot所以这里返回的是一个数组，是对应这个坐标所有的slot的数据，如果长度为0，代表没有slot",
+			"returns": "被使用的单元格，如果是null，代表还没椅子对应这个位置",
+			"params": [
+				{
+					"name": "gridX",
+					"type": "number",
+					"description": ""
+				},
+				{
+					"name": "gridY",
+					"type": "number",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "DiningTableObj",
+		"memberof": "",
+		"filename": "data\\street\\DiningTableObj.ts"
+	},
+	"pType": "public"
+}

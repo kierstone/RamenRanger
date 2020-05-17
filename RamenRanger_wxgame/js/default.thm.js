@@ -10,7 +10,129 @@ var egret = window.egret;window.skins=window.skins||{};
                 window.generateEUI = window.generateEUI||{};
                 generateEUI.paths = generateEUI.paths||{};
                 generateEUI.styles = undefined;
-                generateEUI.skins = {"eui.Button":"resource/eui_skins/ButtonSkin.exml","eui.CheckBox":"resource/eui_skins/CheckBoxSkin.exml","eui.HScrollBar":"resource/eui_skins/HScrollBarSkin.exml","eui.HSlider":"resource/eui_skins/HSliderSkin.exml","eui.Panel":"resource/eui_skins/PanelSkin.exml","eui.TextInput":"resource/eui_skins/TextInputSkin.exml","eui.ProgressBar":"resource/eui_skins/ProgressBarSkin.exml","eui.RadioButton":"resource/eui_skins/RadioButtonSkin.exml","eui.Scroller":"resource/eui_skins/ScrollerSkin.exml","eui.ToggleSwitch":"resource/eui_skins/ToggleSwitchSkin.exml","eui.VScrollBar":"resource/eui_skins/VScrollBarSkin.exml","eui.VSlider":"resource/eui_skins/VSliderSkin.exml","eui.ItemRenderer":"resource/eui_skins/ItemRendererSkin.exml","CraftNoodle":"resource/eui_skins/CraftNoodle.exml","Street":"resource/eui_skins/Street.exml","StreetGround":"resource/eui_skins/StreetGround.exml","RamenObj":"resource/eui_skins/RamenObj.exml"};generateEUI.paths['resource/eui_skins/ButtonSkin.exml'] = window.skins.ButtonSkin = (function (_super) {
+                generateEUI.skins = {"eui.Button":"resource/eui_skins/ButtonSkin.exml","eui.CheckBox":"resource/eui_skins/CheckBoxSkin.exml","eui.HScrollBar":"resource/eui_skins/HScrollBarSkin.exml","eui.HSlider":"resource/eui_skins/HSliderSkin.exml","eui.Panel":"resource/eui_skins/PanelSkin.exml","eui.TextInput":"resource/eui_skins/TextInputSkin.exml","eui.ProgressBar":"resource/eui_skins/ProgressBarSkin.exml","eui.RadioButton":"resource/eui_skins/RadioButtonSkin.exml","eui.Scroller":"resource/eui_skins/ScrollerSkin.exml","eui.ToggleSwitch":"resource/eui_skins/ToggleSwitchSkin.exml","eui.VScrollBar":"resource/eui_skins/VScrollBarSkin.exml","eui.VSlider":"resource/eui_skins/VSliderSkin.exml","eui.ItemRenderer":"resource/eui_skins/ItemRendererSkin.exml","CraftNoodle":"resource/eui_skins/CraftNoodle.exml","Street":"resource/eui_skins/Street.exml","StreetGround":"resource/eui_skins/StreetGround.exml","RamenObj":"resource/eui_skins/RamenObj.exml","IngredientBox":"resource/eui_skins/IngredientBox.exml","IngredientIconInBox":"resource/eui_skins/IngredientIconInBox.exml"};generateEUI.paths['resource/eui_skins/Button_Craft_Next.exml'] = window.Button_Craft_Next = (function (_super) {
+	__extends(Button_Craft_Next, _super);
+	function Button_Craft_Next() {
+		_super.call(this);
+		this.skinParts = [];
+		
+		this.currentState = "up";
+		this.height = 72;
+		this.width = 165;
+		this.elementsContent = [];
+		this._Image1_i();
+		
+		this.states = [
+			new eui.State ("up",
+				[
+					new eui.AddItems("_Image1","",0,"")
+				])
+			,
+			new eui.State ("down",
+				[
+					new eui.AddItems("_Image1","",0,""),
+					new eui.SetProperty("_Image1","source","ui_craft_button_next1")
+				])
+			,
+			new eui.State ("disabled",
+				[
+				])
+		];
+	}
+	var _proto = Button_Craft_Next.prototype;
+
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		this._Image1 = t;
+		t.horizontalCenter = 0;
+		t.source = "ui_craft_button_next";
+		t.verticalCenter = 0;
+		return t;
+	};
+	return Button_Craft_Next;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/Button_IngredientBox_Right.exml'] = window.Button_IngredientBox_Right = (function (_super) {
+	__extends(Button_IngredientBox_Right, _super);
+	function Button_IngredientBox_Right() {
+		_super.call(this);
+		this.skinParts = [];
+		
+		this.currentState = "up";
+		this.height = 135;
+		this.width = 75;
+		this.elementsContent = [];
+		this._Image1_i();
+		
+		this.states = [
+			new eui.State ("up",
+				[
+					new eui.AddItems("_Image1","",0,"")
+				])
+			,
+			new eui.State ("down",
+				[
+					new eui.AddItems("_Image1","",0,""),
+					new eui.SetProperty("_Image1","scaleX",1.1),
+					new eui.SetProperty("_Image1","scaleY",1.1)
+				])
+			,
+			new eui.State ("disabled",
+				[
+				])
+		];
+	}
+	var _proto = Button_IngredientBox_Right.prototype;
+
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		this._Image1 = t;
+		t.horizontalCenter = 0;
+		t.source = "ui_craft_button_right";
+		t.verticalCenter = 0;
+		return t;
+	};
+	return Button_IngredientBox_Right;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/Button_IngredientBoxLeft.exml'] = window.Button_IngredientBoxLeft = (function (_super) {
+	__extends(Button_IngredientBoxLeft, _super);
+	function Button_IngredientBoxLeft() {
+		_super.call(this);
+		this.skinParts = [];
+		
+		this.currentState = "up";
+		this.height = 135;
+		this.width = 75;
+		this.elementsContent = [];
+		this._Image1_i();
+		
+		this.states = [
+			new eui.State ("up",
+				[
+					new eui.AddItems("_Image1","",0,"")
+				])
+			,
+			new eui.State ("down",
+				[
+					new eui.AddItems("_Image1","",0,""),
+					new eui.SetProperty("_Image1","scaleX",1.1),
+					new eui.SetProperty("_Image1","scaleY",1.1)
+				])
+			,
+			new eui.State ("disabled",
+				[
+				])
+		];
+	}
+	var _proto = Button_IngredientBoxLeft.prototype;
+
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		this._Image1 = t;
+		t.horizontalCenter = 0;
+		t.source = "ui_craft_button_left";
+		t.verticalCenter = 0;
+		return t;
+	};
+	return Button_IngredientBoxLeft;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/ButtonSkin.exml'] = window.skins.ButtonSkin = (function (_super) {
 	__extends(ButtonSkin, _super);
 	function ButtonSkin() {
 		_super.call(this);
@@ -172,13 +294,234 @@ var egret = window.egret;window.skins=window.skins||{};
 	__extends(CraftNoodleSkin, _super);
 	function CraftNoodleSkin() {
 		_super.call(this);
-		this.skinParts = [];
+		this.skinParts = ["Img_BKG","Img_Stick","Group_GameLayer","HSilider_Size","Button_Rotate","Button_Flip","Button_OK","Button_Delete","Group_PlaceTool","Group_Box","Button_PrevPage","Button_NextPage","Group_IngBox","Img_Step0","Img_Step1","Img_Step2","Img_Step3","Img_Step4","Group_Step","Button_NextStep","Group_UILayer","Img_BottomBorder"];
 		
 		this.height = 1334;
 		this.width = 750;
+		this.elementsContent = [this.Img_BKG_i(),this.Img_Stick_i(),this.Group_GameLayer_i(),this.Group_UILayer_i(),this._Image1_i(),this.Img_BottomBorder_i()];
 	}
 	var _proto = CraftNoodleSkin.prototype;
 
+	_proto.Img_BKG_i = function () {
+		var t = new eui.Image();
+		this.Img_BKG = t;
+		t.fillMode = "repeat";
+		t.height = 100;
+		t.source = "ui_craft_back";
+		t.width = 100;
+		t.x = 0;
+		t.y = 0;
+		return t;
+	};
+	_proto.Img_Stick_i = function () {
+		var t = new eui.Image();
+		this.Img_Stick = t;
+		t.source = "ui_bowl_stick1";
+		t.x = 580;
+		t.y = 216;
+		return t;
+	};
+	_proto.Group_GameLayer_i = function () {
+		var t = new eui.Group();
+		this.Group_GameLayer = t;
+		t.percentHeight = 100;
+		t.horizontalCenter = 0;
+		t.verticalCenter = 0;
+		t.percentWidth = 100;
+		return t;
+	};
+	_proto.Group_UILayer_i = function () {
+		var t = new eui.Group();
+		this.Group_UILayer = t;
+		t.percentHeight = 100;
+		t.horizontalCenter = 0;
+		t.verticalCenter = 0;
+		t.percentWidth = 100;
+		t.x = 10;
+		t.y = 10;
+		t.elementsContent = [this.Group_PlaceTool_i(),this.Group_IngBox_i(),this.Group_Step_i(),this.Button_NextStep_i()];
+		return t;
+	};
+	_proto.Group_PlaceTool_i = function () {
+		var t = new eui.Group();
+		this.Group_PlaceTool = t;
+		t.x = 125;
+		t.y = 1020;
+		t.elementsContent = [this.HSilider_Size_i(),this.Button_Rotate_i(),this.Button_Flip_i(),this.Button_OK_i(),this.Button_Delete_i()];
+		return t;
+	};
+	_proto.HSilider_Size_i = function () {
+		var t = new eui.HSlider();
+		this.HSilider_Size = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.height = 50;
+		t.maximum = 4;
+		t.value = 2;
+		t.width = 500;
+		t.x = 0;
+		t.y = 0;
+		return t;
+	};
+	_proto.Button_Rotate_i = function () {
+		var t = new eui.Button();
+		this.Button_Rotate = t;
+		t.label = "旋转";
+		t.x = 121.15;
+		t.y = 82.85;
+		return t;
+	};
+	_proto.Button_Flip_i = function () {
+		var t = new eui.Button();
+		this.Button_Flip = t;
+		t.label = "翻转";
+		t.x = 275.15;
+		t.y = 82.85;
+		return t;
+	};
+	_proto.Button_OK_i = function () {
+		var t = new eui.Button();
+		this.Button_OK = t;
+		t.label = "好的";
+		t.x = 125.15;
+		t.y = 165.58;
+		return t;
+	};
+	_proto.Button_Delete_i = function () {
+		var t = new eui.Button();
+		this.Button_Delete = t;
+		t.label = "删除";
+		t.x = 275.15;
+		t.y = 165.58;
+		return t;
+	};
+	_proto.Group_IngBox_i = function () {
+		var t = new eui.Group();
+		this.Group_IngBox = t;
+		t.anchorOffsetY = 540;
+		t.height = 700;
+		t.x = 0;
+		t.y = 1334;
+		t.elementsContent = [this.Group_Box_i(),this.Button_PrevPage_i(),this.Button_NextPage_i()];
+		return t;
+	};
+	_proto.Group_Box_i = function () {
+		var t = new eui.Group();
+		this.Group_Box = t;
+		t.height = 540;
+		t.percentWidth = 100;
+		t.x = 0;
+		t.y = 0;
+		return t;
+	};
+	_proto.Button_PrevPage_i = function () {
+		var t = new eui.Button();
+		this.Button_PrevPage = t;
+		t.label = "";
+		t.skinName = "Button_IngredientBoxLeft";
+		t.x = 0;
+		t.y = 180;
+		return t;
+	};
+	_proto.Button_NextPage_i = function () {
+		var t = new eui.Button();
+		this.Button_NextPage = t;
+		t.label = "Button";
+		t.skinName = "Button_IngredientBox_Right";
+		t.x = 675;
+		t.y = 180;
+		return t;
+	};
+	_proto.Group_Step_i = function () {
+		var t = new eui.Group();
+		this.Group_Step = t;
+		t.anchorOffsetX = 0;
+		t.horizontalCenter = 0;
+		t.width = 480;
+		t.y = 100;
+		t.elementsContent = [this.Img_Step0_i(),this.Img_Step1_i(),this.Img_Step2_i(),this.Img_Step3_i(),this.Img_Step4_i()];
+		return t;
+	};
+	_proto.Img_Step0_i = function () {
+		var t = new eui.Image();
+		this.Img_Step0 = t;
+		t.anchorOffsetX = 40;
+		t.anchorOffsetY = 40;
+		t.source = "ui_craft_tab0";
+		t.x = 40;
+		t.y = 0;
+		return t;
+	};
+	_proto.Img_Step1_i = function () {
+		var t = new eui.Image();
+		this.Img_Step1 = t;
+		t.anchorOffsetX = 40;
+		t.anchorOffsetY = 40;
+		t.source = "ui_craft_tab1";
+		t.x = 140;
+		t.y = 0;
+		return t;
+	};
+	_proto.Img_Step2_i = function () {
+		var t = new eui.Image();
+		this.Img_Step2 = t;
+		t.anchorOffsetX = 40;
+		t.anchorOffsetY = 40;
+		t.source = "ui_craft_tab2";
+		t.x = 240;
+		t.y = 0;
+		return t;
+	};
+	_proto.Img_Step3_i = function () {
+		var t = new eui.Image();
+		this.Img_Step3 = t;
+		t.anchorOffsetX = 40;
+		t.anchorOffsetY = 40;
+		t.source = "ui_craft_tab3";
+		t.x = 340;
+		t.y = 0;
+		return t;
+	};
+	_proto.Img_Step4_i = function () {
+		var t = new eui.Image();
+		this.Img_Step4 = t;
+		t.anchorOffsetX = 40;
+		t.anchorOffsetY = 40;
+		t.source = "ui_craft_tab4";
+		t.x = 440;
+		t.y = 0;
+		return t;
+	};
+	_proto.Button_NextStep_i = function () {
+		var t = new eui.Button();
+		this.Button_NextStep = t;
+		t.label = "";
+		t.skinName = "Button_Craft_Next";
+		t.x = 560;
+		t.y = 800;
+		return t;
+	};
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		t.fillMode = "repeat";
+		t.horizontalCenter = 0;
+		t.scaleY = -1;
+		t.source = "ui_craft_border";
+		t.top = 0;
+		t.percentWidth = 100;
+		return t;
+	};
+	_proto.Img_BottomBorder_i = function () {
+		var t = new eui.Image();
+		this.Img_BottomBorder = t;
+		t.anchorOffsetY = 52;
+		t.fillMode = "repeat";
+		t.horizontalCenter = 0;
+		t.source = "ui_craft_border";
+		t.percentWidth = 100;
+		t.y = 1334;
+		return t;
+	};
 	return CraftNoodleSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/HScrollBarSkin.exml'] = window.skins.HScrollBarSkin = (function (_super) {
 	__extends(HScrollBarSkin, _super);
@@ -233,6 +576,82 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return HSliderSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/IngredientBox.exml'] = window.IngredientBoxSkin = (function (_super) {
+	__extends(IngredientBoxSkin, _super);
+	function IngredientBoxSkin() {
+		_super.call(this);
+		this.skinParts = [];
+		
+		this.height = 505;
+		this.width = 750;
+		this.elementsContent = [this._Image1_i()];
+	}
+	var _proto = IngredientBoxSkin.prototype;
+
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		t.horizontalCenter = 0;
+		t.source = "ui_craft_ingredientbox";
+		t.verticalCenter = 0;
+		return t;
+	};
+	return IngredientBoxSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/IngredientIconInBox.exml'] = window.IngredientIconInBoxSkin = (function (_super) {
+	__extends(IngredientIconInBoxSkin, _super);
+	function IngredientIconInBoxSkin() {
+		_super.call(this);
+		this.skinParts = ["Img_Icon","Label_Name","Img_Select"];
+		
+		this.height = 145;
+		this.width = 132;
+		this.elementsContent = [this.Img_Icon_i(),this._Image1_i(),this.Label_Name_i(),this.Img_Select_i()];
+	}
+	var _proto = IngredientIconInBoxSkin.prototype;
+
+	_proto.Img_Icon_i = function () {
+		var t = new eui.Image();
+		this.Img_Icon = t;
+		t.height = 100;
+		t.horizontalCenter = 0;
+		t.top = 0;
+		t.width = 100;
+		return t;
+	};
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		t.bottom = 0;
+		t.horizontalCenter = 0;
+		t.source = "ui_craft_ingredientname";
+		return t;
+	};
+	_proto.Label_Name_i = function () {
+		var t = new eui.Label();
+		this.Label_Name = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.height = 34;
+		t.horizontalCenter = 0;
+		t.size = 20;
+		t.text = "Label";
+		t.textAlign = "center";
+		t.textColor = 0x000000;
+		t.verticalAlign = "middle";
+		t.width = 124;
+		t.y = 100;
+		return t;
+	};
+	_proto.Img_Select_i = function () {
+		var t = new eui.Image();
+		this.Img_Select = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.height = 67;
+		t.width = 72;
+		t.x = 28;
+		t.y = 35;
+		return t;
+	};
+	return IngredientIconInBoxSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/ItemRendererSkin.exml'] = window.skins.ItemRendererSkin = (function (_super) {
 	__extends(ItemRendererSkin, _super);
 	function ItemRendererSkin() {

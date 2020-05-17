@@ -1,0 +1,125 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "body_lower",
+			"memberof": "CharacterActionInfo",
+			"scope": "instance",
+			"pType": "public",
+			"default": "0"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "body_upper",
+			"memberof": "CharacterActionInfo",
+			"scope": "instance",
+			"pType": "public",
+			"default": "0"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "head_lower",
+			"memberof": "CharacterActionInfo",
+			"scope": "instance",
+			"pType": "public",
+			"default": "0"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "head_upper",
+			"memberof": "CharacterActionInfo",
+			"scope": "instance",
+			"pType": "public",
+			"default": "0"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "key",
+			"memberof": "CharacterActionInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "Array<string>",
+			"name": "toPreloadBodyImage",
+			"memberof": "CharacterActionInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "Array<string>",
+			"name": "toPreloadEmoteImage",
+			"memberof": "CharacterActionInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "Array<string>",
+			"name": "toPreloadHeadImage",
+			"memberof": "CharacterActionInfo",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "CharacterActionInfo",
+			"memberof": "CharacterActionInfo",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "FromJson",
+			"memberof": "CharacterActionInfo",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "data",
+					"type": "Object",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "Array<CharacterFrameInfo>",
+			"name": "GetFrameInfoArray",
+			"memberof": "CharacterActionInfo",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "direction",
+					"type": "Direction",
+					"description": ""
+				},
+				{
+					"name": "action",
+					"type": "CharacterAction",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "CharacterActionInfo",
+		"memberof": "",
+		"filename": "data\\character\\CharacterActionInfo.ts",
+		"description": "//一个角色的动画信息文件"
+	},
+	"pType": "public"
+}

@@ -2,6 +2,8 @@
 var GameData_Ingredients;
 //面碗
 var GameData_Bowl;
+//汤底
+var GameData_Broth;
 //角色动画
 var GameData_CharacterAction;
 //读取数据
@@ -17,9 +19,8 @@ var LoadGameData = function () {
             var loadingIJ = RES.getRes(iJsons[i] + "_json");
             var fData = loadingIJ["data"];
             for (var n = 0; n < fData.length; n++) {
-                var ic = new IngredientClass();
-                ic.fromJson(fData[n]);
-                GameData_Ingredients.push(ic);
+                var ing = new IngredientModel(fData[n]);
+                GameData_Ingredients.push(ing);
             }
         }
         console.log("Ingredient >> Loaded");
@@ -46,6 +47,25 @@ var LoadGameData = function () {
     else {
         console.log("Bowl >> No Data");
     }
+    //汤底
+    console.log("Start Load >> Broth");
+    GameData_Broth = new Array();
+    if (catalog["broth"] && catalog["broth"].length > 0) {
+        var iJsons = catalog["broth"];
+        for (var i = 0; i < iJsons.length; i++) {
+            var loadingIJ = RES.getRes(iJsons[i] + "_json");
+            var fData = loadingIJ["data"];
+            for (var n = 0; n < fData.length; n++) {
+                var broth = new BrothModel();
+                broth.fromJson(fData[n]);
+                GameData_Broth.push(broth);
+            }
+        }
+        console.log("Broth >> Loaded");
+    }
+    else {
+        console.log("Broth >> No Data");
+    }
     //角色动画
     var actionJson = RES.getRes("character_animinfo_json");
     GameData_CharacterAction = new Array();
@@ -62,6 +82,16 @@ var GetCharacterActionInfoByKey = function (key) {
     for (var i = 0; i < GameData_CharacterAction.length; i++) {
         if (GameData_CharacterAction[i].key == key) {
             return GameData_CharacterAction[i];
+        }
+    }
+    return null;
+};
+var GetIngredientModelById = function (id) {
+    if (!GameData_Ingredients)
+        return null;
+    for (var i = 0; i < GameData_Ingredients.length; i++) {
+        if (GameData_Ingredients[i].id == id) {
+            return GameData_Ingredients[i];
         }
     }
     return null;

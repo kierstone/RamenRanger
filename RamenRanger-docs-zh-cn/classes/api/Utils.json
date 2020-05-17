@@ -1,0 +1,37 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"name": "UIRoot",
+			"memberof": "Utils",
+			"scope": "static",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"type": "Object",
+			"name": "GetEuiScreenPos",
+			"memberof": "Utils",
+			"scope": "static",
+			"params": [
+				{
+					"name": "item",
+					"type": "any",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "Utils",
+		"memberof": "",
+		"filename": "Utils.ts"
+	},
+	"pType": "public"
+}

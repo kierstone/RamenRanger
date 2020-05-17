@@ -1,0 +1,179 @@
+{
+	"member": [
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "canBeUsed",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "id",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "string",
+			"name": "name",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "pungency",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "radius",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "salty",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "sour",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "spicy",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"pType": "public"
+		},
+		{
+			"kind": "member",
+			"type": "number",
+			"name": "sweet",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"pType": "public"
+		}
+	],
+	"function": [
+		{
+			"kind": "function",
+			"name": "IngredientModel",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"params": [
+				{
+					"name": "data",
+					"question": true,
+					"type": "Object",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "boolean",
+			"name": "CanBeBroth",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"description": "材料能否做汤底",
+			"returns": "是否可以做汤底",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "boolean",
+			"name": "CanBeNoodle",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"description": "材料能否做面条",
+			"returns": "是否可以做面条",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "boolean",
+			"name": "CanBeTare",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"description": "材料能否做着味",
+			"returns": "是否可以做着味",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "boolean",
+			"name": "CanBeTopping",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"description": "材料能否做盖浇",
+			"returns": "是否可以做盖浇",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"name": "FromJson",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"description": "从json的Object获取到数据",
+			"returns": "是否成功，如果id有异常则不会成功",
+			"params": [
+				{
+					"name": "json",
+					"type": "Object",
+					"description": ""
+				}
+			],
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "string",
+			"name": "Icon",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"description": "获取icon的资源名",
+			"returns": "icon的名称",
+			"pType": "public"
+		},
+		{
+			"kind": "function",
+			"type": "string",
+			"name": "Image",
+			"memberof": "IngredientModel",
+			"scope": "instance",
+			"description": "获取图片资源名",
+			"returns": "资源名称",
+			"pType": "public"
+		}
+	],
+	"globalMember": [],
+	"globalFunction": [],
+	"class": {
+		"kind": "class",
+		"name": "IngredientModel",
+		"memberof": "",
+		"filename": "data\\ramen\\Ingredients.ts",
+		"description": "//从json读取的ingredient数据"
+	},
+	"pType": "public"
+}

@@ -41,3 +41,14 @@ enum SpriteClipLayer{
 	Noodle = 1,	//面条位于普通层上
 	EatingHead = 2,	//吃面的时候脑袋位于面条层上
 }
+
+//拉面制作界面状态
+enum CraftNoodleState{
+	ChooseBowl = 0,
+	PutTare = 1,
+	TareList = 2,
+	SoupToBroth = 3,
+	Noodles = 4,
+	SelectTopping = 5,
+	PlaceTopping = 6
+}
