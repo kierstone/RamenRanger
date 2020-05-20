@@ -57,6 +57,17 @@ class BrothModel {
 		return this.GatherShape(centerX, centerY, radius);
 	}
 
+	/**
+	 * 获取用于场景中面条的的shape
+	 * @param {number} centerX 中心x坐标
+	 * @param {number} centerY 中心y坐标
+	 * @param {number} radius 半径
+	 * @returns {egret.Shape} 用于icon的shape
+	 */
+	public SceneShape(centerX:number, centerY:number, radius:number):egret.Shape{
+		return this.GatherShape(centerX, centerY, radius);
+	}
+
 	private GatherShape(centerX:number, centerY:number, radius:number):egret.Shape{
 		let brothMatrix = new egret.Matrix();
 		brothMatrix.createGradientBox(radius * 2, radius * 2, 0, centerX - radius, centerY - radius)

@@ -1,10 +1,21 @@
 {
     "data":[
-        {"id":"beef0", "name":"牛肉片", "img":"topping_beef", "radius":15, "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
-        {"id":"coriander0", "name":"香菜", "img":"topping_coriander", "radius":15, "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
-        {"id":"onion0", "name":"葱花", "img":"topping_onion", "radius":15, "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
-        {"id":"onion1", "name":"葱花", "img":"topping_onion_2", "radius":15, "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
-        {"id":"turnip0", "name":"白萝卜", "img":"topping_turnip", "radius":15, "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
-        {"id":"noodle0", "name":"细面", "img":"noodle_normal", "radius":15, "using":4, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0}
+        {"id":"beef0", "name":"牛肉片", "img":"topping_beef", "liquid":false, "radius":15, "tag":["beef","meat"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"coriander0", "name":"香菜", "img":"topping_coriander", "liquid":false, "radius":15, "tag":["corinader","vegetable"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"onion0", "name":"葱花", "img":"topping_onion", "liquid":false, "radius":15, "tag":["onion"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"onion1", "name":"葱花", "img":"topping_onion_2", "liquid":false, "radius":15, "tag":["onion"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"turnip0", "name":"白萝卜", "img":"topping_turnip", "liquid":false, "radius":15, "tag":["turnip"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"noodle0", "name":"细面", "img":"noodle_normal", "liquid":false, "radius":15, "tag":["noodle"], "using":4, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"salt0", "name":"盐", "img":"tare_salt", "liquid":false, "radius":0, "tag":["salt"], "using":1, "pungency":0, "spicy":0, "sweet":0, "salty":1, "sour":0},
+        {"id":"ketchup0", "name":"番茄酱", "img":"tare_ketchup", "liquid":false, "radius":0, "tag":["ketchup"], "using":1, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":1},
+        {"id":"broad_bean0", "name":"蚕豆", "img":"broad_bean", "liquid":false, "radius":15, "tag":["broad_bean","bean"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"carrot0", "name":"胡萝卜片", "img":"carrot", "liquid":false, "radius":11, "tag":["carrot"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"cucumber0", "name":"黄瓜片", "img":"cucumber", "liquid":false, "radius":13, "tag":["cucumber"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"lettuce0", "name":"生菜", "img":"lettuce", "liquid":false, "radius":33, "tag":["lettuce","vegetable"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"mushroom_pork_ball0", "name":"香菇贡丸", "img":"mushroom_pork_ball", "liquid":false, "radius":11, "tag":["mushroom","meat"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"orion_ring0", "name":"洋葱圈", "img":"orion_ring", "liquid":false, "radius":16, "tag":["onion"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"poached_egg0", "name":"荷包蛋", "img":"poached_egg", "liquid":false, "radius":25, "tag":["egg"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"spiced_corned_egg0", "name":"卤蛋", "img":"spiced_corned_egg", "liquid":false, "radius":16, "tag":["egg"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0},
+        {"id":"sprouts0", "name":"豆芽", "img":"sprouts", "liquid":false, "radius":22, "tag":["sproouts"], "using":8, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0}
     ]
 }

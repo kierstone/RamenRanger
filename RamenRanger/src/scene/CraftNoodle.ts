@@ -12,6 +12,7 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 	private Button_OK:eui.Button;
 	private Button_Delete:eui.Button;
 	private Button_NextStep:eui.Button;
+	private Button_Prev:eui.Button;
 
 	private Img_BottomBorder:eui.Image;
 	private Img_BKG:eui.Image;
@@ -32,6 +33,7 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 
 	private bowlImage:eui.Image;
 	private brothImage:egret.Shape;
+	private brothHighlight:eui.Image;
 	private noodleImage:eui.Image;
 
 	private uiState:CraftNoodleState;
@@ -83,11 +85,10 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 
 		//先写死就是这个饭碗的数据
 		this.craftingRamen = new RamenModel();
-		this.craftingRamen.bowl = new BowlObj(GameData_Bowl[0]);
 		//this.craftingRamen.broth = new BrothObj(playerInfo.getLearnedBroth("broth0"));
 		 
 		
-		this.ChangeToState(CraftNoodleState.SoupToBroth);
+		this.ChangeToState(CraftNoodleState.ChooseBowl);
 
 		this.UpdateRamen();
 		
@@ -166,6 +167,8 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 
 		//下一步按钮
 		this.Button_NextStep.addEventListener(egret.TouchEvent.TOUCH_TAP, this.OnNextButtonClick, this);
+		//上一部
+		this.Button_Prev.addEventListener(egret.TouchEvent.TOUCH_TAP, this.OnPrevButtonClick, this);
 
 		let t = new egret.Timer(50);
 		t.addEventListener(egret.TimerEvent.TIMER, ()=>{
@@ -174,24 +177,66 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 		t.start();
 	}
 
-	//下一步函数
+	//下一步按钮
 	private OnNextButtonClick(){
+		if (this.canControl == false) return;
+
 		switch(this.uiState){
 			case CraftNoodleState.ChooseBowl:{
-
-			}break;
-			case CraftNoodleState.SoupToBroth:{
-				if (this.canControl == true && this.craftingRamen.broth){
-					//TODO 先跳过放面条，写死的
-					this.craftingRamen.noodles = new IngredientObj(
-						GetIngredientModelById("noodle0"), 
-						this.ramenCenterX, this.ramenCenterY, 0
-					)
-					this.ChangeToState(CraftNoodleState.SelectTopping);	
-					this.UpdateRamen(false, true, true);
+				if (this.craftingRamen.bowl){
+					this.ChangeToState(CraftNoodleState.PutTare);	
+					this.UpdateRamen();
 				}
 			}break;
+			case CraftNoodleState.PutTare:{
+				this.ChangeToState(CraftNoodleState.SoupToBroth);	
+				this.UpdateRamen();
+			}break;
+			case CraftNoodleState.SoupToBroth:{
+				if (this.craftingRamen.broth){
+					this.ChangeToState(CraftNoodleState.Noodles);	
+					this.UpdateRamen();
+					//this.UpdateRamen(false, false, true);
+				}
+			}break;
+			case CraftNoodleState.Noodles:{
+				if (this.craftingRamen.noodles){
+					this.ChangeToState(CraftNoodleState.SelectTopping);	
+					this.UpdateRamen();
+				}
+			}break;
+			case CraftNoodleState.SelectTopping:{
+				//TODO 现在先弄个ramenSpriteClip在200，200
+				this.parent.addChild(new TestScene(this.craftingRamen));
+				this.parent.removeChild(this);
+			}break;
 		}
+		
+	}
+
+	//上一步按钮
+	private OnPrevButtonClick(){
+		if (this.canControl == false) return;
+
+		switch(this.uiState){
+			case CraftNoodleState.PutTare:{
+				this.ChangeToState(CraftNoodleState.ChooseBowl);
+				//this.UpdateRamen(true, false, false);	
+			}break;
+			case CraftNoodleState.SoupToBroth:{
+				this.ChangeToState(CraftNoodleState.PutTare);
+				//this.UpdateRamen(false, true, false);
+			}break;
+			case CraftNoodleState.Noodles:{
+				this.ChangeToState(CraftNoodleState.SoupToBroth);	
+				//this.UpdateRamen(false, false, true);
+			}break;
+			case CraftNoodleState.SelectTopping:{
+				this.ChangeToState(CraftNoodleState.Noodles);
+				//this.UpdateRamen(false, false, false);	
+			}break;
+		}
+		
 	}
 
 
@@ -217,12 +262,20 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 	//手指Tap事件
 	private StagePointerTap(e:egret.TouchEvent){
 		switch(this.uiState){
+			case CraftNoodleState.PutTare:{
+				let touchOne = this.craftingRamen.TouchedTare(
+					e.stageX, e.stageY, this.ramenCenterX, this.ramenCenterY, true
+				);
+				if (touchOne){
+					this.UpdateRamen();
+				}
+			}
 			case CraftNoodleState.SelectTopping:{
 				let touchOne = this.craftingRamen.TouchedTopping(
 					e.stageX, e.stageY, this.ramenCenterX, this.ramenCenterY, true
 				);
 				if (touchOne){
-					this.UpdateRamen(false, false, false);
+					this.UpdateRamen();
 					this.placingIngredient = touchOne;
 					this.ChangeToState(CraftNoodleState.PlaceTopping);
 				}
@@ -246,9 +299,7 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 					this.draggingIng = true;
 					this.pickingOffsetX = this.placingIngredient.x - e.stageX;
 					this.pickingOffsetY = this.placingIngredient.y - e.stageY;
-					console.log("draggingIng", this.draggingIng = true)
 				}
-				console.log("down", e.stageX, e.stageY);
 			}break;
 		}
 	}
@@ -268,7 +319,6 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 					);
 					this.PlacingToolSynchronize();
 				}
-				console.log("draggin", e.stageX, e.stageY);
 			}break;
 		}
 	}
@@ -312,7 +362,7 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 	private PlaceIngredientToRamen(){
 		if (!this.placingIngredient || !this.craftingRamen) return;
 		this.craftingRamen.topping.push(this.placingIngredient.Clone());
-		this.UpdateRamen(false, false, false);
+		this.UpdateRamen();
 		
 		this.ChangeToState(CraftNoodleState.SelectTopping);
 	}
@@ -326,39 +376,91 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 		this.canControl = false;
 		egret.Tween.removeAllTweens();
 
-		//退出当前状态
-		switch(this.uiState){
-			case CraftNoodleState.TareList:{
+		let animLen = 200 //inMS
 
-			}break;
-			case CraftNoodleState.ChooseBowl,
-				CraftNoodleState.PutTare,
-				CraftNoodleState.SoupToBroth,
-				CraftNoodleState.Noodles,
-				CraftNoodleState.SelectTopping:{
-					egret.Tween.get(this.Group_IngBox)
-						.to({y:this.stage.stageHeight + 600}, 200, egret.Ease.quadOut);
-				this.ingredientIndex = 0;
-			}break;
-			case CraftNoodleState.PlaceTopping:{
-				this.draggingIng = false;
-				this.RemovePlacingIngImage();
-				this.placingIngredient = null;
-				egret.Tween.get(this.Group_PlaceTool)
-					.to({y:this.stage.stageHeight + 600}, 200, egret.Ease.quadOut);
-			}break;
+		//初始化一些值
+		if (this.uiState == CraftNoodleState.PlaceTopping){
+			//如果是从摆放toppings退出
+			this.draggingIng = false;
+			this.RemovePlacingIngImage();
+			this.placingIngredient = null;
+			//退出所有界面元素
+			egret.Tween.get(this.Group_IngBox)
+				.to({y:this.stage.stageHeight + 600}, animLen, egret.Ease.quadOut);
+			egret.Tween.get(this.Group_PlaceTool)
+				.to({y:this.stage.stageHeight + 600}, animLen, egret.Ease.quadOut)
+				.call(()=>{this._OnEnterState(toState);});
+		}else if (this.uiState == CraftNoodleState.SelectTopping){
+			//选择Topping离开的话什么都不做
+			egret.Tween.get(this.Group_IngBox)
+				.to({y:this.stage.stageHeight + 600}, animLen, egret.Ease.quadOut)
+				.call(()=>{this._OnEnterState(toState);});
+			egret.Tween.get(this.Group_PlaceTool)
+				.to({y:this.stage.stageHeight + 600}, animLen, egret.Ease.quadOut);
+		}else{
+			this.ingredientIndex = 0; //其他状态离开的时候都要清除ingredientIndex
+			egret.Tween.get(this.Group_IngBox)
+				.to({y:this.stage.stageHeight + 600}, animLen, egret.Ease.quadOut)
+				.call(()=>{this._OnEnterState(toState);});
+			egret.Tween.get(this.Group_PlaceTool)
+				.to({y:this.stage.stageHeight + 600}, animLen, egret.Ease.quadOut);
 		}
+
+		
+		this.uiState = toState;
+
+		//根据状态设置图标
+		this.Img_Step0.scaleX = this.Img_Step0.scaleY = (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2:1;
+		this.Img_Step1.scaleX = this.Img_Step1.scaleY = (this.uiState == CraftNoodleState.PutTare) ? 1.2:1;
+		this.Img_Step2.scaleX = this.Img_Step2.scaleY = (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2:1;
+		this.Img_Step3.scaleX = this.Img_Step3.scaleY = (this.uiState == CraftNoodleState.Noodles) ? 1.2:1;
+		this.Img_Step4.scaleX = this.Img_Step4.scaleY = 
+			(this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2:1;
+	}
+	private _OnEnterState(toState:CraftNoodleState){
+		egret.Tween.get(this.Img_Step0)
+			.to({
+				scaleX:(this.uiState == CraftNoodleState.ChooseBowl) ? 1.2:1,
+				scaleY:(this.uiState == CraftNoodleState.ChooseBowl) ? 1.2:1
+			})
+		egret.Tween.get(this.Img_Step1)
+			.to({
+				scaleX:(this.uiState == CraftNoodleState.PutTare) ? 1.2:1,
+				scaleY:(this.uiState == CraftNoodleState.PutTare) ? 1.2:1
+			})
+		egret.Tween.get(this.Img_Step2)
+			.to({
+				scaleX:(this.uiState == CraftNoodleState.SoupToBroth) ? 1.2:1,
+				scaleY:(this.uiState == CraftNoodleState.SoupToBroth) ? 1.2:1
+			})
+		egret.Tween.get(this.Img_Step3)
+			.to({
+				scaleX:(this.uiState == CraftNoodleState.Noodles) ? 1.2:1,
+				scaleY:(this.uiState == CraftNoodleState.Noodles) ? 1.2:1
+			})
+		egret.Tween.get(this.Img_Step4)
+			.to({
+				scaleX:(this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2:1,
+				scaleY:(this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2:1
+			})
 
 		//同时进入新的状态
 		switch (toState){
 			case CraftNoodleState.ChooseBowl:{
-
+				this.ResetBowlBox();
+				egret.Tween.get(this.Group_IngBox)
+					.to({y:this.stage.stageHeight}, 200, egret.Ease.quadIn)
+					.call(()=>{
+						this.canControl = true;
+					},this);
 			}break;
 			case CraftNoodleState.PutTare:{
 				this.ResetIngredientBox(IngredientUseType.UseType_Tare);
-			}break;
-			case CraftNoodleState.TareList:{
-
+				egret.Tween.get(this.Group_IngBox)
+					.to({y:this.stage.stageHeight}, 200, egret.Ease.quadIn)
+					.call(()=>{
+						this.canControl = true;
+					},this);
 			}break;
 			case CraftNoodleState.SoupToBroth:{
 				this.ResetBrothBox();
@@ -370,7 +472,11 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 			}break;
 			case CraftNoodleState.Noodles:{
 				this.ResetIngredientBox(IngredientUseType.UseType_Noodle);
-				
+				egret.Tween.get(this.Group_IngBox)
+					.to({y:this.stage.stageHeight}, 200, egret.Ease.quadIn)
+					.call(()=>{
+						this.canControl = true;
+					},this);
 			}break;
 			case CraftNoodleState.SelectTopping:{
 				this.ResetIngredientBox(IngredientUseType.UseType_Topping);
@@ -393,16 +499,8 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 					},this);
 			}break;
 		}
-		this.uiState = toState;
-
-		//根据状态设置图标
-		this.Img_Step0.scaleX = this.Img_Step0.scaleY = (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2:1;
-		this.Img_Step1.scaleX = this.Img_Step1.scaleY = 
-			(this.uiState == CraftNoodleState.PutTare || this.uiState == CraftNoodleState.TareList) ? 1.2:1;
-		this.Img_Step2.scaleX = this.Img_Step2.scaleY = (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2:1;
-		this.Img_Step3.scaleX = this.Img_Step3.scaleY = (this.uiState == CraftNoodleState.Noodles) ? 1.2:1;
-		this.Img_Step4.scaleX = this.Img_Step4.scaleY = 
-			(this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2:1;
+		if (this.uiState != CraftNoodleState.PlaceTopping)
+			this.UpdateRamen();
 	}
 
 	private ClearIngredientBoxes(){
@@ -414,6 +512,42 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 			}
 		}
 		this.ingredientPage = new Array<IngredientBox>();
+	}
+
+	/**
+	 * 设置面碗盒子
+	 */
+	private ResetBowlBox(){
+		this.ClearIngredientBoxes();
+
+		let me = this;
+
+		//先把所有的列出来了
+		let selectedIndex = -1;
+		let pageI:Array<Array<BowlModel>> = [new Array<BowlModel>()];
+		let cgI:number = 0;
+		for (let i = 0; i < playerInfo.unlockedBowl.length; i++){
+			let bowl = playerInfo.unlockedBowl[i];
+			if (pageI[cgI].length >= 12){
+				//一页12个，超过了就Push新的一页
+				pageI.push(new Array<BowlModel>());
+				cgI = pageI.length - 1;
+			}
+			pageI[cgI].push(bowl);
+		}
+		
+		//根据pageI制作所有的ingredientBox
+		for (let i = 0; i < pageI.length; i++){
+			let pis = new Array<IngredientIconInBox>();
+			for (let j = 0; j < pageI[i].length; j++){
+				pis.push(new IngredientIconInBox(
+					pageI[i][j].id, pageI[i][j], pageI[i][j].Icon(), me, me.ClickOnIngredientIcon
+				))
+			}
+			let ip = new IngredientBox(pis);
+			this.ingredientPage.push(ip);
+		}
+		this.ChangeIngredientBoxPage(Math.min(this.ingredientIndex, pageI.length - 1));
 	}
 
 	/**
@@ -481,7 +615,7 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 			let pis = new Array<IngredientIconInBox>();
 			for (let j = 0; j < pageI[i].length; j++){
 				pis.push(new IngredientIconInBox(
-					pageI[i][j].id, pageI[i][j], pageI[i][j].Icon(), me, me.ClickOnIngredientIcon
+					pageI[i][j].id, pageI[i][j], pageI[i][j].icon, me, me.ClickOnIngredientIcon
 				))
 			}
 			let ip = new IngredientBox(pis);
@@ -546,26 +680,42 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 		if (caller.canControl == false) return;
 		switch (caller.uiState){
 			case CraftNoodleState.ChooseBowl:{
-
+				caller.craftingRamen.bowl = new BowlObj((ing as BowlModel));
+				caller.UpdateRamen();
 			}break;
 			case CraftNoodleState.PutTare:{
-
+				if (!caller.craftingRamen.bowl) return;
+				if (caller.craftingRamen.tare.length < caller.craftingRamen.bowl.model.tareLimit){
+					let im = (ing as IngredientModel);
+					let randomX = im.liquid == true ? 0 :(Math.random() * 200 - 100);
+					let randomY = im.liquid == true ? 0 :(Math.random() * 200 - 100);
+					if (im.liquid == true){
+						caller.craftingRamen.tare.unshift(
+							new IngredientObj(ing, randomX, randomY)
+						);
+					}else{
+						caller.craftingRamen.tare.push(
+							new IngredientObj(ing, randomX, randomY)
+						);
+					}
+					caller.UpdateRamen();
+				}
 			}break;
 			case CraftNoodleState.SoupToBroth:{
 				caller.craftingRamen.broth = new BrothObj(ing as BrothModel);
-				caller.UpdateRamen(false, true, false);
+				caller.UpdateRamen(true);
 				//TODO 选中还没
 				caller.canControl = true;
 			}break;
 			case CraftNoodleState.Noodles:{
-
+				caller.craftingRamen.noodles = new IngredientObj(
+					(ing as IngredientModel),this.ramenCenterX, this.ramenCenterY
+				);
+				caller.UpdateRamen();
 			}break;
 			case CraftNoodleState.SelectTopping:{
 				caller.placingIngredient = new IngredientObj(ing, 0, 400);
 				caller.ChangeToState(CraftNoodleState.PlaceTopping);
-			}break;
-			case CraftNoodleState.PlaceTopping:{
-				
 			}break;
 		}
 	}
@@ -573,17 +723,60 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 
 	/**
 	 * 重新根据数据绘制一下拉面，正在拖曳的肯定不鸟他
+	 * @param {boolean} doBrothAnim 是否要播放汤底冲开的画面
 	 */
-	private UpdateRamen(bowlChanged:boolean = true, brothChanged:boolean = true, noodleChanged:boolean = true){
+	private UpdateRamen(doBrothAnim:boolean = false){
 		//先全部去掉
 		this.Group_GameLayer.removeChildren();
+
+		//根据状态确定要画什么
+		let drawTare = false;
+		let drawBroth = false;
+		let drawBrothHL = false;
+		let drawNoodle = false;
+		let drawTopping = false;
+
+		let bowlChanged = false;
+		let brothChanged = false;
+		let noodleChanged = false;
+
+		switch (this.uiState){
+			case CraftNoodleState.ChooseBowl:{
+				bowlChanged = true;
+			}break;
+			case CraftNoodleState.PutTare:{
+				drawTare = true;
+			}break;
+			case CraftNoodleState.SoupToBroth:{
+				drawTare = true;
+				drawBroth = true;
+				drawBrothHL = true;
+				brothChanged = true;
+			}break;
+			case CraftNoodleState.Noodles:{
+				drawBroth = true;
+				drawBrothHL = !this.craftingRamen.noodles ;
+				drawNoodle = true;
+				noodleChanged = true;
+			}break;
+			case CraftNoodleState.SelectTopping:{
+				drawBroth = true;
+				drawNoodle = true;
+				drawTopping = true;
+			}break;
+			case CraftNoodleState.PlaceTopping:{
+				drawBroth = true;
+				drawNoodle = true;
+				drawTopping = true;
+			}break;
+		}
 
 		//面碗
 		if (this.craftingRamen.bowl){
 			if (!this.bowlImage){
-				this.bowlImage = new eui.Image(RES.getRes(this.craftingRamen.bowl.model.Image()));
+				this.bowlImage = new eui.Image(RES.getRes(this.craftingRamen.bowl.model.img));
 			}else if (bowlChanged == true){
-				this.bowlImage.source = RES.getRes(this.craftingRamen.bowl.model.Image());
+				this.bowlImage.source = RES.getRes(this.craftingRamen.bowl.model.img);
 			}
 			this.Group_GameLayer.addChild(this.bowlImage);
 			this.bowlImage.anchorOffsetX = this.bowlImage.width / 2;
@@ -592,33 +785,74 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 			this.bowlImage.y = this.ramenCenterY;
 		}
 
+		//着味
+		if (drawTare == true){
+			for (let i = 0; i < this.craftingRamen.tare.length; i++){
+				let tp = this.craftingRamen.tare[i];
+				let img = tp.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
+			}
+		}
+
 		//汤底
-		if (this.craftingRamen.broth){
+		let brothAnimInTime = 350;	//in ms
+		if (this.craftingRamen.broth && drawBroth == true){
 			if (!this.brothImage || brothChanged == true){
 				this.brothImage = this.craftingRamen.broth.model.ImageShape(
 					this.ramenCenterX, this.ramenCenterY, this.craftingRamen.bowl.model.radius
 				);
 			}
 			this.Group_GameLayer.addChild(this.brothImage);
+			
+			//如果是刷新，则需要
+			if (doBrothAnim == true){
+				this.brothImage.scaleX = this.brothImage.scaleY = 0;
+				egret.Tween.removeTweens(this.brothImage);
+				egret.Tween.get(this.brothImage)
+					.to({scaleX:1, scaleY:1}, brothAnimInTime, egret.Ease.quadOut)
+					.call(()=>{
+						if (!this.brothHighlight){
+							this.brothHighlight = new eui.Image(RES.getRes("broth_highlight"));
+						}
+						this.Group_GameLayer.addChild(this.brothHighlight);
+						this.brothHighlight.anchorOffsetX = this.brothHighlight.width / 2;
+						this.brothHighlight.anchorOffsetY = this.brothHighlight.height / 2;
+						this.brothHighlight.x = this.ramenCenterX;
+						this.brothHighlight.y = this.ramenCenterY;
+						this.brothHighlight.alpha = 0;
+						egret.Tween.removeTweens(this.brothHighlight);
+						egret.Tween.get(this.brothHighlight)
+							.to({alpha:1}, brothAnimInTime, egret.Ease.quadOut)
+					});
+			}
 		}
 
 		//汤上面的油光
-		let sC = new eui.Image(RES.getRes("test_broth_highlight"));
-		this.Group_GameLayer.addChild(sC);
-		sC.anchorOffsetX = sC.width / 2;
-		sC.anchorOffsetY = sC.height / 2;
-		sC.x = this.ramenCenterX;
-		sC.y = this.ramenCenterY;
+		if (drawBrothHL == true && this.craftingRamen.broth && doBrothAnim == false){
+			if (!this.brothHighlight){
+				this.brothHighlight = new eui.Image(RES.getRes("broth_highlight"));
+			}
+			this.Group_GameLayer.addChild(this.brothHighlight);
+			this.brothHighlight.anchorOffsetX = this.brothHighlight.width / 2;
+			this.brothHighlight.anchorOffsetY = this.brothHighlight.height / 2;
+			this.brothHighlight.x = this.ramenCenterX;
+			this.brothHighlight.y = this.ramenCenterY;
+			// if (brothChanged == true){
+			// 	this.brothHighlight.scaleX = this.brothHighlight.scaleY = 0;
+			// 	this.brothHighlight.alpha = 0;
+			// 	egret.Tween.removeTweens(this.brothHighlight);
+			// 	egret.Tween.get(this.brothHighlight)
+			// 		.to({scaleX:1, scaleY:1, alpha:1}, brothAnimInTime, egret.Ease.quadOut);
+			// }
+		}
+		
 
 		//return;
 		
 		//面条
-		if (this.craftingRamen.noodles){
-			if (!this.noodleImage){
-				this.noodleImage = new eui.Image(RES.getRes(this.craftingRamen.noodles.model.Image()));	
-			}else if (noodleChanged == true){
-				this.noodleImage.source = RES.getRes(this.craftingRamen.noodles.model.Image());
-			}
+		if (this.craftingRamen.noodles && drawNoodle == true){
+			this.noodleImage = this.craftingRamen.noodles.GatherImage(
+				this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY
+			)
 			this.Group_GameLayer.addChild(this.noodleImage);
 			this.noodleImage.anchorOffsetX = this.noodleImage.width / 2;
 			this.noodleImage.anchorOffsetY = this.noodleImage.height / 2;
@@ -629,10 +863,13 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 		let me = this;
 
 		//Toppings
-		for (let i = 0; i < this.craftingRamen.topping.length; i++){
-			let tp = this.craftingRamen.topping[i];
-			let img = tp.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
+		if (drawTopping == true){
+			for (let i = 0; i < this.craftingRamen.topping.length; i++){
+				let tp = this.craftingRamen.topping[i];
+				let img = tp.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
+			}
 		}
+		
 	}
 }
 

@@ -50,6 +50,43 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return Button_Craft_Next;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/Button_Craft_Prev.exml'] = window.Button_Craft_Prev = (function (_super) {
+	__extends(Button_Craft_Prev, _super);
+	function Button_Craft_Prev() {
+		_super.call(this);
+		this.skinParts = [];
+		
+		this.currentState = "up";
+		this.height = 96;
+		this.width = 75;
+		this.elementsContent = [this._Image1_i()];
+		this.states = [
+			new eui.State ("up",
+				[
+				])
+			,
+			new eui.State ("down",
+				[
+					new eui.SetProperty("_Image1","scaleX",1.1),
+					new eui.SetProperty("_Image1","scaleY",1.1)
+				])
+			,
+			new eui.State ("disabled",
+				[
+				])
+		];
+	}
+	var _proto = Button_Craft_Prev.prototype;
+
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		this._Image1 = t;
+		t.horizontalCenter = 0;
+		t.source = "ui_craft_button_back";
+		t.verticalCenter = 0;
+		return t;
+	};
+	return Button_Craft_Prev;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/Button_IngredientBox_Right.exml'] = window.Button_IngredientBox_Right = (function (_super) {
 	__extends(Button_IngredientBox_Right, _super);
 	function Button_IngredientBox_Right() {
@@ -294,7 +331,7 @@ var egret = window.egret;window.skins=window.skins||{};
 	__extends(CraftNoodleSkin, _super);
 	function CraftNoodleSkin() {
 		_super.call(this);
-		this.skinParts = ["Img_BKG","Img_Stick","Group_GameLayer","HSilider_Size","Button_Rotate","Button_Flip","Button_OK","Button_Delete","Group_PlaceTool","Group_Box","Button_PrevPage","Button_NextPage","Group_IngBox","Img_Step0","Img_Step1","Img_Step2","Img_Step3","Img_Step4","Group_Step","Button_NextStep","Group_UILayer","Img_BottomBorder"];
+		this.skinParts = ["Img_BKG","Img_Stick","Group_GameLayer","HSilider_Size","Button_Rotate","Button_Flip","Button_OK","Button_Delete","Group_PlaceTool","Group_Box","Button_PrevPage","Button_NextPage","Group_IngBox","Img_Step0","Img_Step1","Img_Step2","Img_Step3","Img_Step4","Group_Step","Button_NextStep","Button_Prev","Group_UILayer","Img_BottomBorder"];
 		
 		this.height = 1334;
 		this.width = 750;
@@ -339,7 +376,7 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.percentWidth = 100;
 		t.x = 10;
 		t.y = 10;
-		t.elementsContent = [this.Group_PlaceTool_i(),this.Group_IngBox_i(),this.Group_Step_i(),this.Button_NextStep_i()];
+		t.elementsContent = [this.Group_PlaceTool_i(),this.Group_IngBox_i(),this.Group_Step_i(),this.Button_NextStep_i(),this.Button_Prev_i()];
 		return t;
 	};
 	_proto.Group_PlaceTool_i = function () {
@@ -499,6 +536,15 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.skinName = "Button_Craft_Next";
 		t.x = 560;
 		t.y = 800;
+		return t;
+	};
+	_proto.Button_Prev_i = function () {
+		var t = new eui.Button();
+		this.Button_Prev = t;
+		t.label = "";
+		t.skinName = "Button_Craft_Prev";
+		t.x = 12.5;
+		t.y = 50;
 		return t;
 	};
 	_proto._Image1_i = function () {

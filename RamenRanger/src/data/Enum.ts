@@ -46,9 +46,8 @@ enum SpriteClipLayer{
 enum CraftNoodleState{
 	ChooseBowl = 0,
 	PutTare = 1,
-	TareList = 2,
-	SoupToBroth = 3,
-	Noodles = 4,
-	SelectTopping = 5,
-	PlaceTopping = 6
+	SoupToBroth = 2,
+	Noodles = 3,
+	SelectTopping = 4,
+	PlaceTopping = 5
 }

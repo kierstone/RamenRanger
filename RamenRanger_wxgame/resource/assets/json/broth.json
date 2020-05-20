@@ -1,5 +1,9 @@
 {
     "data":[
-        {"id":"broth0", "name":"豚骨汤", "backColor":16767867, "coverColor":[16739842,16776960,16739842], "coverAlpha":0.18}
+        {"id":"broth0", "name":"豚骨汤", "backColor":16767867, "coverColor":[16739842,16776960,16739842], "coverAlpha":0.18},
+        {"id":"broth1", "name":"辣汤", "backColor":15621888, "coverColor":[16721189,16748945,16711680], "coverAlpha":0.18},
+        {"id":"broth2", "name":"清汤", "backColor":13354649, "coverColor":[15853277,14277004,15451045], "coverAlpha":0.18},
+        {"id":"broth3", "name":"墨鱼汁汤", "backColor":0, "coverColor":[11908533,5066061,12298136], "coverAlpha":0.18},
+        {"id":"broth4", "name":"咖喱汤", "backColor":15630592, "coverColor":[16739842,16776960,16739842], "coverAlpha":0.18}
     ]
 }

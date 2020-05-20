@@ -16,13 +16,14 @@
 		"CraftNoodle": "resource/eui_skins/CraftNoodle.exml",
 		"Street": "resource/eui_skins/Street.exml",
 		"StreetGround": "resource/eui_skins/StreetGround.exml",
-		"RamenObj": "resource/eui_skins/RamenObj.exml",
 		"IngredientBox": "resource/eui_skins/IngredientBox.exml",
-		"IngredientIconInBox": "resource/eui_skins/IngredientIconInBox.exml"
+		"IngredientIconInBox": "resource/eui_skins/IngredientIconInBox.exml",
+		"TestScene": "resource/eui_skins/TestScene.exml"
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
 		"resource/eui_skins/Button_Craft_Next.exml",
+		"resource/eui_skins/Button_Craft_Prev.exml",
 		"resource/eui_skins/Button_IngredientBox_Right.exml",
 		"resource/eui_skins/Button_IngredientBoxLeft.exml",
 		"resource/eui_skins/ButtonSkin.exml",
@@ -37,10 +38,10 @@
 		"resource/eui_skins/PanelSkin.exml",
 		"resource/eui_skins/ProgressBarSkin.exml",
 		"resource/eui_skins/RadioButtonSkin.exml",
-		"resource/eui_skins/RamenObj.exml",
 		"resource/eui_skins/ScrollerSkin.exml",
 		"resource/eui_skins/Street.exml",
 		"resource/eui_skins/StreetGround.exml",
+		"resource/eui_skins/TestScene.exml",
 		"resource/eui_skins/TextInputSkin.exml",
 		"resource/eui_skins/ToggleSwitchSkin.exml",
 		"resource/eui_skins/TrafficLight.exml",

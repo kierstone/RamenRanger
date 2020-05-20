@@ -3,6 +3,7 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 };
 var BowlModel = (function () {
     function BowlModel() {
+        this.tareLimit = 6; //TODO 最多6个tare，回头改成读数据
     }
     /**
      * 从json的Object获取到数据
@@ -16,16 +17,13 @@ var BowlModel = (function () {
         this.id = json["id"];
         this.name = json["name"] ? json["name"] : json["id"];
         this.img = json["img"] ? json["img"] : json["id"];
+        this.icon = json["icon"] ? json["icon"] : "";
+        this.scene = json["scene"] ? json["scene"] : "";
+        this.sceneCenterX = json["x"] ? json["x"] : 0;
+        this.sceneCenterY = json["y"] ? json["y"] : 0;
         this.radius = json["radius"] ? json["radius"] : 200;
         this.cost = json["cost"] ? json["cost"] : 1;
         return true;
-    };
-    /**
-     * 获取图片资源名
-     * @returns {string} 资源名称
-     */
-    BowlModel.prototype.Image = function () {
-        return this.img;
     };
     /**
      * 获取icon的资源名

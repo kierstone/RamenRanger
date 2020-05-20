@@ -1,5 +1,7 @@
 declare class Button_Craft_Next extends eui.Skin{
 }
+declare class Button_Craft_Prev extends eui.Skin{
+}
 declare class Button_IngredientBox_Right extends eui.Skin{
 }
 declare class Button_IngredientBoxLeft extends eui.Skin{
@@ -44,8 +46,6 @@ declare module skins{
 	class RadioButtonSkin extends eui.Skin{
 	}
 }
-declare class RamenObjSkin extends eui.Skin{
-}
 declare module skins{
 	class ScrollerSkin extends eui.Skin{
 	}
@@ -53,6 +53,8 @@ declare module skins{
 declare class StreetSkin extends eui.Skin{
 }
 declare class StreetGroundSkin extends eui.Skin{
+}
+declare class TestSceneSkin extends eui.Skin{
 }
 declare module skins{
 	class TextInputSkin extends eui.Skin{

@@ -180,20 +180,10 @@ var Main = (function (_super) {
      */
     Main.prototype.createGameScene = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var i, j, i;
             return __generator(this, function (_a) {
                 LoadGameData();
                 Utils.UIRoot = this;
                 playerInfo = new PlayerInfo();
-                for (i = 0; i < 3; i++) {
-                    //强行学习3次
-                    for (j = 0; j < GameData_Ingredients.length; j++) {
-                        playerInfo.unlockedIngredients.push(GameData_Ingredients[j]);
-                    }
-                }
-                for (i = 0; i < GameData_Broth.length; i++) {
-                    playerInfo.unlockedBroth.push(GameData_Broth[i]);
-                }
                 console.log(GameData_Ingredients, GameData_Bowl);
                 // if (!GameScene_Street){
                 //     GameScene_Street = new Street();

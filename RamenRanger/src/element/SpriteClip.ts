@@ -1,9 +1,7 @@
 class SpriteClip extends eui.Image{
 	private preloadTextures:Object ; //{"key":string, "texture":egret.Texture}
 
-	//private logicOffsetX:number = 0;	//和x坐标的逻辑偏差
-	//private logicOffsetY:number = 0;
-	private logicLayer:SpriteClipLayer = SpriteClipLayer.Normal;
+	public logicLayer:SpriteClipLayer = SpriteClipLayer.Normal;
 
 	public constructor() {
 		super();
@@ -53,13 +51,6 @@ class SpriteClip extends eui.Image{
 	 */
 	public NeedToSendMeBack(compareSpritClip:SpriteClip):boolean{
 		if (!compareSpritClip) return false;
-		// let myTop = this.anchorOffsetY < 0 ? (this.y + this.anchorOffsetY) : this.y;
-		// let myBottom = this.anchorOffsetY > 0 ? (this.y + this.anchorOffsetY) : this.y;
-		// let itTop = compareSpritClip.anchorOffsetY < 0 ? (compareSpritClip.y + compareSpritClip.anchorOffsetY) : compareSpritClip.y;
-		// let itBottom = compareSpritClip.anchorOffsetY > 0 ? (compareSpritClip.y + compareSpritClip.anchorOffsetY) : compareSpritClip.y;
-		// if (itTop > myBottom || itBottom < myTop){
-		// 	return false;	//两者碰不到不存在层级问题
-		// }
 		if (this.logicLayer == compareSpritClip.logicLayer){
 			return this.y < compareSpritClip.y;
 		}else{

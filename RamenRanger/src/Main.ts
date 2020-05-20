@@ -110,15 +110,7 @@ class Main extends eui.UILayer {
         Utils.UIRoot = this;
 
         playerInfo = new PlayerInfo();
-        for (let i = 0; i < 3; i++){
-            //强行学习3次
-            for (let j = 0; j < GameData_Ingredients.length; j++){
-                playerInfo.unlockedIngredients.push(GameData_Ingredients[j]);
-            }
-        }
-        for (let i = 0; i < GameData_Broth.length; i++){
-            playerInfo.unlockedBroth.push(GameData_Broth[i]);
-        }
+        
 
         console.log(GameData_Ingredients, GameData_Bowl);
 

@@ -64,7 +64,41 @@ var RamenModel = (function () {
         }
         return null;
     };
+    /**
+     * 判断坐标点在哪个Tare上了
+     * @param {number} x 坐标点x
+     * @param {number} y 坐标点y
+     * @param {number} thisX 拉面的x坐标
+     * @param {number} thisY 拉面的y坐标
+     * @param {boolean} removeTouchOne 是否从tare里面移除掉这个
+     * @returns {IngredientObj} 点中的那个，null代表没有
+     */
+    RamenModel.prototype.TouchedTare = function (x, y, thisX, thisY, removeTouchOne) {
+        if (!this.tare || this.tare.length <= 0)
+            return null;
+        //越后面的在越上面，越容易被点到
+        for (var i = this.tare.length - 1; i >= 0; i--) {
+            var tp = this.tare[i];
+            if (tp.TouchOnMe(x, y, thisX, thisY) == true) {
+                if (removeTouchOne == true) {
+                    return this.tare.splice(i, 1)[0];
+                }
+                else {
+                    return tp;
+                }
+            }
+        }
+        return null;
+    };
     return RamenModel;
 }());
 __reflect(RamenModel.prototype, "RamenModel");
+var RamenObj = (function () {
+    function RamenObj(model) {
+        if (model)
+            this.model = model;
+    }
+    return RamenObj;
+}());
+__reflect(RamenObj.prototype, "RamenObj");
 //# sourceMappingURL=RamenModel.js.map

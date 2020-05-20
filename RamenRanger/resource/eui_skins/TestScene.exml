@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="TestSceneSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="17231442c30" ></w:Config>
+	<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" locked="true"/>
+	<e:Group id="gameLayer" width="100%" height="60%" horizontalCenter="0" top="0"/>
+</e:Skin>

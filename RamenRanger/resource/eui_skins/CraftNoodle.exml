@@ -26,6 +26,7 @@
 			<e:Image id="Img_Step4" x="440" y="0" source="ui_craft_tab4" anchorOffsetX="40" anchorOffsetY="40"/>
 		</e:Group>
 		<e:Button id="Button_NextStep" label="" x="560" y="800" skinName="Button_Craft_Next"/>
+		<e:Button id="Button_Prev" label="" x="12.5" y="50" skinName="Button_Craft_Prev"/>
 	</e:Group>
 	<e:Image width="100%" top="0" horizontalCenter="0" source="ui_craft_border" fillMode="repeat" scaleY="-1"/>
 	<e:Image id="Img_BottomBorder" width="100%" horizontalCenter="0" source="ui_craft_border" fillMode="repeat" anchorOffsetY="52" y="1334"/>

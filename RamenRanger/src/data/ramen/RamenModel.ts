@@ -72,4 +72,38 @@ class RamenModel {
 		return null;
 	}
 
+	/**
+	 * 判断坐标点在哪个Tare上了
+	 * @param {number} x 坐标点x
+	 * @param {number} y 坐标点y
+	 * @param {number} thisX 拉面的x坐标
+	 * @param {number} thisY 拉面的y坐标
+	 * @param {boolean} removeTouchOne 是否从tare里面移除掉这个
+	 * @returns {IngredientObj} 点中的那个，null代表没有
+	 */
+	public TouchedTare(x:number, y:number, thisX:number, thisY:number, removeTouchOne:boolean):IngredientObj{
+		if (!this.tare || this.tare.length <= 0) return null;
+		//越后面的在越上面，越容易被点到
+		for (let i = this.tare.length - 1; i >= 0; i--){
+			let tp = this.tare[i];
+			if (tp.TouchOnMe(x, y, thisX, thisY) == true){
+				if (removeTouchOne == true){
+					return this.tare.splice(i, 1)[0];
+				}else{
+					return tp;
+				}
+			}
+		}
+		return null;
+	}
+
+}
+
+
+class RamenObj{
+	public model:RamenModel;
+
+	constructor(model?:RamenModel){
+		if (model) this.model = model;
+	}
 }

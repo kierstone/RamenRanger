@@ -19,28 +19,24 @@ var IngredientModel = (function () {
         this.id = json["id"];
         this.name = json["name"] ? json["name"] : json["id"];
         this.img = json["img"] ? json["img"] : "";
+        this.icon = json["icon"] ? json["icon"] : "";
+        this.scene = json["scene"] ? json["scene"] : "";
         this.radius = json["radius"] ? json["radius"] : 0;
         this.canBeUsed = json["using"] ? json["using"] : 0;
+        this.liquid = json["liquid"] ? json["liquid"] : false;
         this.pungency = json["pungency"] ? json["pungency"] : 0;
         this.sweet = json["sweet"] ? json["sweet"] : 0;
         this.salty = json["salty"] ? json["salty"] : 0;
         this.sour = json["sour"] ? json["sour"] : 0;
         this.spicy = json["spicy"] ? json["spicy"] : 0;
+        this.tags = new Array();
+        if (json["tag"]) {
+            var jt = json["tag"];
+            for (var i = 0; i < jt.length; i++) {
+                this.tags.push(jt[i]);
+            }
+        }
         return true;
-    };
-    /**
-     * 获取图片资源名
-     * @returns {string} 资源名称
-     */
-    IngredientModel.prototype.Image = function () {
-        return "ingredient_" + this.img;
-    };
-    /**
-     * 获取icon的资源名
-     * @returns {string} icon的名称
-     */
-    IngredientModel.prototype.Icon = function () {
-        return "ingredient_" + this.img;
     };
     /**
      * 材料能否做着味
@@ -97,12 +93,33 @@ var IngredientObj = (function () {
     IngredientObj.prototype.GatherImage = function (parent, centerX, centerY) {
         if (!parent)
             return null;
-        var res = new eui.Image(RES.getRes(this.model.Image()));
+        var res = new eui.Image(RES.getRes(this.model.img));
         parent.addChild(res);
         res.anchorOffsetX = res.width / 2;
         res.anchorOffsetY = res.height / 2;
         res.x = this.x + centerX;
         res.y = this.y + centerY;
+        res.rotation = this.rotation;
+        res.scaleX = (this.xFlip == true ? -1 : 1) * this.size;
+        res.scaleY = this.size;
+        return res;
+    };
+    /**
+     * 根据当前情况创建一个新的eui.Image
+     * @param {eui.Group} parent 要放到什么父亲
+     * @param {number} centerX 面碗中心的x坐标
+     * @param {number} centerY 面碗中心的y坐标
+     * @returns {eui.Image} 创建出来的image
+     */
+    IngredientObj.prototype.GatherSceneImage = function (parent, centerX, centerY) {
+        if (!parent)
+            return null;
+        var res = new eui.Image(RES.getRes(this.model.scene));
+        parent.addChild(res);
+        res.anchorOffsetX = res.width / 2;
+        res.anchorOffsetY = res.height / 2;
+        res.x = Math.round(this.x * Scene_PosScale + centerX);
+        res.y = Math.round(this.y * Scene_PosScale + centerY);
         res.rotation = this.rotation;
         res.scaleX = (this.xFlip == true ? -1 : 1) * this.size;
         res.scaleY = this.size;

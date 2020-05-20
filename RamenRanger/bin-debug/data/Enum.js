@@ -46,10 +46,9 @@ var CraftNoodleState;
 (function (CraftNoodleState) {
     CraftNoodleState[CraftNoodleState["ChooseBowl"] = 0] = "ChooseBowl";
     CraftNoodleState[CraftNoodleState["PutTare"] = 1] = "PutTare";
-    CraftNoodleState[CraftNoodleState["TareList"] = 2] = "TareList";
-    CraftNoodleState[CraftNoodleState["SoupToBroth"] = 3] = "SoupToBroth";
-    CraftNoodleState[CraftNoodleState["Noodles"] = 4] = "Noodles";
-    CraftNoodleState[CraftNoodleState["SelectTopping"] = 5] = "SelectTopping";
-    CraftNoodleState[CraftNoodleState["PlaceTopping"] = 6] = "PlaceTopping";
+    CraftNoodleState[CraftNoodleState["SoupToBroth"] = 2] = "SoupToBroth";
+    CraftNoodleState[CraftNoodleState["Noodles"] = 3] = "Noodles";
+    CraftNoodleState[CraftNoodleState["SelectTopping"] = 4] = "SelectTopping";
+    CraftNoodleState[CraftNoodleState["PlaceTopping"] = 5] = "PlaceTopping";
 })(CraftNoodleState || (CraftNoodleState = {}));
 //# sourceMappingURL=Enum.js.map

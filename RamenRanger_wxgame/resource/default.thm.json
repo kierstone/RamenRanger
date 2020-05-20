@@ -23,6 +23,7 @@
 	"autoGenerateExmlsList": true,
 	"exmls": [
 		"resource/eui_skins/Button_Craft_Next.exml",
+		"resource/eui_skins/Button_Craft_Prev.exml",
 		"resource/eui_skins/Button_IngredientBox_Right.exml",
 		"resource/eui_skins/Button_IngredientBoxLeft.exml",
 		"resource/eui_skins/ButtonSkin.exml",

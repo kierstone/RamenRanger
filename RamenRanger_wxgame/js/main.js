@@ -104,9 +104,9 @@ var BrothModel = (function () {
         var sizes = new Array();
         for (var i = 0; i < this.coverColor.length; i++) {
             alphas.push(this.coverAlpha);
-            sizes.push(i / this.coverColor.length * 255);
+            sizes.push((i + 1) * 255 / this.coverColor.length);
         }
-        shp.graphics.beginGradientFill(egret.GradientType.RADIAL, [0xff6e02, 0xffff00, 0xff6e02], [0.18, 0.18, 0.18], [255 / 3, 255 * 2 / 3, 255], brothMatrix);
+        shp.graphics.beginGradientFill(egret.GradientType.RADIAL, this.coverColor, alphas, sizes, brothMatrix);
         shp.graphics.drawCircle(0, 0, radius);
         shp.graphics.endFill();
         return shp;
@@ -316,20 +316,10 @@ var Main = (function (_super) {
      */
     Main.prototype.createGameScene = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var i, j, i;
             return __generator(this, function (_a) {
                 LoadGameData();
                 Utils.UIRoot = this;
                 playerInfo = new PlayerInfo();
-                for (i = 0; i < 3; i++) {
-                    //强行学习3次
-                    for (j = 0; j < GameData_Ingredients.length; j++) {
-                        playerInfo.unlockedIngredients.push(GameData_Ingredients[j]);
-                    }
-                }
-                for (i = 0; i < GameData_Broth.length; i++) {
-                    playerInfo.unlockedBroth.push(GameData_Broth[i]);
-                }
                 console.log(GameData_Ingredients, GameData_Bowl);
                 // if (!GameScene_Street){
                 //     GameScene_Street = new Street();
@@ -550,17 +540,33 @@ var CraftNoodleState;
 (function (CraftNoodleState) {
     CraftNoodleState[CraftNoodleState["ChooseBowl"] = 0] = "ChooseBowl";
     CraftNoodleState[CraftNoodleState["PutTare"] = 1] = "PutTare";
-    CraftNoodleState[CraftNoodleState["TareList"] = 2] = "TareList";
-    CraftNoodleState[CraftNoodleState["SoupToBroth"] = 3] = "SoupToBroth";
-    CraftNoodleState[CraftNoodleState["Noodles"] = 4] = "Noodles";
-    CraftNoodleState[CraftNoodleState["SelectTopping"] = 5] = "SelectTopping";
-    CraftNoodleState[CraftNoodleState["PlaceTopping"] = 6] = "PlaceTopping";
+    CraftNoodleState[CraftNoodleState["SoupToBroth"] = 2] = "SoupToBroth";
+    CraftNoodleState[CraftNoodleState["Noodles"] = 3] = "Noodles";
+    CraftNoodleState[CraftNoodleState["SelectTopping"] = 4] = "SelectTopping";
+    CraftNoodleState[CraftNoodleState["PlaceTopping"] = 5] = "PlaceTopping";
 })(CraftNoodleState || (CraftNoodleState = {}));
 var PlayerInfo = (function () {
     function PlayerInfo() {
         this.unlockedIngredients = new Array();
         this.unlockedBroth = new Array();
+        this.unlockedBowl = new Array();
+        this.Load();
     }
+    /**
+     * 读盘
+     * 先写死
+     */
+    PlayerInfo.prototype.Load = function () {
+        for (var j = 0; j < GameData_Ingredients.length; j++) {
+            this.unlockedIngredients.push(GameData_Ingredients[j]);
+        }
+        for (var i = 0; i < GameData_Broth.length; i++) {
+            this.unlockedBroth.push(GameData_Broth[i]);
+        }
+        for (var i = 0; i < GameData_Bowl.length; i++) {
+            this.unlockedBowl.push(GameData_Bowl[i]);
+        }
+    };
     /**
      * 获取学会了某个素材，如果返回null就是没学会
      * @param {string} ingredientId 查询的ingredient的id
@@ -587,6 +593,21 @@ var PlayerInfo = (function () {
         for (var i = 0; i < this.unlockedBroth.length; i++) {
             if (this.unlockedBroth[i].id == brothId) {
                 return this.unlockedBroth[i];
+            }
+        }
+        return null;
+    };
+    /**
+     * 获取学会了某个面碗，如果返回null就是没学会
+     * @param {string} bowlId 查询的bowl的id
+     * @returns {BowlModel} 返回要查询的面碗model，如果Null代表没学会
+     */
+    PlayerInfo.prototype.getLearnedBowl = function (bowlId) {
+        if (bowlId == "" || !this.unlockedBowl || this.unlockedBowl.length <= 0)
+            return null;
+        for (var i = 0; i < this.unlockedBowl.length; i++) {
+            if (this.unlockedBowl[i].id == bowlId) {
+                return this.unlockedBowl[i];
             }
         }
         return null;
@@ -1153,6 +1174,7 @@ var CharacterAIScript = (function () {
 __reflect(CharacterAIScript.prototype, "CharacterAIScript");
 var BowlModel = (function () {
     function BowlModel() {
+        this.tareLimit = 6; //TODO 最多6个tare，回头改成读数据
     }
     /**
      * 从json的Object获取到数据
@@ -1291,11 +1313,19 @@ var IngredientModel = (function () {
         this.img = json["img"] ? json["img"] : "";
         this.radius = json["radius"] ? json["radius"] : 0;
         this.canBeUsed = json["using"] ? json["using"] : 0;
+        this.liquid = json["liquid"] ? json["liquid"] : false;
         this.pungency = json["pungency"] ? json["pungency"] : 0;
         this.sweet = json["sweet"] ? json["sweet"] : 0;
         this.salty = json["salty"] ? json["salty"] : 0;
         this.sour = json["sour"] ? json["sour"] : 0;
         this.spicy = json["spicy"] ? json["spicy"] : 0;
+        this.tags = new Array();
+        if (json["tag"]) {
+            var jt = json["tag"];
+            for (var i = 0; i < jt.length; i++) {
+                this.tags.push(jt[i]);
+            }
+        }
         return true;
     };
     /**
@@ -2022,9 +2052,8 @@ var CraftNoodle = (function (_super) {
         this.Group_IngBox.y = this.stage.stageHeight;
         //先写死就是这个饭碗的数据
         this.craftingRamen = new RamenModel();
-        this.craftingRamen.bowl = new BowlObj(GameData_Bowl[0]);
         //this.craftingRamen.broth = new BrothObj(playerInfo.getLearnedBroth("broth0"));
-        this.ChangeToState(CraftNoodleState.SoupToBroth);
+        this.ChangeToState(CraftNoodleState.ChooseBowl);
         this.UpdateRamen();
         this.Group_UILayer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.StagePointerDown, this);
         this.Group_UILayer.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.StagePointerMove, this);
@@ -2089,27 +2118,79 @@ var CraftNoodle = (function (_super) {
         }, this);
         //下一步按钮
         this.Button_NextStep.addEventListener(egret.TouchEvent.TOUCH_TAP, this.OnNextButtonClick, this);
+        //上一部
+        this.Button_Prev.addEventListener(egret.TouchEvent.TOUCH_TAP, this.OnPrevButtonClick, this);
         var t = new egret.Timer(50);
         t.addEventListener(egret.TimerEvent.TIMER, function () {
             _this.Update();
         }, this);
         t.start();
     };
-    //下一步函数
+    //下一步按钮
     CraftNoodle.prototype.OnNextButtonClick = function () {
+        if (this.canControl == false)
+            return;
         switch (this.uiState) {
             case CraftNoodleState.ChooseBowl:
                 {
+                    if (this.craftingRamen.bowl) {
+                        this.ChangeToState(CraftNoodleState.PutTare);
+                        this.UpdateRamen();
+                    }
+                }
+                break;
+            case CraftNoodleState.PutTare:
+                {
+                    this.ChangeToState(CraftNoodleState.SoupToBroth);
+                    this.UpdateRamen();
                 }
                 break;
             case CraftNoodleState.SoupToBroth:
                 {
-                    if (this.canControl == true && this.craftingRamen.broth) {
-                        //TODO 先跳过放面条，写死的
-                        this.craftingRamen.noodles = new IngredientObj(GetIngredientModelById("noodle0"), this.ramenCenterX, this.ramenCenterY, 0);
-                        this.ChangeToState(CraftNoodleState.SelectTopping);
-                        this.UpdateRamen(false, true, true);
+                    if (this.craftingRamen.broth) {
+                        this.ChangeToState(CraftNoodleState.Noodles);
+                        this.UpdateRamen();
+                        //this.UpdateRamen(false, false, true);
                     }
+                }
+                break;
+            case CraftNoodleState.Noodles:
+                {
+                    if (this.craftingRamen.noodles) {
+                        this.ChangeToState(CraftNoodleState.SelectTopping);
+                        this.UpdateRamen();
+                    }
+                }
+                break;
+        }
+    };
+    //上一步按钮
+    CraftNoodle.prototype.OnPrevButtonClick = function () {
+        if (this.canControl == false)
+            return;
+        switch (this.uiState) {
+            case CraftNoodleState.PutTare:
+                {
+                    this.ChangeToState(CraftNoodleState.ChooseBowl);
+                    //this.UpdateRamen(true, false, false);	
+                }
+                break;
+            case CraftNoodleState.SoupToBroth:
+                {
+                    this.ChangeToState(CraftNoodleState.PutTare);
+                    //this.UpdateRamen(false, true, false);
+                }
+                break;
+            case CraftNoodleState.Noodles:
+                {
+                    this.ChangeToState(CraftNoodleState.SoupToBroth);
+                    //this.UpdateRamen(false, false, true);
+                }
+                break;
+            case CraftNoodleState.SelectTopping:
+                {
+                    this.ChangeToState(CraftNoodleState.Noodles);
+                    //this.UpdateRamen(false, false, false);	
                 }
                 break;
         }
@@ -2139,7 +2220,7 @@ var CraftNoodle = (function (_super) {
                 {
                     var touchOne = this.craftingRamen.TouchedTopping(e.stageX, e.stageY, this.ramenCenterX, this.ramenCenterY, true);
                     if (touchOne) {
-                        this.UpdateRamen(false, false, false);
+                        this.UpdateRamen();
                         this.placingIngredient = touchOne;
                         this.ChangeToState(CraftNoodleState.PlaceTopping);
                     }
@@ -2231,7 +2312,7 @@ var CraftNoodle = (function (_super) {
         if (!this.placingIngredient || !this.craftingRamen)
             return;
         this.craftingRamen.topping.push(this.placingIngredient.Clone());
-        this.UpdateRamen(false, false, false);
+        this.UpdateRamen();
         this.ChangeToState(CraftNoodleState.SelectTopping);
     };
     /**
@@ -2242,46 +2323,92 @@ var CraftNoodle = (function (_super) {
         var _this = this;
         this.canControl = false;
         egret.Tween.removeAllTweens();
-        //退出当前状态
-        switch (this.uiState) {
-            case CraftNoodleState.TareList:
-                {
-                }
-                break;
-            case CraftNoodleState.ChooseBowl,
-                CraftNoodleState.PutTare,
-                CraftNoodleState.SoupToBroth,
-                CraftNoodleState.Noodles,
-                CraftNoodleState.SelectTopping:
-                {
-                    egret.Tween.get(this.Group_IngBox)
-                        .to({ y: this.stage.stageHeight + 600 }, 200, egret.Ease.quadOut);
-                    this.ingredientIndex = 0;
-                }
-                break;
-            case CraftNoodleState.PlaceTopping:
-                {
-                    this.draggingIng = false;
-                    this.RemovePlacingIngImage();
-                    this.placingIngredient = null;
-                    egret.Tween.get(this.Group_PlaceTool)
-                        .to({ y: this.stage.stageHeight + 600 }, 200, egret.Ease.quadOut);
-                }
-                break;
+        var animLen = 200; //inMS
+        //初始化一些值
+        if (this.uiState == CraftNoodleState.PlaceTopping) {
+            //如果是从摆放toppings退出
+            this.draggingIng = false;
+            this.RemovePlacingIngImage();
+            this.placingIngredient = null;
+            //退出所有界面元素
+            egret.Tween.get(this.Group_IngBox)
+                .to({ y: this.stage.stageHeight + 600 }, animLen, egret.Ease.quadOut);
+            egret.Tween.get(this.Group_PlaceTool)
+                .to({ y: this.stage.stageHeight + 600 }, animLen, egret.Ease.quadOut)
+                .call(function () { _this._OnEnterState(toState); });
         }
+        else if (this.uiState == CraftNoodleState.SelectTopping) {
+            //选择Topping离开的话什么都不做
+            egret.Tween.get(this.Group_IngBox)
+                .to({ y: this.stage.stageHeight + 600 }, animLen, egret.Ease.quadOut)
+                .call(function () { _this._OnEnterState(toState); });
+            egret.Tween.get(this.Group_PlaceTool)
+                .to({ y: this.stage.stageHeight + 600 }, animLen, egret.Ease.quadOut);
+        }
+        else {
+            this.ingredientIndex = 0; //其他状态离开的时候都要清除ingredientIndex
+            egret.Tween.get(this.Group_IngBox)
+                .to({ y: this.stage.stageHeight + 600 }, animLen, egret.Ease.quadOut)
+                .call(function () { _this._OnEnterState(toState); });
+            egret.Tween.get(this.Group_PlaceTool)
+                .to({ y: this.stage.stageHeight + 600 }, animLen, egret.Ease.quadOut);
+        }
+        this.uiState = toState;
+        //根据状态设置图标
+        this.Img_Step0.scaleX = this.Img_Step0.scaleY = (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2 : 1;
+        this.Img_Step1.scaleX = this.Img_Step1.scaleY = (this.uiState == CraftNoodleState.PutTare) ? 1.2 : 1;
+        this.Img_Step2.scaleX = this.Img_Step2.scaleY = (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2 : 1;
+        this.Img_Step3.scaleX = this.Img_Step3.scaleY = (this.uiState == CraftNoodleState.Noodles) ? 1.2 : 1;
+        this.Img_Step4.scaleX = this.Img_Step4.scaleY =
+            (this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2 : 1;
+    };
+    CraftNoodle.prototype._OnEnterState = function (toState) {
+        var _this = this;
+        egret.Tween.get(this.Img_Step0)
+            .to({
+            scaleX: (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2 : 1,
+            scaleY: (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2 : 1
+        });
+        egret.Tween.get(this.Img_Step1)
+            .to({
+            scaleX: (this.uiState == CraftNoodleState.PutTare) ? 1.2 : 1,
+            scaleY: (this.uiState == CraftNoodleState.PutTare) ? 1.2 : 1
+        });
+        egret.Tween.get(this.Img_Step2)
+            .to({
+            scaleX: (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2 : 1,
+            scaleY: (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2 : 1
+        });
+        egret.Tween.get(this.Img_Step3)
+            .to({
+            scaleX: (this.uiState == CraftNoodleState.Noodles) ? 1.2 : 1,
+            scaleY: (this.uiState == CraftNoodleState.Noodles) ? 1.2 : 1
+        });
+        egret.Tween.get(this.Img_Step4)
+            .to({
+            scaleX: (this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2 : 1,
+            scaleY: (this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2 : 1
+        });
         //同时进入新的状态
         switch (toState) {
             case CraftNoodleState.ChooseBowl:
                 {
+                    this.ResetBowlBox();
+                    egret.Tween.get(this.Group_IngBox)
+                        .to({ y: this.stage.stageHeight }, 200, egret.Ease.quadIn)
+                        .call(function () {
+                        _this.canControl = true;
+                    }, this);
                 }
                 break;
             case CraftNoodleState.PutTare:
                 {
                     this.ResetIngredientBox(IngredientUseType.UseType_Tare);
-                }
-                break;
-            case CraftNoodleState.TareList:
-                {
+                    egret.Tween.get(this.Group_IngBox)
+                        .to({ y: this.stage.stageHeight }, 200, egret.Ease.quadIn)
+                        .call(function () {
+                        _this.canControl = true;
+                    }, this);
                 }
                 break;
             case CraftNoodleState.SoupToBroth:
@@ -2297,6 +2424,11 @@ var CraftNoodle = (function (_super) {
             case CraftNoodleState.Noodles:
                 {
                     this.ResetIngredientBox(IngredientUseType.UseType_Noodle);
+                    egret.Tween.get(this.Group_IngBox)
+                        .to({ y: this.stage.stageHeight }, 200, egret.Ease.quadIn)
+                        .call(function () {
+                        _this.canControl = true;
+                    }, this);
                 }
                 break;
             case CraftNoodleState.SelectTopping:
@@ -2324,15 +2456,8 @@ var CraftNoodle = (function (_super) {
                 }
                 break;
         }
-        this.uiState = toState;
-        //根据状态设置图标
-        this.Img_Step0.scaleX = this.Img_Step0.scaleY = (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2 : 1;
-        this.Img_Step1.scaleX = this.Img_Step1.scaleY =
-            (this.uiState == CraftNoodleState.PutTare || this.uiState == CraftNoodleState.TareList) ? 1.2 : 1;
-        this.Img_Step2.scaleX = this.Img_Step2.scaleY = (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2 : 1;
-        this.Img_Step3.scaleX = this.Img_Step3.scaleY = (this.uiState == CraftNoodleState.Noodles) ? 1.2 : 1;
-        this.Img_Step4.scaleX = this.Img_Step4.scaleY =
-            (this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2 : 1;
+        if (this.uiState != CraftNoodleState.PlaceTopping)
+            this.UpdateRamen();
     };
     CraftNoodle.prototype.ClearIngredientBoxes = function () {
         if (this.ingredientPage && this.ingredientPage.length > 0) {
@@ -2343,6 +2468,36 @@ var CraftNoodle = (function (_super) {
             }
         }
         this.ingredientPage = new Array();
+    };
+    /**
+     * 设置面碗盒子
+     */
+    CraftNoodle.prototype.ResetBowlBox = function () {
+        this.ClearIngredientBoxes();
+        var me = this;
+        //先把所有的列出来了
+        var selectedIndex = -1;
+        var pageI = [new Array()];
+        var cgI = 0;
+        for (var i = 0; i < playerInfo.unlockedBowl.length; i++) {
+            var bowl = playerInfo.unlockedBowl[i];
+            if (pageI[cgI].length >= 12) {
+                //一页12个，超过了就Push新的一页
+                pageI.push(new Array());
+                cgI = pageI.length - 1;
+            }
+            pageI[cgI].push(bowl);
+        }
+        //根据pageI制作所有的ingredientBox
+        for (var i = 0; i < pageI.length; i++) {
+            var pis = new Array();
+            for (var j = 0; j < pageI[i].length; j++) {
+                pis.push(new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].Icon(), me, me.ClickOnIngredientIcon));
+            }
+            var ip = new IngredientBox(pis);
+            this.ingredientPage.push(ip);
+        }
+        this.ChangeIngredientBoxPage(Math.min(this.ingredientIndex, pageI.length - 1));
     };
     /**
      * 设置汤底盒子
@@ -2465,22 +2620,35 @@ var CraftNoodle = (function (_super) {
         switch (caller.uiState) {
             case CraftNoodleState.ChooseBowl:
                 {
+                    caller.craftingRamen.bowl = new BowlObj(ing);
+                    caller.UpdateRamen();
                 }
                 break;
             case CraftNoodleState.PutTare:
                 {
+                    if (!caller.craftingRamen.bowl)
+                        return;
+                    if (caller.craftingRamen.tare.length < caller.craftingRamen.bowl.model.tareLimit) {
+                        var im = ing;
+                        var randomX = im.liquid == true ? 0 : (Math.random() * 200 - 100);
+                        var randomY = im.liquid == true ? 0 : (Math.random() * 200 - 100);
+                        caller.craftingRamen.tare.push(new IngredientObj(ing, randomX, randomY));
+                        caller.UpdateRamen();
+                    }
                 }
                 break;
             case CraftNoodleState.SoupToBroth:
                 {
                     caller.craftingRamen.broth = new BrothObj(ing);
-                    caller.UpdateRamen(false, true, false);
+                    caller.UpdateRamen(true);
                     //TODO 选中还没
                     caller.canControl = true;
                 }
                 break;
             case CraftNoodleState.Noodles:
                 {
+                    caller.craftingRamen.noodles = new IngredientObj(ing, this.ramenCenterX, this.ramenCenterY);
+                    caller.UpdateRamen();
                 }
                 break;
             case CraftNoodleState.SelectTopping:
@@ -2489,21 +2657,68 @@ var CraftNoodle = (function (_super) {
                     caller.ChangeToState(CraftNoodleState.PlaceTopping);
                 }
                 break;
-            case CraftNoodleState.PlaceTopping:
-                {
-                }
-                break;
         }
     };
     /**
      * 重新根据数据绘制一下拉面，正在拖曳的肯定不鸟他
+     * @param {boolean} doBrothAnim 是否要播放汤底冲开的画面
      */
-    CraftNoodle.prototype.UpdateRamen = function (bowlChanged, brothChanged, noodleChanged) {
-        if (bowlChanged === void 0) { bowlChanged = true; }
-        if (brothChanged === void 0) { brothChanged = true; }
-        if (noodleChanged === void 0) { noodleChanged = true; }
+    CraftNoodle.prototype.UpdateRamen = function (doBrothAnim) {
+        var _this = this;
+        if (doBrothAnim === void 0) { doBrothAnim = false; }
         //先全部去掉
         this.Group_GameLayer.removeChildren();
+        //根据状态确定要画什么
+        var drawTare = false;
+        var drawBroth = false;
+        var drawBrothHL = false;
+        var drawNoodle = false;
+        var drawTopping = false;
+        var bowlChanged = false;
+        var brothChanged = false;
+        var noodleChanged = false;
+        switch (this.uiState) {
+            case CraftNoodleState.ChooseBowl:
+                {
+                    bowlChanged = true;
+                }
+                break;
+            case CraftNoodleState.PutTare:
+                {
+                    drawTare = true;
+                }
+                break;
+            case CraftNoodleState.SoupToBroth:
+                {
+                    drawTare = true;
+                    drawBroth = true;
+                    drawBrothHL = true;
+                    brothChanged = true;
+                }
+                break;
+            case CraftNoodleState.Noodles:
+                {
+                    drawBroth = true;
+                    drawBrothHL = !this.craftingRamen.noodles;
+                    drawNoodle = true;
+                    noodleChanged = true;
+                }
+                break;
+            case CraftNoodleState.SelectTopping:
+                {
+                    drawBroth = true;
+                    drawNoodle = true;
+                    drawTopping = true;
+                }
+                break;
+            case CraftNoodleState.PlaceTopping:
+                {
+                    drawBroth = true;
+                    drawNoodle = true;
+                    drawTopping = true;
+                }
+                break;
+        }
         //面碗
         if (this.craftingRamen.bowl) {
             if (!this.bowlImage) {
@@ -2518,23 +2733,63 @@ var CraftNoodle = (function (_super) {
             this.bowlImage.x = this.ramenCenterX;
             this.bowlImage.y = this.ramenCenterY;
         }
+        //着味
+        if (drawTare == true) {
+            for (var i = 0; i < this.craftingRamen.tare.length; i++) {
+                var tp = this.craftingRamen.tare[i];
+                var img = tp.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
+            }
+        }
         //汤底
-        if (this.craftingRamen.broth) {
+        var brothAnimInTime = 350; //in ms
+        if (this.craftingRamen.broth && drawBroth == true) {
             if (!this.brothImage || brothChanged == true) {
                 this.brothImage = this.craftingRamen.broth.model.ImageShape(this.ramenCenterX, this.ramenCenterY, this.craftingRamen.bowl.model.radius);
             }
             this.Group_GameLayer.addChild(this.brothImage);
+            //如果是刷新，则需要
+            if (doBrothAnim == true) {
+                this.brothImage.scaleX = this.brothImage.scaleY = 0;
+                egret.Tween.removeTweens(this.brothImage);
+                egret.Tween.get(this.brothImage)
+                    .to({ scaleX: 1, scaleY: 1 }, brothAnimInTime, egret.Ease.quadOut)
+                    .call(function () {
+                    if (!_this.brothHighlight) {
+                        _this.brothHighlight = new eui.Image(RES.getRes("broth_highlight"));
+                    }
+                    _this.Group_GameLayer.addChild(_this.brothHighlight);
+                    _this.brothHighlight.anchorOffsetX = _this.brothHighlight.width / 2;
+                    _this.brothHighlight.anchorOffsetY = _this.brothHighlight.height / 2;
+                    _this.brothHighlight.x = _this.ramenCenterX;
+                    _this.brothHighlight.y = _this.ramenCenterY;
+                    _this.brothHighlight.alpha = 0;
+                    egret.Tween.removeTweens(_this.brothHighlight);
+                    egret.Tween.get(_this.brothHighlight)
+                        .to({ alpha: 1 }, brothAnimInTime, egret.Ease.quadOut);
+                });
+            }
         }
         //汤上面的油光
-        var sC = new eui.Image(RES.getRes("test_broth_highlight"));
-        this.Group_GameLayer.addChild(sC);
-        sC.anchorOffsetX = sC.width / 2;
-        sC.anchorOffsetY = sC.height / 2;
-        sC.x = this.ramenCenterX;
-        sC.y = this.ramenCenterY;
+        if (drawBrothHL == true && this.craftingRamen.broth && doBrothAnim == false) {
+            if (!this.brothHighlight) {
+                this.brothHighlight = new eui.Image(RES.getRes("broth_highlight"));
+            }
+            this.Group_GameLayer.addChild(this.brothHighlight);
+            this.brothHighlight.anchorOffsetX = this.brothHighlight.width / 2;
+            this.brothHighlight.anchorOffsetY = this.brothHighlight.height / 2;
+            this.brothHighlight.x = this.ramenCenterX;
+            this.brothHighlight.y = this.ramenCenterY;
+            // if (brothChanged == true){
+            // 	this.brothHighlight.scaleX = this.brothHighlight.scaleY = 0;
+            // 	this.brothHighlight.alpha = 0;
+            // 	egret.Tween.removeTweens(this.brothHighlight);
+            // 	egret.Tween.get(this.brothHighlight)
+            // 		.to({scaleX:1, scaleY:1, alpha:1}, brothAnimInTime, egret.Ease.quadOut);
+            // }
+        }
         //return;
         //面条
-        if (this.craftingRamen.noodles) {
+        if (this.craftingRamen.noodles && drawNoodle == true) {
             if (!this.noodleImage) {
                 this.noodleImage = new eui.Image(RES.getRes(this.craftingRamen.noodles.model.Image()));
             }
@@ -2549,9 +2804,11 @@ var CraftNoodle = (function (_super) {
         }
         var me = this;
         //Toppings
-        for (var i = 0; i < this.craftingRamen.topping.length; i++) {
-            var tp = this.craftingRamen.topping[i];
-            var img = tp.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
+        if (drawTopping == true) {
+            for (var i = 0; i < this.craftingRamen.topping.length; i++) {
+                var tp = this.craftingRamen.topping[i];
+                var img = tp.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
+            }
         }
     };
     return CraftNoodle;

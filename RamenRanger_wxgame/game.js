@@ -27,7 +27,7 @@ egret.runEgret({
 		showLog: false,
 		maxTouches: 2,
 		//----auto option end----
-    renderMode: 'webgl',
+    renderMode: 'canvas',
     audioType: 0,
     calculateCanvasScaleFactor: function (context) {
         var backingStore = context.backingStorePixelRatio ||
