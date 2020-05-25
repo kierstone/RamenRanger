@@ -3,6 +3,10 @@ class CharacterObj {
 	public head:SpriteClip;
 	public emote:SpriteClip;
 
+	//当前帧是否有食材对应贴图位置
+	public hasIngredientPoint:boolean;
+	public ingredientPoint:egret.Point;
+
 	private playingActionInfo:Array<CharacterFrameInfo>;
 	private doingAction:CharacterAction;
 	private currentFrame:number = 0;
@@ -15,11 +19,14 @@ class CharacterObj {
 	public direction:Direction;
 
 	public ai:CharacterAI;
+	public isSitting:boolean = false;	//如果sitting了，那么就不会执行ai了
 
 	public constructor(characterActionInfo:CharacterActionInfo, x:number, y:number, property?:CharacterProperty) {
 		this.cInfo = characterActionInfo;
 		this.CreateSpriteClipByInfo();
 		this.SetPosition(x, y);
+		this.ingredientPoint = new egret.Point(0,0);
+		this.hasIngredientPoint = false;
 
 		//this.playingActionInfo = this.cInfo.GetFrameInfoArray(CharacterDirection.Down, CharacterAction.Stand);
 		this.ChangeAction(Direction.Down, CharacterAction.Stand);
@@ -84,6 +91,15 @@ class CharacterObj {
 			this.head.anchorOffsetX = Math.floor(this.head.width / 2);
 			this.head.anchorOffsetY = this.head.height + upperY - this.cInfo.head_lower;
 			this.head.scaleX = this.direction == Direction.Right ? -1 : 1;
+		}
+		if (this.doingAction == CharacterAction.Eat && this.currentFrame < this.cInfo.eatIngredientPos.length && this.head){
+			this.hasIngredientPoint = true;
+			this.ingredientPoint.x = -this.head.anchorOffsetX + this.cInfo.eatIngredientPos[this.currentFrame].x;
+			this.ingredientPoint.y = -this.head.anchorOffsetY + this.cInfo.eatIngredientPos[this.currentFrame].y;
+
+console.log("ing pos", this.currentFrame, this.ingredientPoint,  this.cInfo.eatIngredientPos[this.currentFrame]);
+		}else{
+			this.hasIngredientPoint = false;
 		}
 		this.SetPosition(this.position.x, this.position.y);
 	}
@@ -153,24 +169,27 @@ class CharacterObj {
 	 * 逻辑update。返回是否需要立即渲染一下
 	 */
 	public FixedUpdate():boolean{
-		let todo:CharacterAIScript = this.ai.WhatToDo();
-
 		let requireInstantDraw = false;
-		if (todo){
-			//处理移动
-			if (todo.doMove == true){
-				this.SetPosition(todo.moveToX, todo.moveToY);
-			}
 
-			//动作和方向改变，引起改变
-			let cD:boolean = todo.changeDirection;
-			let cA:boolean = this.IsSameAction(todo.doAction, this.doingAction) == false;
-			if (cD == true || cA == true){
-				this.ChangeAction(
-					cD == true ? todo.directionTo : this.direction,
-					cA == true ? todo.doAction : this.doingAction
-				);
-				requireInstantDraw = true;
+		//没坐着就得执行ai
+		if (this.isSitting == false){
+			let todo:CharacterAIScript = this.ai.WhatToDo();
+			if (todo){
+				//处理移动
+				if (todo.doMove == true){
+					this.SetPosition(todo.moveToX, todo.moveToY);
+				}
+
+				//动作和方向改变，引起改变
+				let cD:boolean = todo.changeDirection;
+				let cA:boolean = this.IsSameAction(todo.doAction, this.doingAction) == false;
+				if (cD == true || cA == true){
+					this.ChangeAction(
+						cD == true ? todo.directionTo : this.direction,
+						cA == true ? todo.doAction : this.doingAction
+					);
+					requireInstantDraw = true;
+				}
 			}
 		}
 

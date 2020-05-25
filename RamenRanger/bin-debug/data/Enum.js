@@ -51,4 +51,23 @@ var CraftNoodleState;
     CraftNoodleState[CraftNoodleState["SelectTopping"] = 4] = "SelectTopping";
     CraftNoodleState[CraftNoodleState["PlaceTopping"] = 5] = "PlaceTopping";
 })(CraftNoodleState || (CraftNoodleState = {}));
+//拉面食材难吃的类别，每吃一回合都有一个这个，当然大多值是none
+var BadTaste;
+(function (BadTaste) {
+    BadTaste[BadTaste["None"] = 0] = "None";
+    BadTaste[BadTaste["Hot"] = 10] = "Hot";
+    BadTaste[BadTaste["TooHeavy"] = 12] = "TooHeavy";
+    BadTaste[BadTaste["Disappointed"] = 13] = "Disappointed";
+    BadTaste[BadTaste["Hatred"] = 15] = "Hatred"; //对应动作Hate，是吃到忌口了
+})(BadTaste || (BadTaste = {}));
+//吃面迷你游戏的状态
+var EatRamenGameState;
+(function (EatRamenGameState) {
+    EatRamenGameState[EatRamenGameState["Enter"] = 0] = "Enter";
+    EatRamenGameState[EatRamenGameState["Order"] = 1] = "Order";
+    EatRamenGameState[EatRamenGameState["Wait"] = 2] = "Wait";
+    EatRamenGameState[EatRamenGameState["Eat"] = 3] = "Eat";
+    EatRamenGameState[EatRamenGameState["ReadyToLeave"] = 4] = "ReadyToLeave";
+    EatRamenGameState[EatRamenGameState["Leave"] = 5] = "Leave"; //离去
+})(EatRamenGameState || (EatRamenGameState = {}));
 //# sourceMappingURL=Enum.js.map

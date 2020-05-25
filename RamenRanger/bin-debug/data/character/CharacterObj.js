@@ -4,9 +4,12 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 var CharacterObj = (function () {
     function CharacterObj(characterActionInfo, x, y, property) {
         this.currentFrame = 0;
+        this.isSitting = false; //如果sitting了，那么就不会执行ai了
         this.cInfo = characterActionInfo;
         this.CreateSpriteClipByInfo();
         this.SetPosition(x, y);
+        this.ingredientPoint = new egret.Point(0, 0);
+        this.hasIngredientPoint = false;
         //this.playingActionInfo = this.cInfo.GetFrameInfoArray(CharacterDirection.Down, CharacterAction.Stand);
         this.ChangeAction(Direction.Down, CharacterAction.Stand);
         this.property = property;
@@ -66,6 +69,15 @@ var CharacterObj = (function () {
             this.head.anchorOffsetY = this.head.height + upperY - this.cInfo.head_lower;
             this.head.scaleX = this.direction == Direction.Right ? -1 : 1;
         }
+        if (this.doingAction == CharacterAction.Eat && this.currentFrame < this.cInfo.eatIngredientPos.length && this.head) {
+            this.hasIngredientPoint = true;
+            this.ingredientPoint.x = -this.head.anchorOffsetX + this.cInfo.eatIngredientPos[this.currentFrame].x;
+            this.ingredientPoint.y = -this.head.anchorOffsetY + this.cInfo.eatIngredientPos[this.currentFrame].y;
+            console.log("ing pos", this.currentFrame, this.ingredientPoint, this.cInfo.eatIngredientPos[this.currentFrame]);
+        }
+        else {
+            this.hasIngredientPoint = false;
+        }
         this.SetPosition(this.position.x, this.position.y);
     };
     /**
@@ -123,19 +135,22 @@ var CharacterObj = (function () {
      * 逻辑update。返回是否需要立即渲染一下
      */
     CharacterObj.prototype.FixedUpdate = function () {
-        var todo = this.ai.WhatToDo();
         var requireInstantDraw = false;
-        if (todo) {
-            //处理移动
-            if (todo.doMove == true) {
-                this.SetPosition(todo.moveToX, todo.moveToY);
-            }
-            //动作和方向改变，引起改变
-            var cD = todo.changeDirection;
-            var cA = this.IsSameAction(todo.doAction, this.doingAction) == false;
-            if (cD == true || cA == true) {
-                this.ChangeAction(cD == true ? todo.directionTo : this.direction, cA == true ? todo.doAction : this.doingAction);
-                requireInstantDraw = true;
+        //没坐着就得执行ai
+        if (this.isSitting == false) {
+            var todo = this.ai.WhatToDo();
+            if (todo) {
+                //处理移动
+                if (todo.doMove == true) {
+                    this.SetPosition(todo.moveToX, todo.moveToY);
+                }
+                //动作和方向改变，引起改变
+                var cD = todo.changeDirection;
+                var cA = this.IsSameAction(todo.doAction, this.doingAction) == false;
+                if (cD == true || cA == true) {
+                    this.ChangeAction(cD == true ? todo.directionTo : this.direction, cA == true ? todo.doAction : this.doingAction);
+                    requireInstantDraw = true;
+                }
             }
         }
         return requireInstantDraw;

@@ -43,6 +43,62 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var SpriteClip = (function (_super) {
+    __extends(SpriteClip, _super);
+    function SpriteClip() {
+        var _this = _super.call(this) || this;
+        _this.logicLayer = SpriteClipLayer.Normal;
+        _this.preloadTextures = {};
+        return _this;
+    }
+    SpriteClip.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        //this.init();
+    };
+    /**
+     * 预加载这些textures
+     * @param {Object} texture {"key":string, "texture":egret.Texture}
+     */
+    SpriteClip.prototype.SetPreloadTexturesFromObject = function (textures) {
+        this.preloadTextures = textures;
+    };
+    /**
+     * 根据string预加载这些texture
+     * @param {Array<string>} keys 文件名称，最终将成为preloadTextures[Key]
+     */
+    SpriteClip.prototype.SetPreloadTextureByKeys = function (keys) {
+        this.preloadTextures = {};
+        for (var i = 0; i < keys.length; i++) {
+            this.preloadTextures[keys[i]] = RES.getRes(keys[i]);
+        }
+    };
+    /**
+     * 设置当前图形为preload的某一个
+     * @returns {boolean} 是否成功
+     */
+    SpriteClip.prototype.ChangeToPreloadTexture = function (key) {
+        if (key == "" || !this.preloadTextures || !this.preloadTextures[key]) {
+            return false;
+        }
+        this.texture = this.preloadTextures[key];
+    };
+    /**
+     * 经过比较，我是否改到下面一层
+     * @returns {boolean} true代表我该去下一层
+     */
+    SpriteClip.prototype.NeedToSendMeBack = function (compareSpritClip) {
+        if (!compareSpritClip)
+            return false;
+        if (this.logicLayer == compareSpritClip.logicLayer) {
+            return this.y < compareSpritClip.y;
+        }
+        else {
+            return this.logicLayer < compareSpritClip.logicLayer;
+        }
+    };
+    return SpriteClip;
+}(eui.Image));
+__reflect(SpriteClip.prototype, "SpriteClip");
 var BrothModel = (function () {
     function BrothModel() {
     }
@@ -88,6 +144,16 @@ var BrothModel = (function () {
     BrothModel.prototype.IconShape = function (centerX, centerY, radius) {
         return this.GatherShape(centerX, centerY, radius);
     };
+    /**
+     * 获取用于场景中面条的的shape
+     * @param {number} centerX 中心x坐标
+     * @param {number} centerY 中心y坐标
+     * @param {number} radius 半径
+     * @returns {egret.Shape} 用于icon的shape
+     */
+    BrothModel.prototype.SceneShape = function (centerX, centerY, radius) {
+        return this.GatherShape(centerX, centerY, radius);
+    };
     BrothModel.prototype.GatherShape = function (centerX, centerY, radius) {
         var brothMatrix = new egret.Matrix();
         brothMatrix.createGradientBox(radius * 2, radius * 2, 0, centerX - radius, centerY - radius);
@@ -121,64 +187,6 @@ var BrothObj = (function () {
     return BrothObj;
 }());
 __reflect(BrothObj.prototype, "BrothObj");
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var AssetAdapter = (function () {
-    function AssetAdapter() {
-    }
-    /**
-     * @language zh_CN
-     * 解析素材
-     * @param source 待解析的新素材标识符
-     * @param compFunc 解析完成回调函数，示例：callBack(content:any,source:string):void;
-     * @param thisObject callBack的 this 引用
-     */
-    AssetAdapter.prototype.getAsset = function (source, compFunc, thisObject) {
-        function onGetRes(data) {
-            compFunc.call(thisObject, data, source);
-        }
-        if (RES.hasRes(source)) {
-            var data = RES.getRes(source);
-            if (data) {
-                onGetRes(data);
-            }
-            else {
-                RES.getResAsync(source, onGetRes, this);
-            }
-        }
-        else {
-            RES.getResByUrl(source, onGetRes, this, RES.ResourceItem.TYPE_IMAGE);
-        }
-    };
-    return AssetAdapter;
-}());
-__reflect(AssetAdapter.prototype, "AssetAdapter", ["eui.IAssetAdapter"]);
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -724,6 +732,9 @@ var BusAreaHeight = 375; //小车的高度
 var BusLeftInGrid = 2; //小车的单元格坐标x=2
 var BusBottomInGrid = -1; //小车的单元格坐标y，应该是地图区域往上1格
 var RenderUpdateEveryLogicTick = 3; //每3个逻辑tick，渲染走1个tick
+var Scene_NoodleBrothSize = 60; //场景里的拉面的宽度高度
+var Scene_PosScale = 0.12; //这是摆面界面的尺寸转化到面碗尺寸
+var Scene_HorVerTimes = 0.6; //宽高比
 //吃饭的npc身上的buff，而不是玩家店铺的buff，是buffObj
 var CharacterBuff = (function () {
     function CharacterBuff() {
@@ -1188,16 +1199,13 @@ var BowlModel = (function () {
         this.id = json["id"];
         this.name = json["name"] ? json["name"] : json["id"];
         this.img = json["img"] ? json["img"] : json["id"];
+        this.icon = json["icon"] ? json["icon"] : "";
+        this.scene = json["scene"] ? json["scene"] : "";
+        this.sceneCenterX = json["x"] ? json["x"] : 0;
+        this.sceneCenterY = json["y"] ? json["y"] : 0;
         this.radius = json["radius"] ? json["radius"] : 200;
         this.cost = json["cost"] ? json["cost"] : 1;
         return true;
-    };
-    /**
-     * 获取图片资源名
-     * @returns {string} 资源名称
-     */
-    BowlModel.prototype.Image = function () {
-        return this.img;
     };
     /**
      * 获取icon的资源名
@@ -1311,6 +1319,8 @@ var IngredientModel = (function () {
         this.id = json["id"];
         this.name = json["name"] ? json["name"] : json["id"];
         this.img = json["img"] ? json["img"] : "";
+        this.icon = json["icon"] ? json["icon"] : "";
+        this.scene = json["scene"] ? json["scene"] : "";
         this.radius = json["radius"] ? json["radius"] : 0;
         this.canBeUsed = json["using"] ? json["using"] : 0;
         this.liquid = json["liquid"] ? json["liquid"] : false;
@@ -1327,20 +1337,6 @@ var IngredientModel = (function () {
             }
         }
         return true;
-    };
-    /**
-     * 获取图片资源名
-     * @returns {string} 资源名称
-     */
-    IngredientModel.prototype.Image = function () {
-        return "ingredient_" + this.img;
-    };
-    /**
-     * 获取icon的资源名
-     * @returns {string} icon的名称
-     */
-    IngredientModel.prototype.Icon = function () {
-        return "ingredient_" + this.img;
     };
     /**
      * 材料能否做着味
@@ -1397,12 +1393,33 @@ var IngredientObj = (function () {
     IngredientObj.prototype.GatherImage = function (parent, centerX, centerY) {
         if (!parent)
             return null;
-        var res = new eui.Image(RES.getRes(this.model.Image()));
+        var res = new eui.Image(RES.getRes(this.model.img));
         parent.addChild(res);
         res.anchorOffsetX = res.width / 2;
         res.anchorOffsetY = res.height / 2;
         res.x = this.x + centerX;
         res.y = this.y + centerY;
+        res.rotation = this.rotation;
+        res.scaleX = (this.xFlip == true ? -1 : 1) * this.size;
+        res.scaleY = this.size;
+        return res;
+    };
+    /**
+     * 根据当前情况创建一个新的eui.Image
+     * @param {eui.Group} parent 要放到什么父亲
+     * @param {number} centerX 面碗中心的x坐标
+     * @param {number} centerY 面碗中心的y坐标
+     * @returns {eui.Image} 创建出来的image
+     */
+    IngredientObj.prototype.GatherSceneImage = function (parent, centerX, centerY) {
+        if (!parent)
+            return null;
+        var res = new eui.Image(RES.getRes(this.model.scene));
+        parent.addChild(res);
+        res.anchorOffsetX = res.width / 2;
+        res.anchorOffsetY = res.height / 2;
+        res.x = Math.round(this.x * Scene_PosScale + centerX);
+        res.y = Math.round(this.y * Scene_PosScale + centerY);
         res.rotation = this.rotation;
         res.scaleX = (this.xFlip == true ? -1 : 1) * this.size;
         res.scaleY = this.size;
@@ -1553,9 +1570,43 @@ var RamenModel = (function () {
         }
         return null;
     };
+    /**
+     * 判断坐标点在哪个Tare上了
+     * @param {number} x 坐标点x
+     * @param {number} y 坐标点y
+     * @param {number} thisX 拉面的x坐标
+     * @param {number} thisY 拉面的y坐标
+     * @param {boolean} removeTouchOne 是否从tare里面移除掉这个
+     * @returns {IngredientObj} 点中的那个，null代表没有
+     */
+    RamenModel.prototype.TouchedTare = function (x, y, thisX, thisY, removeTouchOne) {
+        if (!this.tare || this.tare.length <= 0)
+            return null;
+        //越后面的在越上面，越容易被点到
+        for (var i = this.tare.length - 1; i >= 0; i--) {
+            var tp = this.tare[i];
+            if (tp.TouchOnMe(x, y, thisX, thisY) == true) {
+                if (removeTouchOne == true) {
+                    return this.tare.splice(i, 1)[0];
+                }
+                else {
+                    return tp;
+                }
+            }
+        }
+        return null;
+    };
     return RamenModel;
 }());
 __reflect(RamenModel.prototype, "RamenModel");
+var RamenObj = (function () {
+    function RamenObj(model) {
+        if (model)
+            this.model = model;
+    }
+    return RamenObj;
+}());
+__reflect(RamenObj.prototype, "RamenObj");
 var ChairModel = (function () {
     function ChairModel(downInfo, upInfo, leftInfo, rightInfo) {
         if (upInfo === void 0) { upInfo = null; }
@@ -1858,85 +1909,110 @@ var IngredientIconInBox = (function (_super) {
     return IngredientIconInBox;
 }(eui.Component));
 __reflect(IngredientIconInBox.prototype, "IngredientIconInBox", ["eui.UIComponent", "egret.DisplayObject"]);
-var RamenObj = (function (_super) {
-    __extends(RamenObj, _super);
-    function RamenObj() {
-        return _super.call(this) || this;
-    }
-    RamenObj.prototype.partAdded = function (partName, instance) {
-        _super.prototype.partAdded.call(this, partName, instance);
-    };
-    RamenObj.prototype.childrenCreated = function () {
-        _super.prototype.childrenCreated.call(this);
-    };
-    return RamenObj;
-}(eui.Component));
-__reflect(RamenObj.prototype, "RamenObj", ["eui.UIComponent", "egret.DisplayObject"]);
-var SpriteClip = (function (_super) {
-    __extends(SpriteClip, _super);
-    function SpriteClip() {
+var RamenSpriteClip = (function (_super) {
+    __extends(RamenSpriteClip, _super);
+    function RamenSpriteClip(ramen) {
         var _this = _super.call(this) || this;
-        //private logicOffsetX:number = 0;	//和x坐标的逻辑偏差
-        //private logicOffsetY:number = 0;
-        _this.logicLayer = SpriteClipLayer.Normal;
-        _this.preloadTextures = {};
+        _this.logicLayer = SpriteClipLayer.Noodle;
+        _this.ramen = ramen;
+        _this._ramenCreated = false;
         return _this;
     }
-    SpriteClip.prototype.childrenCreated = function () {
+    RamenSpriteClip.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
-        //this.init();
+        this.init();
     };
-    /**
-     * 预加载这些textures
-     * @param {Object} texture {"key":string, "texture":egret.Texture}
-     */
-    SpriteClip.prototype.SetPreloadTexturesFromObject = function (textures) {
-        this.preloadTextures = textures;
+    RamenSpriteClip.prototype.init = function () {
+        this.source = RES.getRes(this.ramen.model.bowl.model.scene);
+        this.anchorOffsetX = this.width / 2;
+        this.anchorOffsetY = this.height;
     };
-    /**
-     * 根据string预加载这些texture
-     * @param {Array<string>} keys 文件名称，最终将成为preloadTextures[Key]
-     */
-    SpriteClip.prototype.SetPreloadTextureByKeys = function (keys) {
-        this.preloadTextures = {};
-        for (var i = 0; i < keys.length; i++) {
-            this.preloadTextures[keys[i]] = RES.getRes(keys[i]);
+    //绘制拉面的内容
+    RamenSpriteClip.prototype.CreateRamen = function () {
+        if (!this.parent || this._ramenCreated == true)
+            return;
+        var backGroup = new eui.Group();
+        backGroup.x = this.ramen.model.bowl.model.sceneCenterX + this.x - this.anchorOffsetX;
+        backGroup.y = this.ramen.model.bowl.model.sceneCenterY + this.y - this.anchorOffsetY;
+        this.parent.addChild(backGroup);
+        console.log("back", Utils.GetEuiScreenPos(backGroup));
+        var broth = this.ramen.model.broth.model.SceneShape(0, 0, 30); //美术设计拉面汤的宽度是60
+        backGroup.addChild(broth);
+        console.log("broth", Utils.GetEuiScreenPos(broth));
+        this.ramen.model.noodles.GatherSceneImage(backGroup, 0, 0);
+        this.imgs = new Array();
+        for (var i = 0; i < this.ramen.model.topping.length; i++) {
+            var thisImg = this.ramen.model.topping[i].GatherSceneImage(backGroup, 0, 0);
+            var thisObj = {
+                "ingredient": this.ramen.model.topping[i],
+                "img": thisImg
+            };
+            console.log("toppings[" + i.toString() + "]", Utils.GetEuiScreenPos(thisImg));
         }
+        backGroup.scaleY = Scene_HorVerTimes;
+        this._ramenCreated = true;
     };
+    return RamenSpriteClip;
+}(SpriteClip));
+__reflect(RamenSpriteClip.prototype, "RamenSpriteClip");
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var AssetAdapter = (function () {
+    function AssetAdapter() {
+    }
     /**
-     * 设置当前图形为preload的某一个
-     * @returns {boolean} 是否成功
+     * @language zh_CN
+     * 解析素材
+     * @param source 待解析的新素材标识符
+     * @param compFunc 解析完成回调函数，示例：callBack(content:any,source:string):void;
+     * @param thisObject callBack的 this 引用
      */
-    SpriteClip.prototype.ChangeToPreloadTexture = function (key) {
-        if (key == "" || !this.preloadTextures || !this.preloadTextures[key]) {
-            return false;
+    AssetAdapter.prototype.getAsset = function (source, compFunc, thisObject) {
+        function onGetRes(data) {
+            compFunc.call(thisObject, data, source);
         }
-        this.texture = this.preloadTextures[key];
-    };
-    /**
-     * 经过比较，我是否改到下面一层
-     * @returns {boolean} true代表我该去下一层
-     */
-    SpriteClip.prototype.NeedToSendMeBack = function (compareSpritClip) {
-        if (!compareSpritClip)
-            return false;
-        // let myTop = this.anchorOffsetY < 0 ? (this.y + this.anchorOffsetY) : this.y;
-        // let myBottom = this.anchorOffsetY > 0 ? (this.y + this.anchorOffsetY) : this.y;
-        // let itTop = compareSpritClip.anchorOffsetY < 0 ? (compareSpritClip.y + compareSpritClip.anchorOffsetY) : compareSpritClip.y;
-        // let itBottom = compareSpritClip.anchorOffsetY > 0 ? (compareSpritClip.y + compareSpritClip.anchorOffsetY) : compareSpritClip.y;
-        // if (itTop > myBottom || itBottom < myTop){
-        // 	return false;	//两者碰不到不存在层级问题
-        // }
-        if (this.logicLayer == compareSpritClip.logicLayer) {
-            return this.y < compareSpritClip.y;
+        if (RES.hasRes(source)) {
+            var data = RES.getRes(source);
+            if (data) {
+                onGetRes(data);
+            }
+            else {
+                RES.getResAsync(source, onGetRes, this);
+            }
         }
         else {
-            return this.logicLayer < compareSpritClip.logicLayer;
+            RES.getResByUrl(source, onGetRes, this, RES.ResourceItem.TYPE_IMAGE);
         }
     };
-    return SpriteClip;
-}(eui.Image));
-__reflect(SpriteClip.prototype, "SpriteClip");
+    return AssetAdapter;
+}());
+__reflect(AssetAdapter.prototype, "AssetAdapter", ["eui.IAssetAdapter"]);
 var StreetGround = (function (_super) {
     __extends(StreetGround, _super);
     function StreetGround(jsonFile) {
@@ -2162,6 +2238,13 @@ var CraftNoodle = (function (_super) {
                     }
                 }
                 break;
+            case CraftNoodleState.SelectTopping:
+                {
+                    //TODO 现在先弄个ramenSpriteClip在200，200
+                    this.parent.addChild(new TestScene(this.craftingRamen));
+                    this.parent.removeChild(this);
+                }
+                break;
         }
     };
     //上一步按钮
@@ -2216,6 +2299,12 @@ var CraftNoodle = (function (_super) {
     //手指Tap事件
     CraftNoodle.prototype.StagePointerTap = function (e) {
         switch (this.uiState) {
+            case CraftNoodleState.PutTare: {
+                var touchOne = this.craftingRamen.TouchedTare(e.stageX, e.stageY, this.ramenCenterX, this.ramenCenterY, true);
+                if (touchOne) {
+                    this.UpdateRamen();
+                }
+            }
             case CraftNoodleState.SelectTopping:
                 {
                     var touchOne = this.craftingRamen.TouchedTopping(e.stageX, e.stageY, this.ramenCenterX, this.ramenCenterY, true);
@@ -2245,9 +2334,7 @@ var CraftNoodle = (function (_super) {
                         this.draggingIng = true;
                         this.pickingOffsetX = this.placingIngredient.x - e.stageX;
                         this.pickingOffsetY = this.placingIngredient.y - e.stageY;
-                        console.log("draggingIng", this.draggingIng = true);
                     }
-                    console.log("down", e.stageX, e.stageY);
                 }
                 break;
         }
@@ -2267,7 +2354,6 @@ var CraftNoodle = (function (_super) {
                         this.placingIngredient.SetToImage(this.placingIngImage, this.ramenCenterX, this.ramenCenterY);
                         this.PlacingToolSynchronize();
                     }
-                    console.log("draggin", e.stageX, e.stageY);
                 }
                 break;
         }
@@ -2554,7 +2640,7 @@ var CraftNoodle = (function (_super) {
         for (var i = 0; i < pageI.length; i++) {
             var pis = new Array();
             for (var j = 0; j < pageI[i].length; j++) {
-                pis.push(new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].Icon(), me, me.ClickOnIngredientIcon));
+                pis.push(new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].icon, me, me.ClickOnIngredientIcon));
             }
             var ip = new IngredientBox(pis);
             this.ingredientPage.push(ip);
@@ -2632,7 +2718,12 @@ var CraftNoodle = (function (_super) {
                         var im = ing;
                         var randomX = im.liquid == true ? 0 : (Math.random() * 200 - 100);
                         var randomY = im.liquid == true ? 0 : (Math.random() * 200 - 100);
-                        caller.craftingRamen.tare.push(new IngredientObj(ing, randomX, randomY));
+                        if (im.liquid == true) {
+                            caller.craftingRamen.tare.unshift(new IngredientObj(ing, randomX, randomY));
+                        }
+                        else {
+                            caller.craftingRamen.tare.push(new IngredientObj(ing, randomX, randomY));
+                        }
                         caller.UpdateRamen();
                     }
                 }
@@ -2722,10 +2813,10 @@ var CraftNoodle = (function (_super) {
         //面碗
         if (this.craftingRamen.bowl) {
             if (!this.bowlImage) {
-                this.bowlImage = new eui.Image(RES.getRes(this.craftingRamen.bowl.model.Image()));
+                this.bowlImage = new eui.Image(RES.getRes(this.craftingRamen.bowl.model.img));
             }
             else if (bowlChanged == true) {
-                this.bowlImage.source = RES.getRes(this.craftingRamen.bowl.model.Image());
+                this.bowlImage.source = RES.getRes(this.craftingRamen.bowl.model.img);
             }
             this.Group_GameLayer.addChild(this.bowlImage);
             this.bowlImage.anchorOffsetX = this.bowlImage.width / 2;
@@ -2790,12 +2881,7 @@ var CraftNoodle = (function (_super) {
         //return;
         //面条
         if (this.craftingRamen.noodles && drawNoodle == true) {
-            if (!this.noodleImage) {
-                this.noodleImage = new eui.Image(RES.getRes(this.craftingRamen.noodles.model.Image()));
-            }
-            else if (noodleChanged == true) {
-                this.noodleImage.source = RES.getRes(this.craftingRamen.noodles.model.Image());
-            }
+            this.noodleImage = this.craftingRamen.noodles.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
             this.Group_GameLayer.addChild(this.noodleImage);
             this.noodleImage.anchorOffsetX = this.noodleImage.width / 2;
             this.noodleImage.anchorOffsetY = this.noodleImage.height / 2;
@@ -3298,5 +3384,78 @@ var Street = (function (_super) {
     return Street;
 }(eui.Component));
 __reflect(Street.prototype, "Street", ["eui.UIComponent", "egret.DisplayObject"]);
+var TestScene = (function (_super) {
+    __extends(TestScene, _super);
+    function TestScene(ramen) {
+        var _this = _super.call(this) || this;
+        _this.zOrderBase = 10000; //在重新计算zOrder时，加上这个数字
+        _this.ramenObj = new RamenObj(ramen);
+        return _this;
+    }
+    TestScene.prototype.partAdded = function (partName, instance) {
+        _super.prototype.partAdded.call(this, partName, instance);
+    };
+    TestScene.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        this.sprites = new Array();
+        this.init();
+    };
+    TestScene.prototype.init = function () {
+        this.PlaceTable(new DiningTableModel(1, 1, "wooden_single_table", []), 350, 500);
+        this.PlaceChair("wooden_chair", 350, 448, Direction.Down);
+        this.PlaceCharacter("schoolgirl", 350, 450);
+        this.PlaceRamen(350, 470);
+        this.RearrangeSpritesZOrder();
+    };
+    //拉面
+    TestScene.prototype.PlaceRamen = function (x, y) {
+        this.ramen = new RamenSpriteClip(this.ramenObj);
+        this.addChild(this.ramen);
+        this.ramen.x = x;
+        this.ramen.y = y;
+        this.ramen.CreateRamen();
+        this.sprites.push(this.ramen);
+    };
+    //重新排序zOrder
+    TestScene.prototype.RearrangeSpritesZOrder = function () {
+        if (!this.sprites || this.sprites.length <= 0)
+            return;
+        this.sprites.sort(function (a, b) {
+            var needBack = a.NeedToSendMeBack(b);
+            return (needBack == true) ? -1 : 1;
+        });
+        for (var i = 0; i < this.sprites.length; i++) {
+            var ts = this.sprites[i];
+            ts.zIndex = i + this.zOrderBase;
+        }
+        this.gameLayer.sortChildren();
+    };
+    //放一个角色，这里的x,y都是像素级
+    TestScene.prototype.PlaceCharacter = function (key, x, y) {
+        if (key === void 0) { key = "schoolgirl"; }
+        var cha = new CharacterObj(GetCharacterActionInfoByKey(key), x, y, new CharacterProperty());
+        cha.head.logicLayer = SpriteClipLayer.EatingHead; //这个是Street少的，就是要切换到吃面层
+        this.gameLayer.addChild(cha.body);
+        this.gameLayer.addChild(cha.head);
+        this.sprites.push(cha.body);
+        this.sprites.push(cha.head);
+        return cha;
+    };
+    //放一张桌子，这里可不管能不能放的下，只管放上去的
+    TestScene.prototype.PlaceTable = function (table, x, y) {
+        var t = new DiningTableObj(table, x, y);
+        this.gameLayer.addChild(t.Image);
+        this.sprites.push(t.Image);
+        //TODO桌子椅子连接状态等
+    };
+    //放一张椅子，也是只负责放下去，不负责判断能不能放
+    TestScene.prototype.PlaceChair = function (chairSource, x, y, dir) {
+        var c = new ChairObj(chairSource, x, y, dir);
+        this.gameLayer.addChild(c.image);
+        this.sprites.push(c.image);
+    };
+    return TestScene;
+}(eui.Component));
+__reflect(TestScene.prototype, "TestScene", ["eui.UIComponent", "egret.DisplayObject"]);
 
 ;window.Main = Main;

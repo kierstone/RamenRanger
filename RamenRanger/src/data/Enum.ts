@@ -51,3 +51,22 @@ enum CraftNoodleState{
 	SelectTopping = 4,
 	PlaceTopping = 5
 }
+
+//拉面食材难吃的类别，每吃一回合都有一个这个，当然大多值是none
+enum BadTaste{
+	None = 0,
+	Hot = 10, //对应动作Spicy，太辛太辣
+	TooHeavy = 12,	//对应Salty，太甜太咸
+	Disappointed = 13, //对应sigh，是没找到想吃的内容
+	Hatred = 15  //对应动作Hate，是吃到忌口了
+}
+
+//吃面迷你游戏的状态
+enum EatRamenGameState{
+	Enter = 0,	//坐进位置
+	Order = 1,	//点单
+	Wait = 2,	//等上菜
+	Eat = 3,	//吃
+	ReadyToLeave = 4,	//准备离去，比如想出了意见什么的
+	Leave = 5	//离去
+}

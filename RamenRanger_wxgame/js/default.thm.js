@@ -10,7 +10,7 @@ var egret = window.egret;window.skins=window.skins||{};
                 window.generateEUI = window.generateEUI||{};
                 generateEUI.paths = generateEUI.paths||{};
                 generateEUI.styles = undefined;
-                generateEUI.skins = {"eui.Button":"resource/eui_skins/ButtonSkin.exml","eui.CheckBox":"resource/eui_skins/CheckBoxSkin.exml","eui.HScrollBar":"resource/eui_skins/HScrollBarSkin.exml","eui.HSlider":"resource/eui_skins/HSliderSkin.exml","eui.Panel":"resource/eui_skins/PanelSkin.exml","eui.TextInput":"resource/eui_skins/TextInputSkin.exml","eui.ProgressBar":"resource/eui_skins/ProgressBarSkin.exml","eui.RadioButton":"resource/eui_skins/RadioButtonSkin.exml","eui.Scroller":"resource/eui_skins/ScrollerSkin.exml","eui.ToggleSwitch":"resource/eui_skins/ToggleSwitchSkin.exml","eui.VScrollBar":"resource/eui_skins/VScrollBarSkin.exml","eui.VSlider":"resource/eui_skins/VSliderSkin.exml","eui.ItemRenderer":"resource/eui_skins/ItemRendererSkin.exml","CraftNoodle":"resource/eui_skins/CraftNoodle.exml","Street":"resource/eui_skins/Street.exml","StreetGround":"resource/eui_skins/StreetGround.exml","RamenObj":"resource/eui_skins/RamenObj.exml","IngredientBox":"resource/eui_skins/IngredientBox.exml","IngredientIconInBox":"resource/eui_skins/IngredientIconInBox.exml"};generateEUI.paths['resource/eui_skins/Button_Craft_Next.exml'] = window.Button_Craft_Next = (function (_super) {
+                generateEUI.skins = {"eui.Button":"resource/eui_skins/ButtonSkin.exml","eui.CheckBox":"resource/eui_skins/CheckBoxSkin.exml","eui.HScrollBar":"resource/eui_skins/HScrollBarSkin.exml","eui.HSlider":"resource/eui_skins/HSliderSkin.exml","eui.Panel":"resource/eui_skins/PanelSkin.exml","eui.TextInput":"resource/eui_skins/TextInputSkin.exml","eui.ProgressBar":"resource/eui_skins/ProgressBarSkin.exml","eui.RadioButton":"resource/eui_skins/RadioButtonSkin.exml","eui.Scroller":"resource/eui_skins/ScrollerSkin.exml","eui.ToggleSwitch":"resource/eui_skins/ToggleSwitchSkin.exml","eui.VScrollBar":"resource/eui_skins/VScrollBarSkin.exml","eui.VSlider":"resource/eui_skins/VSliderSkin.exml","eui.ItemRenderer":"resource/eui_skins/ItemRendererSkin.exml","CraftNoodle":"resource/eui_skins/CraftNoodle.exml","Street":"resource/eui_skins/Street.exml","StreetGround":"resource/eui_skins/StreetGround.exml","IngredientBox":"resource/eui_skins/IngredientBox.exml","IngredientIconInBox":"resource/eui_skins/IngredientIconInBox.exml","TestScene":"resource/eui_skins/TestScene.exml"};generateEUI.paths['resource/eui_skins/Button_Craft_Next.exml'] = window.Button_Craft_Next = (function (_super) {
 	__extends(Button_Craft_Next, _super);
 	function Button_Craft_Next() {
 		_super.call(this);
@@ -927,27 +927,6 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return RadioButtonSkin;
-})(eui.Skin);generateEUI.paths['resource/eui_skins/RamenObj.exml'] = window.RamenObjSkin = (function (_super) {
-	__extends(RamenObjSkin, _super);
-	function RamenObjSkin() {
-		_super.call(this);
-		this.skinParts = ["bowl"];
-		
-		this.height = 75;
-		this.width = 75;
-		this.elementsContent = [this.bowl_i()];
-	}
-	var _proto = RamenObjSkin.prototype;
-
-	_proto.bowl_i = function () {
-		var t = new eui.Image();
-		this.bowl = t;
-		t.bottom = 0;
-		t.horizontalCenter = 0;
-		t.source = "wooden_chair";
-		return t;
-	};
-	return RamenObjSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/ScrollerSkin.exml'] = window.skins.ScrollerSkin = (function (_super) {
 	__extends(ScrollerSkin, _super);
 	function ScrollerSkin() {
@@ -1051,6 +1030,36 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return StreetGroundSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/TestScene.exml'] = window.TestSceneSkin = (function (_super) {
+	__extends(TestSceneSkin, _super);
+	function TestSceneSkin() {
+		_super.call(this);
+		this.skinParts = ["gameLayer"];
+		
+		this.height = 1334;
+		this.width = 750;
+		this.elementsContent = [this._Rect1_i(),this.gameLayer_i()];
+	}
+	var _proto = TestSceneSkin.prototype;
+
+	_proto._Rect1_i = function () {
+		var t = new eui.Rect();
+		t.percentHeight = 100;
+		t.horizontalCenter = 0;
+		t.verticalCenter = 0;
+		t.percentWidth = 100;
+		return t;
+	};
+	_proto.gameLayer_i = function () {
+		var t = new eui.Group();
+		this.gameLayer = t;
+		t.percentHeight = 60;
+		t.horizontalCenter = 0;
+		t.top = 0;
+		t.percentWidth = 100;
+		return t;
+	};
+	return TestSceneSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/TextInputSkin.exml'] = window.skins.TextInputSkin = (function (_super) {
 	__extends(TextInputSkin, _super);
 	function TextInputSkin() {

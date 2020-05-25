@@ -1,14 +1,24 @@
 class TestScene extends eui.Component implements  eui.UIComponent {
+	private HSilder_Size:eui.HSlider;
+	private Label_Size:eui.Label;
+	private Button_Start:eui.Button;
 
 	//From Street
+	private toUpdateTicker:number = 0;
+	private tick:number = 0;
+	private chaRefTicker:number = 0;
 	private gameLayer:eui.Group;
-	private sprites:Array<SpriteClip>;	//所有sprite层图片
+	private sprites:Array<SpriteGroup>;	//所有sprite层图片
+	private actor:CharacterObj;
 	private zOrderBase = 10000;	//在重新计算zOrder时，加上这个数字
 
 
 
 	private ramenObj:RamenObj;
-	private ramen:RamenSpriteClip;
+	private diningTable:DiningTableSprite;
+	// private ramen:RamenSpriteClip;
+
+	private timeScale = 1;
 
 	public constructor(ramen:RamenModel) {
 		super();
@@ -24,33 +34,80 @@ class TestScene extends eui.Component implements  eui.UIComponent {
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
-		this.sprites = new Array<SpriteClip>();
+		this.sprites = new Array<SpriteGroup>();
 		this.init();
 	}
 
 	private init(){
-		this.PlaceTable(new DiningTableModel(1,1,"wooden_single_table", []), 350, 500);
-		this.PlaceChair("wooden_chair", 350, 448, Direction.Down);
-		this.PlaceCharacter("schoolgirl", 350, 450);
-		this.PlaceRamen(350, 470);
+		this.PlaceCharacter("schoolgirl", 150, 450);
+
+		this.actor = new CharacterObj(
+			GetCharacterActionInfoByKey("schoolgirl"), 
+			0, 0,
+			new CharacterProperty()
+		)
+		this.PlaceTable(350, 500);
+		this.diningTable.SetCharacterToSeat(this.actor);
+		this.diningTable.PlaceRamen(this.ramenObj);
 
 		this.RearrangeSpritesZOrder();
+
+		this.HSilder_Size.addEventListener(egret.Event.CHANGE, ()=>{
+			let toSize = this.HSilder_Size.value * 0.05 + 1;
+			this.ChangeShowSize(toSize);
+			this.Label_Size.text = toSize.toFixed(2).toString();
+		},this);
+
+		this.Button_Start.addEventListener(egret.TouchEvent.TOUCH_TAP, ()=>{
+			if (this.diningTable && this.diningTable.eatGame){
+				this.diningTable.eatGame.StartEat();
+			}
+		},this);
+
+		//开启一个update和fixedUpdate的计时器
+		let t = new egret.Timer(30*this.timeScale);
+		t.addEventListener(egret.TimerEvent.TIMER, ()=>{
+			this.FixedUpdate();
+			if (this.toUpdateTicker == 0) this.Update();
+			this.RearrangeSpritesZOrder();	//ZOrder每个逻辑tick都会重新排列，所以FixedUpdate中可以不用
+			
+			this.tick += 1;
+			this.toUpdateTicker = (this.toUpdateTicker + 1) % 3;
+		}, this);
+		t.start();
 	}
 
-	//拉面
-	private PlaceRamen(x:number, y:number){
-		this.ramen = new RamenSpriteClip(this.ramenObj);
-		this.addChild(this.ramen);
-		this.ramen.x = x;
-		this.ramen.y = y;
-		this.ramen.CreateRamen();
-		this.sprites.push(this.ramen);
+	private ChangeShowSize(toScale:number = 1.0){
+		this.gameLayer.scaleX = this.gameLayer.scaleY = toScale;
+		this.gameLayer.x = (this.stage.stageWidth - this.gameLayer.width * this.gameLayer.scaleX) / 2;
+		this.gameLayer.y = (800 - this.gameLayer.height * this.gameLayer.scaleY) / 2;
 	}
+
+	//用于动画刷新的Update
+	private Update(){
+		//角色的
+		//this.actor.Update();
+		
+		if (this.diningTable){
+			this.diningTable.Update();
+		}
+	}
+
+	//用于逻辑刷新的Update
+	private FixedUpdate(){
+		//角色的
+		//this.actor.FixedUpdate();
+		
+		if (this.diningTable){
+			this.diningTable.FixedUpdate();
+		}
+	}
+
 	
 	//重新排序zOrder
 	private RearrangeSpritesZOrder(){
 		if (!this.sprites || this.sprites.length <= 0) return;
-		this.sprites.sort((a:SpriteClip, b:SpriteClip)=>{
+		this.sprites.sort((a:SpriteGroup, b:SpriteGroup)=>{
 			let needBack = a.NeedToSendMeBack(b);
 			return (needBack == true)?-1:1;
 		});
@@ -63,33 +120,25 @@ class TestScene extends eui.Component implements  eui.UIComponent {
 	}
 
 	//放一个角色，这里的x,y都是像素级
-	private PlaceCharacter(key:string = "schoolgirl",x:number, y:number):CharacterObj{
-		let cha = new CharacterObj(
+	private PlaceCharacter(key:string = "schoolgirl",x:number, y:number){
+		this.actor = new CharacterObj(
 			GetCharacterActionInfoByKey(key), 
 			x, y,
 			new CharacterProperty()
 		)
-		cha.head.logicLayer = SpriteClipLayer.EatingHead;	//这个是Street少的，就是要切换到吃面层
-		this.gameLayer.addChild(cha.body);
-		this.gameLayer.addChild(cha.head);
-		this.sprites.push(cha.body);
-		this.sprites.push(cha.head);
-		return cha;
+		let aImg = new CharacterSprite(this.actor);
+		aImg.x = x;
+		aImg.y = y;
+		this.gameLayer.addChild(aImg);
+		this.sprites.push(aImg);
 	}
 
 	//放一张桌子，这里可不管能不能放的下，只管放上去的
-	private PlaceTable(table:DiningTableModel, x:number, y:number){
-		let t:DiningTableObj = new DiningTableObj(table, x, y);
-		this.gameLayer.addChild(t.Image);
-		this.sprites.push(t.Image);	
-
-		//TODO桌子椅子连接状态等
+	private PlaceTable( x:number, y:number){
+		this.diningTable = new DiningTableSprite();
+		this.gameLayer.addChild(this.diningTable);
+		this.diningTable.x = x;
+		this.diningTable.y = y;
 	}
 
-	//放一张椅子，也是只负责放下去，不负责判断能不能放
-	private PlaceChair(chairSource:string, x:number, y:number, dir:Direction){
-		let c = new ChairObj(chairSource, x, y, dir);
-		this.gameLayer.addChild(c.image);
-		this.sprites.push(c.image);
-	}
 }

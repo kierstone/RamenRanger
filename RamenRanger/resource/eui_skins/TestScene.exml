@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e:Skin class="TestSceneSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
 	<w:Config id="17231442c30" ></w:Config>
-	<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" locked="true"/>
-	<e:Group id="gameLayer" width="100%" height="60%" horizontalCenter="0" top="0"/>
+	<e:Rect width="100%" height="2000" horizontalCenter="0" top="0" fillColor="0x0086ff"/>
+	<e:Group id="gameLayer" width="750" height="800" y="0" x="0"/>
+	<e:HSlider id="HSilder_Size" width="470" height="89" x="184.28" y="829.5" anchorOffsetX="0" anchorOffsetY="0" maximum="20" value="0" minimum="-10"/>
+	<e:Label text="画面尺寸" x="43.61" y="859"/>
+	<e:Label id="Label_Size" text="1.0" x="673.31" y="859"/>
+	<e:Button id="Button_Start" label="开吃" x="163.61" y="1000" anchorOffsetX="0" width="240.91" anchorOffsetY="0" height="75.76"/>
 </e:Skin>

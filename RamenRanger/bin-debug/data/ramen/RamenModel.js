@@ -95,9 +95,21 @@ var RamenModel = (function () {
 __reflect(RamenModel.prototype, "RamenModel");
 var RamenObj = (function () {
     function RamenObj(model) {
+        this.noodlePercentage = 1; //0-1 as 0%-100%
+        this.brothPercentage = 1;
+        this.topping = new Array();
         if (model)
-            this.model = model;
+            this.SetModel(model);
     }
+    RamenObj.prototype.SetModel = function (model) {
+        if (!model)
+            return;
+        this.model = model;
+        this.topping = new Array();
+        for (var i = 0; i < this.model.topping.length; i++) {
+            this.topping.push(this.model.topping[i].Clone());
+        }
+    };
     return RamenObj;
 }());
 __reflect(RamenObj.prototype, "RamenObj");

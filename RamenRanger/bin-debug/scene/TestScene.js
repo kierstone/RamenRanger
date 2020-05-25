@@ -12,7 +12,13 @@ var TestScene = (function (_super) {
     __extends(TestScene, _super);
     function TestScene(ramen) {
         var _this = _super.call(this) || this;
+        //From Street
+        _this.toUpdateTicker = 0;
+        _this.tick = 0;
+        _this.chaRefTicker = 0;
         _this.zOrderBase = 10000; //在重新计算zOrder时，加上这个数字
+        // private ramen:RamenSpriteClip;
+        _this.timeScale = 1;
         _this.ramenObj = new RamenObj(ramen);
         return _this;
     }
@@ -25,20 +31,56 @@ var TestScene = (function (_super) {
         this.init();
     };
     TestScene.prototype.init = function () {
-        this.PlaceTable(new DiningTableModel(1, 1, "wooden_single_table", []), 350, 500);
-        this.PlaceChair("wooden_chair", 350, 448, Direction.Down);
-        this.PlaceCharacter("schoolgirl", 350, 450);
-        this.PlaceRamen(350, 470);
+        var _this = this;
+        this.PlaceCharacter("schoolgirl", 150, 450);
+        this.actor = new CharacterObj(GetCharacterActionInfoByKey("schoolgirl"), 0, 0, new CharacterProperty());
+        this.PlaceTable(350, 500);
+        this.diningTable.SetCharacterToSeat(this.actor);
+        this.diningTable.PlaceRamen(this.ramenObj);
         this.RearrangeSpritesZOrder();
+        this.HSilder_Size.addEventListener(egret.Event.CHANGE, function () {
+            var toSize = _this.HSilder_Size.value * 0.05 + 1;
+            _this.ChangeShowSize(toSize);
+            _this.Label_Size.text = toSize.toFixed(2).toString();
+        }, this);
+        this.Button_Start.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.diningTable && _this.diningTable.eatGame) {
+                _this.diningTable.eatGame.StartEat();
+            }
+        }, this);
+        //开启一个update和fixedUpdate的计时器
+        var t = new egret.Timer(30 * this.timeScale);
+        t.addEventListener(egret.TimerEvent.TIMER, function () {
+            _this.FixedUpdate();
+            if (_this.toUpdateTicker == 0)
+                _this.Update();
+            _this.RearrangeSpritesZOrder(); //ZOrder每个逻辑tick都会重新排列，所以FixedUpdate中可以不用
+            _this.tick += 1;
+            _this.toUpdateTicker = (_this.toUpdateTicker + 1) % 3;
+        }, this);
+        t.start();
     };
-    //拉面
-    TestScene.prototype.PlaceRamen = function (x, y) {
-        this.ramen = new RamenSpriteClip(this.ramenObj);
-        this.addChild(this.ramen);
-        this.ramen.x = x;
-        this.ramen.y = y;
-        this.ramen.CreateRamen();
-        this.sprites.push(this.ramen);
+    TestScene.prototype.ChangeShowSize = function (toScale) {
+        if (toScale === void 0) { toScale = 1.0; }
+        this.gameLayer.scaleX = this.gameLayer.scaleY = toScale;
+        this.gameLayer.x = (this.stage.stageWidth - this.gameLayer.width * this.gameLayer.scaleX) / 2;
+        this.gameLayer.y = (800 - this.gameLayer.height * this.gameLayer.scaleY) / 2;
+    };
+    //用于动画刷新的Update
+    TestScene.prototype.Update = function () {
+        //角色的
+        //this.actor.Update();
+        if (this.diningTable) {
+            this.diningTable.Update();
+        }
+    };
+    //用于逻辑刷新的Update
+    TestScene.prototype.FixedUpdate = function () {
+        //角色的
+        //this.actor.FixedUpdate();
+        if (this.diningTable) {
+            this.diningTable.FixedUpdate();
+        }
     };
     //重新排序zOrder
     TestScene.prototype.RearrangeSpritesZOrder = function () {
@@ -57,26 +99,19 @@ var TestScene = (function (_super) {
     //放一个角色，这里的x,y都是像素级
     TestScene.prototype.PlaceCharacter = function (key, x, y) {
         if (key === void 0) { key = "schoolgirl"; }
-        var cha = new CharacterObj(GetCharacterActionInfoByKey(key), x, y, new CharacterProperty());
-        cha.head.logicLayer = SpriteClipLayer.EatingHead; //这个是Street少的，就是要切换到吃面层
-        this.gameLayer.addChild(cha.body);
-        this.gameLayer.addChild(cha.head);
-        this.sprites.push(cha.body);
-        this.sprites.push(cha.head);
-        return cha;
+        this.actor = new CharacterObj(GetCharacterActionInfoByKey(key), x, y, new CharacterProperty());
+        var aImg = new CharacterSprite(this.actor);
+        aImg.x = x;
+        aImg.y = y;
+        this.gameLayer.addChild(aImg);
+        this.sprites.push(aImg);
     };
     //放一张桌子，这里可不管能不能放的下，只管放上去的
-    TestScene.prototype.PlaceTable = function (table, x, y) {
-        var t = new DiningTableObj(table, x, y);
-        this.gameLayer.addChild(t.Image);
-        this.sprites.push(t.Image);
-        //TODO桌子椅子连接状态等
-    };
-    //放一张椅子，也是只负责放下去，不负责判断能不能放
-    TestScene.prototype.PlaceChair = function (chairSource, x, y, dir) {
-        var c = new ChairObj(chairSource, x, y, dir);
-        this.gameLayer.addChild(c.image);
-        this.sprites.push(c.image);
+    TestScene.prototype.PlaceTable = function (x, y) {
+        this.diningTable = new DiningTableSprite();
+        this.gameLayer.addChild(this.diningTable);
+        this.diningTable.x = x;
+        this.diningTable.y = y;
     };
     return TestScene;
 }(eui.Component));

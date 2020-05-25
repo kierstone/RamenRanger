@@ -54,6 +54,13 @@ var CharacterActionInfo = (function () {
             if (eh["body_lower"])
                 this.body_lower = eh["body_lower"];
         }
+        this.eatIngredientPos = new Array();
+        if (data["ingredient_pos"]) {
+            var ipd = data["ingredient_pos"];
+            for (var i = 0; i < ipd.length; i++) {
+                this.eatIngredientPos.push(new egret.Point(ipd[i]["x"] ? ipd[i]["x"] : 0, ipd[i]["y"] ? ipd[i]["y"] : 0));
+            }
+        }
         for (var i = 0; i < keys.length; i++) {
             var k = keys[i];
             var thisArr = new Array();

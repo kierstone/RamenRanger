@@ -17,6 +17,8 @@ class CharacterActionInfo {
 	public toPreloadBodyImage:Array<string>;	//所有要预加载的图片
 	public toPreloadEmoteImage:Array<string>;	
 
+	public eatIngredientPos:Array<egret.Point>;	//吃的动作食物的位置
+
 	public constructor() {
 		this.allActions = new Array<Array<Array<CharacterFrameInfo>>>();
 	}
@@ -65,6 +67,17 @@ class CharacterActionInfo {
 			if (eh["head_lower"]) this.head_lower = eh["head_lower"];
 			if (eh["body_upper"]) this.body_upper = eh["body_upper"];
 			if (eh["body_lower"]) this.body_lower = eh["body_lower"];
+		}
+
+		this.eatIngredientPos = new Array<egret.Point>();
+		if (data["ingredient_pos"]){
+			let ipd = data["ingredient_pos"];
+			for (let i = 0; i < ipd.length; i++){
+				this.eatIngredientPos.push(new egret.Point(
+					ipd[i]["x"] ? ipd[i]["x"] : 0,
+					ipd[i]["y"] ? ipd[i]["y"] : 0
+				));
+			}
 		}
 
 		for (let i = 0; i < keys.length; i++){

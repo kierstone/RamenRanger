@@ -103,7 +103,22 @@ class RamenModel {
 class RamenObj{
 	public model:RamenModel;
 
+	//碗里的状况
+	public topping:Array<IngredientObj>;
+	public noodlePercentage:number = 1;	//0-1 as 0%-100%
+	public brothPercentage:number = 1;
+
 	constructor(model?:RamenModel){
-		if (model) this.model = model;
+		this.topping = new Array<IngredientObj>();
+		if (model) this.SetModel(model);
+	}
+
+	public SetModel(model:RamenModel){
+		if (!model) return;
+		this.model = model;
+		this.topping = new Array<IngredientObj>();
+		for (let i = 0; i < this.model.topping.length; i++){
+			this.topping.push(this.model.topping[i].Clone());
+		}
 	}
 }
