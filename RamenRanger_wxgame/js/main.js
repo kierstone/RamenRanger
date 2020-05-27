@@ -43,62 +43,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var SpriteClip = (function (_super) {
-    __extends(SpriteClip, _super);
-    function SpriteClip() {
-        var _this = _super.call(this) || this;
-        _this.logicLayer = SpriteClipLayer.Normal;
-        _this.preloadTextures = {};
-        return _this;
+var SpriteGroup = (function (_super) {
+    __extends(SpriteGroup, _super);
+    function SpriteGroup() {
+        return _super.call(this) || this;
     }
-    SpriteClip.prototype.childrenCreated = function () {
+    SpriteGroup.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
         //this.init();
-    };
-    /**
-     * 预加载这些textures
-     * @param {Object} texture {"key":string, "texture":egret.Texture}
-     */
-    SpriteClip.prototype.SetPreloadTexturesFromObject = function (textures) {
-        this.preloadTextures = textures;
-    };
-    /**
-     * 根据string预加载这些texture
-     * @param {Array<string>} keys 文件名称，最终将成为preloadTextures[Key]
-     */
-    SpriteClip.prototype.SetPreloadTextureByKeys = function (keys) {
-        this.preloadTextures = {};
-        for (var i = 0; i < keys.length; i++) {
-            this.preloadTextures[keys[i]] = RES.getRes(keys[i]);
-        }
-    };
-    /**
-     * 设置当前图形为preload的某一个
-     * @returns {boolean} 是否成功
-     */
-    SpriteClip.prototype.ChangeToPreloadTexture = function (key) {
-        if (key == "" || !this.preloadTextures || !this.preloadTextures[key]) {
-            return false;
-        }
-        this.texture = this.preloadTextures[key];
     };
     /**
      * 经过比较，我是否改到下面一层
      * @returns {boolean} true代表我该去下一层
      */
-    SpriteClip.prototype.NeedToSendMeBack = function (compareSpritClip) {
-        if (!compareSpritClip)
+    SpriteGroup.prototype.NeedToSendMeBack = function (compareGroup) {
+        if (!compareGroup)
             return false;
-        if (this.logicLayer == compareSpritClip.logicLayer) {
-            return this.y < compareSpritClip.y;
-        }
-        else {
-            return this.logicLayer < compareSpritClip.logicLayer;
-        }
+        return this.y < compareGroup.y;
     };
-    return SpriteClip;
-}(eui.Image));
-__reflect(SpriteClip.prototype, "SpriteClip");
+    SpriteGroup.prototype.Update = function () { };
+    SpriteGroup.prototype.FixedUpdate = function () { return false; };
+    ;
+    return SpriteGroup;
+}(eui.Group));
+__reflect(SpriteGroup.prototype, "SpriteGroup");
 var BrothModel = (function () {
     function BrothModel() {
     }
@@ -166,16 +134,46 @@ var BrothModel = (function () {
         shp.graphics.drawCircle(0, 0, radius);
         shp.graphics.endFill();
         //烫的渐变cover
+        var sizes = [0, 102, 216.75, 255];
         var alphas = new Array();
-        var sizes = new Array();
-        for (var i = 0; i < this.coverColor.length; i++) {
+        var loopLen = Math.min(sizes.length, this.coverColor.length);
+        for (var i = 0; i < loopLen; i++) {
             alphas.push(this.coverAlpha);
-            sizes.push((i + 1) * 255 / this.coverColor.length);
+            //sizes.push((i+1) * 255 / this.coverColor.length);
         }
         shp.graphics.beginGradientFill(egret.GradientType.RADIAL, this.coverColor, alphas, sizes, brothMatrix);
         shp.graphics.drawCircle(0, 0, radius);
         shp.graphics.endFill();
         return shp;
+    };
+    /**
+     * 获取用于场景中面条的的shape
+     * @param {egret.Graphics} toGraphic 要打印到的graphic
+     * @param {number} centerX 中心x坐标
+     * @param {number} centerY 中心y坐标
+     * @param {number} radius 半径
+     */
+    BrothModel.prototype.DrawToGraphic = function (toGraphic, centerX, centerY, radius) {
+        if (!toGraphic)
+            return;
+        var brothMatrix = new egret.Matrix();
+        brothMatrix.createGradientBox(radius * 2, radius * 2, 0, centerX - radius, centerY - radius);
+        //底色
+        toGraphic.lineStyle(1, this.backColor);
+        toGraphic.beginFill(this.backColor, 1);
+        toGraphic.drawCircle(centerX, centerY, radius);
+        toGraphic.endFill();
+        //烫的渐变cover
+        var sizes = [0, 102, 216.75, 255];
+        var alphas = new Array();
+        var loopLen = Math.min(sizes.length, this.coverColor.length);
+        for (var i = 0; i < loopLen; i++) {
+            alphas.push(this.coverAlpha);
+            //sizes.push((i+1) * 255 / this.coverColor.length);
+        }
+        toGraphic.beginGradientFill(egret.GradientType.RADIAL, this.coverColor, alphas, sizes, brothMatrix);
+        toGraphic.drawCircle(0, 0, radius);
+        toGraphic.endFill();
     };
     return BrothModel;
 }());
@@ -553,6 +551,25 @@ var CraftNoodleState;
     CraftNoodleState[CraftNoodleState["SelectTopping"] = 4] = "SelectTopping";
     CraftNoodleState[CraftNoodleState["PlaceTopping"] = 5] = "PlaceTopping";
 })(CraftNoodleState || (CraftNoodleState = {}));
+//拉面食材难吃的类别，每吃一回合都有一个这个，当然大多值是none
+var BadTaste;
+(function (BadTaste) {
+    BadTaste[BadTaste["None"] = 0] = "None";
+    BadTaste[BadTaste["Hot"] = 10] = "Hot";
+    BadTaste[BadTaste["TooHeavy"] = 12] = "TooHeavy";
+    BadTaste[BadTaste["Disappointed"] = 13] = "Disappointed";
+    BadTaste[BadTaste["Hatred"] = 15] = "Hatred"; //对应动作Hate，是吃到忌口了
+})(BadTaste || (BadTaste = {}));
+//吃面迷你游戏的状态
+var EatRamenGameState;
+(function (EatRamenGameState) {
+    EatRamenGameState[EatRamenGameState["Enter"] = 0] = "Enter";
+    EatRamenGameState[EatRamenGameState["Order"] = 1] = "Order";
+    EatRamenGameState[EatRamenGameState["Wait"] = 2] = "Wait";
+    EatRamenGameState[EatRamenGameState["Eat"] = 3] = "Eat";
+    EatRamenGameState[EatRamenGameState["ReadyToLeave"] = 4] = "ReadyToLeave";
+    EatRamenGameState[EatRamenGameState["Leave"] = 5] = "Leave"; //离去
+})(EatRamenGameState || (EatRamenGameState = {}));
 var PlayerInfo = (function () {
     function PlayerInfo() {
         this.unlockedIngredients = new Array();
@@ -735,6 +752,7 @@ var RenderUpdateEveryLogicTick = 3; //每3个逻辑tick，渲染走1个tick
 var Scene_NoodleBrothSize = 60; //场景里的拉面的宽度高度
 var Scene_PosScale = 0.12; //这是摆面界面的尺寸转化到面碗尺寸
 var Scene_HorVerTimes = 0.6; //宽高比
+var ResName_Broth_Highlight = "broth_highlight"; //汤上面的油光
 //吃饭的npc身上的buff，而不是玩家店铺的buff，是buffObj
 var CharacterBuff = (function () {
     function CharacterBuff() {
@@ -812,6 +830,13 @@ var CharacterActionInfo = (function () {
             if (eh["body_lower"])
                 this.body_lower = eh["body_lower"];
         }
+        this.eatIngredientPos = new Array();
+        if (data["ingredient_pos"]) {
+            var ipd = data["ingredient_pos"];
+            for (var i = 0; i < ipd.length; i++) {
+                this.eatIngredientPos.push(new egret.Point(ipd[i]["x"] ? ipd[i]["x"] : 0, ipd[i]["y"] ? ipd[i]["y"] : 0));
+            }
+        }
         for (var i = 0; i < keys.length; i++) {
             var k = keys[i];
             var thisArr = new Array();
@@ -868,9 +893,12 @@ __reflect(CharacterFrameInfo.prototype, "CharacterFrameInfo");
 var CharacterObj = (function () {
     function CharacterObj(characterActionInfo, x, y, property) {
         this.currentFrame = 0;
+        this.isSitting = false; //如果sitting了，那么就不会执行ai了
         this.cInfo = characterActionInfo;
         this.CreateSpriteClipByInfo();
         this.SetPosition(x, y);
+        this.ingredientPoint = new egret.Point(0, 0);
+        this.hasIngredientPoint = false;
         //this.playingActionInfo = this.cInfo.GetFrameInfoArray(CharacterDirection.Down, CharacterAction.Stand);
         this.ChangeAction(Direction.Down, CharacterAction.Stand);
         this.property = property;
@@ -930,6 +958,15 @@ var CharacterObj = (function () {
             this.head.anchorOffsetY = this.head.height + upperY - this.cInfo.head_lower;
             this.head.scaleX = this.direction == Direction.Right ? -1 : 1;
         }
+        if (this.doingAction == CharacterAction.Eat && this.currentFrame < this.cInfo.eatIngredientPos.length && this.head) {
+            this.hasIngredientPoint = true;
+            this.ingredientPoint.x = -this.head.anchorOffsetX + this.cInfo.eatIngredientPos[this.currentFrame].x;
+            this.ingredientPoint.y = -this.head.anchorOffsetY + this.cInfo.eatIngredientPos[this.currentFrame].y;
+            console.log("ing pos", this.currentFrame, this.ingredientPoint, this.cInfo.eatIngredientPos[this.currentFrame]);
+        }
+        else {
+            this.hasIngredientPoint = false;
+        }
         this.SetPosition(this.position.x, this.position.y);
     };
     /**
@@ -987,19 +1024,22 @@ var CharacterObj = (function () {
      * 逻辑update。返回是否需要立即渲染一下
      */
     CharacterObj.prototype.FixedUpdate = function () {
-        var todo = this.ai.WhatToDo();
         var requireInstantDraw = false;
-        if (todo) {
-            //处理移动
-            if (todo.doMove == true) {
-                this.SetPosition(todo.moveToX, todo.moveToY);
-            }
-            //动作和方向改变，引起改变
-            var cD = todo.changeDirection;
-            var cA = this.IsSameAction(todo.doAction, this.doingAction) == false;
-            if (cD == true || cA == true) {
-                this.ChangeAction(cD == true ? todo.directionTo : this.direction, cA == true ? todo.doAction : this.doingAction);
-                requireInstantDraw = true;
+        //没坐着就得执行ai
+        if (this.isSitting == false) {
+            var todo = this.ai.WhatToDo();
+            if (todo) {
+                //处理移动
+                if (todo.doMove == true) {
+                    this.SetPosition(todo.moveToX, todo.moveToY);
+                }
+                //动作和方向改变，引起改变
+                var cD = todo.changeDirection;
+                var cA = this.IsSameAction(todo.doAction, this.doingAction) == false;
+                if (cD == true || cA == true) {
+                    this.ChangeAction(cD == true ? todo.directionTo : this.direction, cA == true ? todo.doAction : this.doingAction);
+                    requireInstantDraw = true;
+                }
             }
         }
         return requireInstantDraw;
@@ -1183,6 +1223,202 @@ var CharacterAIScript = (function () {
     return CharacterAIScript;
 }());
 __reflect(CharacterAIScript.prototype, "CharacterAIScript");
+/**
+ * 吃东西的FixedUpdate的数据
+ */
+var EatingAction = (function () {
+    //其他的比如喷出爱心等需要了再加
+    function EatingAction(tick, toAction) {
+        this.tick = tick;
+        this.changeToAction = toAction;
+    }
+    return EatingAction;
+}());
+__reflect(EatingAction.prototype, "EatingAction");
+/**
+ * 把吃拉面的过程，当做是一个小游戏
+ * 每一个回合计算当前的情况，并确定表演，同时表演时间决定到下一个回合的时间
+ * 这样之后有玩法就可以插入到这里
+ * 而吃拉面的相关属性也放在这里，并不放在角色里，角色是一个被读取用的数据源
+ */
+var EatingRamen = (function () {
+    function EatingRamen(cha, ramen) {
+        //相关数据
+        this.hungry = 100; //吃面的人的饥饿度，这个未来可以有算法，现在先100开始，到0就吃饱吃撑了
+        this.heart = 0; //吃面开始到现在已经获得了多少爱心了
+        this.turnId = 0;
+        this.gameState = EatRamenGameState.Enter;
+        this.cha = cha;
+        this.ramen = ramen;
+    }
+    /**
+     * 执行一个回合的逻辑思维，这个只有在回合开始一瞬间执行了
+     * 当然是在EatRamenGameState.Eat才会运行
+     */
+    EatingRamen.prototype.RunATurn = function () {
+        //回合数先提高
+        this.turnId += 1;
+        //先看看你吃饱了就结束了
+        if (this.hungry <= 0) {
+            this.gameState = EatRamenGameState.ReadyToLeave;
+            this.cha.ChangeAction(this.cha.direction, CharacterAction.Stand);
+            return; //TODO 没东西吃了，应该去后续状态
+        }
+        //选择要吃啥
+        var eatIng = this.ThisTurnEat();
+        if (eatIng == null) {
+            this.gameState = EatRamenGameState.ReadyToLeave;
+            this.cha.ChangeAction(this.cha.direction, CharacterAction.Stand);
+            return; //TODO 没东西吃了，应该去后续状态
+        }
+        //根据吃的东西改变属性
+        //根据吃的东西生成EatTurnAction和EatingAction
+        this.ThisTurnModify(eatIng);
+    };
+    //从拉面里选出这回合吃啥，当然目前是测试的，今后要改规则
+    EatingRamen.prototype.ThisTurnEat = function () {
+        if ((this.turnId % 2) == 0) {
+            //偶数回合吃料优先，TODO 找出最想吃的
+            if (this.ramen.topping.length > 0) {
+                var sIndex = Math.floor(Math.random() * this.ramen.topping.length);
+                return this.ramen.topping.splice(sIndex, 1)[0];
+            }
+            else if (this.ramen.noodlePercentage > 0) {
+                this.ramen.noodlePercentage -= 0.06; //TODO 先写死一口吃6%，应该来自于属性
+                return this.ramen.model.noodles;
+            }
+        }
+        else {
+            if (this.ramen.noodlePercentage > 0) {
+                this.ramen.noodlePercentage -= 0.06; //TODO 先写死一口吃6%，应该来自于属性
+                return this.ramen.model.noodles;
+            }
+            else if (this.ramen.topping.length > 0) {
+                var sIndex = Math.floor(Math.random() * this.ramen.topping.length);
+                return this.ramen.topping.splice(sIndex, 1)[0];
+            }
+        }
+        return null;
+    };
+    //根据吃的东西改变属性，并且获得行为列表 TODO 都是临时写死的
+    EatingRamen.prototype.ThisTurnModify = function (eatIng) {
+        this.hungry -= 1;
+        var satisify = Math.round(Math.random() * 200 - 100);
+        var badTaste = BadTaste.None;
+        var ranRes = Math.random();
+        if (ranRes >= 0.95) {
+            badTaste = BadTaste.Hatred;
+        }
+        else if (ranRes >= 0.9) {
+            badTaste = BadTaste.Disappointed;
+        }
+        else if (ranRes >= 0.85) {
+            badTaste = BadTaste.Hot;
+        }
+        else if (ranRes >= 0.8) {
+            badTaste = BadTaste.TooHeavy;
+        }
+        if (!this.turnResult) {
+            this.turnResult = new EatTurnAction(eatIng, satisify, badTaste);
+        }
+        else {
+            this.turnResult.badTaste = badTaste;
+            this.turnResult.eatIngredient = eatIng;
+            this.turnResult.satisfy = satisify;
+        }
+        this.turnActions = this.turnResult.GatherActionList(this.cha);
+    };
+    //返回是否立即重新绘制RamenSprite等内容
+    EatingRamen.prototype.FixedUpdate = function () {
+        var requireUpdate = false;
+        switch (this.gameState) {
+            case EatRamenGameState.Eat:
+                {
+                    if (this.turnActions && this.turnActions.length > 0) {
+                        var doingOne = this.turnActions[0];
+                        if (doingOne.tick > 0) {
+                            this.cha.ChangeAction(this.cha.direction, doingOne.changeToAction);
+                            doingOne.tick -= 1;
+                        }
+                        if (doingOne.tick <= 0) {
+                            this.turnActions.shift();
+                        }
+                    }
+                    else {
+                        this.RunATurn();
+                        requireUpdate = true;
+                    }
+                }
+                break;
+        }
+        return requireUpdate;
+    };
+    /**
+     * 临时的开吃
+     */
+    EatingRamen.prototype.StartEat = function () {
+        this.gameState = EatRamenGameState.Eat;
+    };
+    return EatingRamen;
+}());
+__reflect(EatingRamen.prototype, "EatingRamen");
+/**
+ * 首先我们把吃面的过程作为一个小游戏玩法，这样以后要扩展操作也简单
+ * 只是吃面这个迷你游戏的每个回合要做些什么事情的数据结构
+ */
+var EatTurnAction = (function () {
+    function EatTurnAction(eatIngredient, satisfy, badTaste) {
+        if (badTaste === void 0) { badTaste = BadTaste.None; }
+        this.eatIngredient = eatIngredient;
+        this.satisfy = satisfy;
+        this.badTaste = badTaste;
+    }
+    /**
+     * 根据这个回合的结果，算出需要做的动作序列
+     * @param {CharacterObj} cha 针对这个角色而算出的列表，因为要依赖动作长度
+     */
+    EatTurnAction.prototype.GatherActionList = function (cha) {
+        var res = new Array();
+        //吃的动作
+        res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Eat), CharacterAction.Eat));
+        //咀嚼
+        res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Chew), CharacterAction.Chew));
+        //如果恶心了，那么就做恶心的动作，否则就是根据高兴程度来
+        var resAction = this.GetEatActionBySatisfy();
+        res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, resAction), resAction));
+        return res;
+    };
+    //根据高兴程度获得吃这口面的结果
+    EatTurnAction.prototype.GetEatActionBySatisfy = function () {
+        if (this.badTaste != BadTaste.None) {
+            //优先不爽的感觉
+            switch (this.badTaste) {
+                case BadTaste.Disappointed: return CharacterAction.Sigh;
+                case BadTaste.Hatred: return CharacterAction.Hate;
+                case BadTaste.Hot: return CharacterAction.Spicy;
+                case BadTaste.TooHeavy: return CharacterAction.Salty;
+            }
+            return CharacterAction.Chew;
+        }
+        else if (this.satisfy > 80) {
+            return CharacterAction.Smile;
+        }
+        else if (this.satisfy > 60) {
+            return CharacterAction.Nod;
+        }
+        else if (this.satisfy < -90) {
+            return CharacterAction.Hate;
+        }
+        else if (this.satisfy < -75) {
+            return CharacterAction.Sigh;
+        }
+        else {
+            return CharacterAction.Chew;
+        }
+    };
+    return EatTurnAction;
+}());
+__reflect(EatTurnAction.prototype, "EatTurnAction");
 var BowlModel = (function () {
     function BowlModel() {
         this.tareLimit = 6; //TODO 最多6个tare，回头改成读数据
@@ -1273,34 +1509,6 @@ var LoadingUI = (function (_super) {
     return LoadingUI;
 }(egret.Sprite));
 __reflect(LoadingUI.prototype, "LoadingUI", ["RES.PromiseTaskReporter"]);
-var IngredientClass = (function () {
-    function IngredientClass() {
-    }
-    /**
-     * 从json的Object获取到数据
-     * @param {Object} json 存盘的json文件，参看“数据结构/面碗”文档。
-     * @returns {boolean} 是否成功，如果id有异常则不会成功
-     */
-    IngredientClass.prototype.fromJson = function (json) {
-        if (!json || !json["id"]) {
-            return false;
-        }
-        this.id = json["id"];
-        this.name = json["name"] ? json["name"] : json["id"];
-        this.icon = "icon_Ingredient_" + (json["icon"] ? json["icon"] : "");
-        this.items = new Array();
-        if (json["children"] && json["children"].length && json["children"].length > 0) {
-            for (var i = 0; i < json["children"].length; i++) {
-                var bObj = json["children"][i];
-                var im = new IngredientModel();
-                this.items.push(im);
-            }
-        }
-        return true;
-    };
-    return IngredientClass;
-}());
-__reflect(IngredientClass.prototype, "IngredientClass");
 //从json读取的ingredient数据
 var IngredientModel = (function () {
     function IngredientModel(data) {
@@ -1601,9 +1809,21 @@ var RamenModel = (function () {
 __reflect(RamenModel.prototype, "RamenModel");
 var RamenObj = (function () {
     function RamenObj(model) {
+        this.noodlePercentage = 1; //0-1 as 0%-100%
+        this.brothPercentage = 1;
+        this.topping = new Array();
         if (model)
-            this.model = model;
+            this.SetModel(model);
     }
+    RamenObj.prototype.SetModel = function (model) {
+        if (!model)
+            return;
+        this.model = model;
+        this.topping = new Array();
+        for (var i = 0; i < this.model.topping.length; i++) {
+            this.topping.push(this.model.topping[i].Clone());
+        }
+    };
     return RamenObj;
 }());
 __reflect(RamenObj.prototype, "RamenObj");
@@ -1838,6 +2058,201 @@ var GridPosition = (function () {
     return GridPosition;
 }());
 __reflect(GridPosition.prototype, "GridPosition");
+var CharacterSprite = (function (_super) {
+    __extends(CharacterSprite, _super);
+    function CharacterSprite(chaObj) {
+        var _this = _super.call(this) || this;
+        _this._character = chaObj;
+        return _this;
+    }
+    CharacterSprite.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        this.init();
+    };
+    CharacterSprite.prototype.init = function () {
+        this.head = this._character.head;
+        this.body = this._character.body;
+        this.emote = this._character.emote;
+        this._character.SetPosition(0, 0);
+        //注意加入顺序
+        if (this.body)
+            this.addChild(this.body);
+        if (this.head)
+            this.addChild(this.head);
+        if (this.emote)
+            this.addChild(this.emote);
+    };
+    CharacterSprite.prototype.Update = function () {
+        this._character.Update();
+    };
+    CharacterSprite.prototype.FixedUpdate = function () {
+        return this._character.FixedUpdate();
+    };
+    return CharacterSprite;
+}(SpriteGroup));
+__reflect(CharacterSprite.prototype, "CharacterSprite");
+var DiningTableSprite = (function (_super) {
+    __extends(DiningTableSprite, _super);
+    //TODO桌子信息等
+    function DiningTableSprite() {
+        return _super.call(this) || this;
+    }
+    DiningTableSprite.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        this.init();
+    };
+    DiningTableSprite.prototype.init = function () {
+        //TODO 椅子写死
+        this.chair = new eui.Image(RES.getRes("wooden_chair"));
+        this.addChild(this.chair);
+        this.chair.anchorOffsetX = this.chair.width / 2;
+        this.chair.anchorOffsetY = this.chair.height + 50;
+        this.chair.visible = false;
+        //TODO 桌子先写死
+        this.table = new eui.Image(RES.getRes("wooden_single_table"));
+        this.addChild(this.table);
+        this.table.anchorOffsetX = this.table.width / 2;
+        this.table.anchorOffsetY = this.table.height;
+    };
+    DiningTableSprite.prototype.ResetZOrder = function () {
+        if (this.chair)
+            this.chair.zIndex = 0;
+        if (this.body)
+            this.body.zIndex = 1;
+        if (this.table)
+            this.table.zIndex = 2;
+        if (this.ramen)
+            this.ramen.zIndex = 3;
+        if (this.head)
+            this.head.zIndex = 4;
+        if (this.eatingIngImg)
+            this.eatingIngImg.zIndex = 5;
+        this.sortChildren();
+    };
+    /**
+     * 现在的角色从椅子上挪走
+     */
+    DiningTableSprite.prototype.RemoveCharacter = function () {
+        if (this.body) {
+            if (this.body.parent)
+                this.body.parent.removeChild(this.body);
+            this.body = null;
+        }
+        if (this.head) {
+            if (this.head.parent)
+                this.head.parent.removeChild(this.head);
+            this.head = null;
+        }
+        if (this.emote) {
+            if (this.emote.parent)
+                this.emote.parent.removeChild(this.emote);
+            this.emote = null;
+        }
+        this.chair.visible = false;
+        if (this._cha) {
+            this._cha.isSitting = false;
+        }
+        this._cha = null;
+        this.eatGame = null;
+    };
+    /**
+     * 让角色做到凳子上，TODO，现在凳子数据写死
+     */
+    DiningTableSprite.prototype.SetCharacterToSeat = function (cha) {
+        this.RemoveCharacter();
+        this.chair.visible = true;
+        if (!cha)
+            return;
+        this._cha = cha;
+        this._cha.SetPosition(0, -50);
+        if (this._cha.body) {
+            this.body = this._cha.body;
+            this.addChild(this.body);
+        }
+        if (this._cha.head) {
+            this.head = this._cha.head;
+            this.addChild(this.head);
+        }
+        if (this._cha.emote) {
+            this.emote = this._cha.emote;
+            this.addChild(this.emote);
+        }
+        this._cha.isSitting = true;
+        if (this._cha && this._ramen)
+            this.eatGame = new EatingRamen(this._cha, this._ramen);
+        this.ResetZOrder();
+    };
+    /**
+     * 删除拉面
+     */
+    DiningTableSprite.prototype.RemoveRamen = function () {
+        if (this.ramen) {
+            if (this.ramen.parent)
+                this.ramen.parent.removeChild(this.ramen);
+            this.ramen = null;
+            this._ramen = null;
+        }
+    };
+    /**
+     * 上拉面
+     */
+    DiningTableSprite.prototype.PlaceRamen = function (ramen) {
+        this.RemoveRamen();
+        if (!ramen)
+            return;
+        this._ramen = ramen;
+        this.ramen = new RamenSprite(this._ramen);
+        this.ramen.y = -30; //TODO 写死
+        this.addChild(this.ramen);
+        if (this._cha && this._ramen)
+            this.eatGame = new EatingRamen(this._cha, this._ramen);
+        this.ResetZOrder();
+    };
+    /**
+     * 根据eatGame状态重绘一些图形
+     */
+    DiningTableSprite.prototype.UpdateByEatGame = function () {
+        this.ramen.UpdateRamen();
+        if (this.eatingIngImg && this.eatingIngImg.parent) {
+            this.eatingIngImg.parent.removeChild(this.eatingIngImg);
+        }
+        this.eatingIngImg = this.eatGame.turnResult.eatIngredient.GatherSceneImage(this, 0, 0);
+        console.log("eating ing refresh", this.eatingIngImg.anchorOffsetY);
+        this.eatingIngImg.visible = false;
+        this.ResetZOrder();
+    };
+    DiningTableSprite.prototype.Update = function () {
+        if (this._cha) {
+            this._cha.Update();
+            if (this.eatingIngImg) {
+                if (this._cha.hasIngredientPoint == true) {
+                    this.eatingIngImg.visible = true;
+                    var chaPos = this._cha.GetPos();
+                    this.eatingIngImg.x = this._cha.ingredientPoint.x + chaPos.x;
+                    this.eatingIngImg.y = this._cha.ingredientPoint.y + chaPos.y;
+                }
+                else {
+                    this.eatingIngImg.visible = false;
+                }
+            }
+        }
+    };
+    DiningTableSprite.prototype.FixedUpdate = function () {
+        if (this._cha) {
+            if (this._cha.FixedUpdate() == true) {
+                this._cha.Update();
+            }
+        }
+        if (this.eatGame) {
+            if (this.eatGame.FixedUpdate() == true) {
+                this.UpdateByEatGame();
+            }
+        }
+        return false;
+    };
+    return DiningTableSprite;
+}(SpriteGroup));
+__reflect(DiningTableSprite.prototype, "DiningTableSprite");
 var IngredientBox = (function (_super) {
     __extends(IngredientBox, _super);
     function IngredientBox(items) {
@@ -1875,13 +2290,15 @@ var IngredientBox = (function (_super) {
 __reflect(IngredientBox.prototype, "IngredientBox", ["eui.UIComponent", "egret.DisplayObject"]);
 var IngredientIconInBox = (function (_super) {
     __extends(IngredientIconInBox, _super);
-    function IngredientIconInBox(id, ingredient, icon, caller, func) {
+    function IngredientIconInBox(id, ingredient, icon, caller, func, broth) {
+        if (broth === void 0) { broth = null; }
         var _this = _super.call(this) || this;
         _this.selected = false;
         _this.ingredient = ingredient;
         _this.eveCaller = caller;
         _this.eveFunc = func;
         _this.icon = icon;
+        _this.bModel = broth;
         return _this;
     }
     IngredientIconInBox.prototype.partAdded = function (partName, instance) {
@@ -1896,6 +2313,9 @@ var IngredientIconInBox = (function (_super) {
         this.Img_Icon.source = this.icon;
         this.Label_Name.text = this.ingredient.name;
         this.SetSelected(false);
+        if (this.bModel) {
+            this.FillBroth(this.bModel);
+        }
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
             if (_this.eveCaller && _this.eveFunc) {
                 _this.eveFunc(_this.eveCaller, _this.ingredient);
@@ -1906,55 +2326,161 @@ var IngredientIconInBox = (function (_super) {
         this.selected = s;
         this.Img_Select.visible = s;
     };
+    /**
+     * 因为汤比较特殊，所以得额外fill进来
+     * @param {BrothModel} broth 汤的model
+     * @param {number} centerX 要绘制的位置x，为空时为图标中心
+     * @param {number} centerY 要绘制的位置y，为空时为图标中心
+     * @param {number} radius 要绘制的汤的半径，为空时为图标的40%
+     */
+    IngredientIconInBox.prototype.FillBroth = function (broth, centerX, centerY, radius) {
+        if (centerX === void 0) { centerX = null; }
+        if (centerY === void 0) { centerY = null; }
+        if (radius === void 0) { radius = null; }
+        if (!this.Img_Icon)
+            return;
+        if (centerX == null)
+            centerX = this.width / 2;
+        if (centerY == null)
+            centerY = this.Img_Icon.height / 2;
+        if (radius == null)
+            radius = this.Img_Icon.width * 0.4;
+        var shp = broth.ImageShape(centerX, // + this.Img_Icon.x,
+        centerY + this.Img_Icon.y, radius);
+        this.addChild(shp);
+        var brothHL = new eui.Image(RES.getRes(ResName_Broth_Highlight));
+        this.addChild(brothHL);
+        brothHL.width = brothHL.height = radius * 2;
+        brothHL.anchorOffsetX = brothHL.width / 2;
+        brothHL.anchorOffsetY = brothHL.height / 2;
+        brothHL.x = shp.x;
+        brothHL.y = shp.y;
+    };
     return IngredientIconInBox;
 }(eui.Component));
 __reflect(IngredientIconInBox.prototype, "IngredientIconInBox", ["eui.UIComponent", "egret.DisplayObject"]);
-var RamenSpriteClip = (function (_super) {
-    __extends(RamenSpriteClip, _super);
-    function RamenSpriteClip(ramen) {
+var RamenSprite = (function (_super) {
+    __extends(RamenSprite, _super);
+    function RamenSprite(ramen) {
         var _this = _super.call(this) || this;
-        _this.logicLayer = SpriteClipLayer.Noodle;
         _this.ramen = ramen;
-        _this._ramenCreated = false;
         return _this;
     }
-    RamenSpriteClip.prototype.childrenCreated = function () {
+    RamenSprite.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
         this.init();
     };
-    RamenSpriteClip.prototype.init = function () {
-        this.source = RES.getRes(this.ramen.model.bowl.model.scene);
-        this.anchorOffsetX = this.width / 2;
-        this.anchorOffsetY = this.height;
+    RamenSprite.prototype.init = function () {
+        if (this.ramen)
+            this.SetRamen(this.ramen);
     };
-    //绘制拉面的内容
-    RamenSpriteClip.prototype.CreateRamen = function () {
-        if (!this.parent || this._ramenCreated == true)
+    RamenSprite.prototype.SetRamen = function (ramen) {
+        if (!ramen)
             return;
+        this.ramen = ramen;
+        this.bowlImg = new eui.Image(RES.getRes(this.ramen.model.bowl.model.scene));
+        this.addChild(this.bowlImg);
+        this.bowlImg.anchorOffsetX = this.bowlImg.width / 2;
+        this.bowlImg.anchorOffsetY = this.bowlImg.height;
         var backGroup = new eui.Group();
-        backGroup.x = this.ramen.model.bowl.model.sceneCenterX + this.x - this.anchorOffsetX;
-        backGroup.y = this.ramen.model.bowl.model.sceneCenterY + this.y - this.anchorOffsetY;
-        this.parent.addChild(backGroup);
-        console.log("back", Utils.GetEuiScreenPos(backGroup));
-        var broth = this.ramen.model.broth.model.SceneShape(0, 0, 30); //美术设计拉面汤的宽度是60
-        backGroup.addChild(broth);
-        console.log("broth", Utils.GetEuiScreenPos(broth));
-        this.ramen.model.noodles.GatherSceneImage(backGroup, 0, 0);
-        this.imgs = new Array();
-        for (var i = 0; i < this.ramen.model.topping.length; i++) {
-            var thisImg = this.ramen.model.topping[i].GatherSceneImage(backGroup, 0, 0);
+        backGroup.x = -this.bowlImg.anchorOffsetX + this.ramen.model.bowl.model.sceneCenterX;
+        backGroup.y = -this.bowlImg.anchorOffsetY + this.ramen.model.bowl.model.sceneCenterY;
+        this.addChild(backGroup);
+        this.brothShape = this.ramen.model.broth.model.SceneShape(0, 0, 30); //美术设计拉面汤的宽度是60
+        backGroup.addChild(this.brothShape);
+        this.noodleImg = this.ramen.model.noodles.GatherSceneImage(backGroup, 0, 0);
+        this.ToppingImg = new Array();
+        for (var i = 0; i < this.ramen.topping.length; i++) {
+            var thisImg = this.ramen.topping[i].GatherSceneImage(backGroup, 0, 0);
             var thisObj = {
-                "ingredient": this.ramen.model.topping[i],
+                "ingredient": this.ramen.topping[i],
                 "img": thisImg
             };
-            console.log("toppings[" + i.toString() + "]", Utils.GetEuiScreenPos(thisImg));
+            this.ToppingImg.push(thisObj);
         }
         backGroup.scaleY = Scene_HorVerTimes;
-        this._ramenCreated = true;
     };
-    return RamenSpriteClip;
-}(SpriteClip));
-__reflect(RamenSpriteClip.prototype, "RamenSpriteClip");
+    /**
+     * 当拉面被吃了一口的时候，应该刷新一下
+     *
+     */
+    RamenSprite.prototype.UpdateRamen = function () {
+        //noodles
+        var noodleScale = Math.max(0, Math.min(this.ramen.noodlePercentage, 1));
+        this.noodleImg.scaleX = this.noodleImg.scaleY = noodleScale;
+        //TODO broth
+        //ingredients
+        var index = 0;
+        while (index < this.ToppingImg.length) {
+            if (this.ramen.topping.indexOf(this.ToppingImg[index]["ingredient"]) >= 0) {
+                index += 1;
+            }
+            else {
+                if (this.ToppingImg[index]["img"].parent)
+                    this.ToppingImg[index]["img"].parent.removeChild(this.ToppingImg[index]["img"]);
+                this.ToppingImg.splice(index, 1);
+            }
+        }
+    };
+    return RamenSprite;
+}(SpriteGroup));
+__reflect(RamenSprite.prototype, "RamenSprite");
+var SpriteClip = (function (_super) {
+    __extends(SpriteClip, _super);
+    function SpriteClip() {
+        var _this = _super.call(this) || this;
+        _this.logicLayer = SpriteClipLayer.Normal;
+        _this.preloadTextures = {};
+        return _this;
+    }
+    SpriteClip.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        //this.init();
+    };
+    /**
+     * 预加载这些textures
+     * @param {Object} texture {"key":string, "texture":egret.Texture}
+     */
+    SpriteClip.prototype.SetPreloadTexturesFromObject = function (textures) {
+        this.preloadTextures = textures;
+    };
+    /**
+     * 根据string预加载这些texture
+     * @param {Array<string>} keys 文件名称，最终将成为preloadTextures[Key]
+     */
+    SpriteClip.prototype.SetPreloadTextureByKeys = function (keys) {
+        this.preloadTextures = {};
+        for (var i = 0; i < keys.length; i++) {
+            this.preloadTextures[keys[i]] = RES.getRes(keys[i]);
+        }
+    };
+    /**
+     * 设置当前图形为preload的某一个
+     * @returns {boolean} 是否成功
+     */
+    SpriteClip.prototype.ChangeToPreloadTexture = function (key) {
+        if (key == "" || !this.preloadTextures || !this.preloadTextures[key]) {
+            return false;
+        }
+        this.texture = this.preloadTextures[key];
+    };
+    /**
+     * 经过比较，我是否改到下面一层
+     * @returns {boolean} true代表我该去下一层
+     */
+    SpriteClip.prototype.NeedToSendMeBack = function (compareSpritClip) {
+        if (!compareSpritClip)
+            return false;
+        if (this.logicLayer == compareSpritClip.logicLayer) {
+            return this.y < compareSpritClip.y;
+        }
+        else {
+            return this.logicLayer < compareSpritClip.logicLayer;
+        }
+    };
+    return SpriteClip;
+}(eui.Image));
+__reflect(SpriteClip.prototype, "SpriteClip");
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -2608,7 +3134,8 @@ var CraftNoodle = (function (_super) {
         for (var i = 0; i < pageI.length; i++) {
             var pis = new Array();
             for (var j = 0; j < pageI[i].length; j++) {
-                pis.push(new IngredientIconInBox(pageI[i][j].id, pageI[i][j], "icon_default", me, me.ClickOnIngredientIcon));
+                var iInB = new IngredientIconInBox(pageI[i][j].id, pageI[i][j], this.craftingRamen.bowl.model.img, me, me.ClickOnIngredientIcon, pageI[i][j]);
+                pis.push(iInB);
             }
             var ip = new IngredientBox(pis);
             this.ingredientPage.push(ip);
@@ -2640,7 +3167,8 @@ var CraftNoodle = (function (_super) {
         for (var i = 0; i < pageI.length; i++) {
             var pis = new Array();
             for (var j = 0; j < pageI[i].length; j++) {
-                pis.push(new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].icon, me, me.ClickOnIngredientIcon));
+                var iInB = new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].icon, me, me.ClickOnIngredientIcon);
+                pis.push(iInB);
             }
             var ip = new IngredientBox(pis);
             this.ingredientPage.push(ip);
@@ -2846,7 +3374,7 @@ var CraftNoodle = (function (_super) {
                     .to({ scaleX: 1, scaleY: 1 }, brothAnimInTime, egret.Ease.quadOut)
                     .call(function () {
                     if (!_this.brothHighlight) {
-                        _this.brothHighlight = new eui.Image(RES.getRes("broth_highlight"));
+                        _this.brothHighlight = new eui.Image(RES.getRes(ResName_Broth_Highlight));
                     }
                     _this.Group_GameLayer.addChild(_this.brothHighlight);
                     _this.brothHighlight.anchorOffsetX = _this.brothHighlight.width / 2;
@@ -3388,7 +3916,13 @@ var TestScene = (function (_super) {
     __extends(TestScene, _super);
     function TestScene(ramen) {
         var _this = _super.call(this) || this;
+        //From Street
+        _this.toUpdateTicker = 0;
+        _this.tick = 0;
+        _this.chaRefTicker = 0;
         _this.zOrderBase = 10000; //在重新计算zOrder时，加上这个数字
+        // private ramen:RamenSpriteClip;
+        _this.timeScale = 1;
         _this.ramenObj = new RamenObj(ramen);
         return _this;
     }
@@ -3401,20 +3935,56 @@ var TestScene = (function (_super) {
         this.init();
     };
     TestScene.prototype.init = function () {
-        this.PlaceTable(new DiningTableModel(1, 1, "wooden_single_table", []), 350, 500);
-        this.PlaceChair("wooden_chair", 350, 448, Direction.Down);
-        this.PlaceCharacter("schoolgirl", 350, 450);
-        this.PlaceRamen(350, 470);
+        var _this = this;
+        this.PlaceCharacter("schoolgirl", 150, 450);
+        this.actor = new CharacterObj(GetCharacterActionInfoByKey("schoolgirl"), 0, 0, new CharacterProperty());
+        this.PlaceTable(350, 500);
+        this.diningTable.SetCharacterToSeat(this.actor);
+        this.diningTable.PlaceRamen(this.ramenObj);
         this.RearrangeSpritesZOrder();
+        this.HSilder_Size.addEventListener(egret.Event.CHANGE, function () {
+            var toSize = _this.HSilder_Size.value * 0.05 + 1;
+            _this.ChangeShowSize(toSize);
+            _this.Label_Size.text = toSize.toFixed(2).toString();
+        }, this);
+        this.Button_Start.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.diningTable && _this.diningTable.eatGame) {
+                _this.diningTable.eatGame.StartEat();
+            }
+        }, this);
+        //开启一个update和fixedUpdate的计时器
+        var t = new egret.Timer(30 * this.timeScale);
+        t.addEventListener(egret.TimerEvent.TIMER, function () {
+            _this.FixedUpdate();
+            if (_this.toUpdateTicker == 0)
+                _this.Update();
+            _this.RearrangeSpritesZOrder(); //ZOrder每个逻辑tick都会重新排列，所以FixedUpdate中可以不用
+            _this.tick += 1;
+            _this.toUpdateTicker = (_this.toUpdateTicker + 1) % 3;
+        }, this);
+        t.start();
     };
-    //拉面
-    TestScene.prototype.PlaceRamen = function (x, y) {
-        this.ramen = new RamenSpriteClip(this.ramenObj);
-        this.addChild(this.ramen);
-        this.ramen.x = x;
-        this.ramen.y = y;
-        this.ramen.CreateRamen();
-        this.sprites.push(this.ramen);
+    TestScene.prototype.ChangeShowSize = function (toScale) {
+        if (toScale === void 0) { toScale = 1.0; }
+        this.gameLayer.scaleX = this.gameLayer.scaleY = toScale;
+        this.gameLayer.x = (this.stage.stageWidth - this.gameLayer.width * this.gameLayer.scaleX) / 2;
+        this.gameLayer.y = (800 - this.gameLayer.height * this.gameLayer.scaleY) / 2;
+    };
+    //用于动画刷新的Update
+    TestScene.prototype.Update = function () {
+        //角色的
+        //this.actor.Update();
+        if (this.diningTable) {
+            this.diningTable.Update();
+        }
+    };
+    //用于逻辑刷新的Update
+    TestScene.prototype.FixedUpdate = function () {
+        //角色的
+        //this.actor.FixedUpdate();
+        if (this.diningTable) {
+            this.diningTable.FixedUpdate();
+        }
     };
     //重新排序zOrder
     TestScene.prototype.RearrangeSpritesZOrder = function () {
@@ -3433,26 +4003,19 @@ var TestScene = (function (_super) {
     //放一个角色，这里的x,y都是像素级
     TestScene.prototype.PlaceCharacter = function (key, x, y) {
         if (key === void 0) { key = "schoolgirl"; }
-        var cha = new CharacterObj(GetCharacterActionInfoByKey(key), x, y, new CharacterProperty());
-        cha.head.logicLayer = SpriteClipLayer.EatingHead; //这个是Street少的，就是要切换到吃面层
-        this.gameLayer.addChild(cha.body);
-        this.gameLayer.addChild(cha.head);
-        this.sprites.push(cha.body);
-        this.sprites.push(cha.head);
-        return cha;
+        this.actor = new CharacterObj(GetCharacterActionInfoByKey(key), x, y, new CharacterProperty());
+        var aImg = new CharacterSprite(this.actor);
+        aImg.x = x;
+        aImg.y = y;
+        this.gameLayer.addChild(aImg);
+        this.sprites.push(aImg);
     };
     //放一张桌子，这里可不管能不能放的下，只管放上去的
-    TestScene.prototype.PlaceTable = function (table, x, y) {
-        var t = new DiningTableObj(table, x, y);
-        this.gameLayer.addChild(t.Image);
-        this.sprites.push(t.Image);
-        //TODO桌子椅子连接状态等
-    };
-    //放一张椅子，也是只负责放下去，不负责判断能不能放
-    TestScene.prototype.PlaceChair = function (chairSource, x, y, dir) {
-        var c = new ChairObj(chairSource, x, y, dir);
-        this.gameLayer.addChild(c.image);
-        this.sprites.push(c.image);
+    TestScene.prototype.PlaceTable = function (x, y) {
+        this.diningTable = new DiningTableSprite();
+        this.gameLayer.addChild(this.diningTable);
+        this.diningTable.x = x;
+        this.diningTable.y = y;
     };
     return TestScene;
 }(eui.Component));

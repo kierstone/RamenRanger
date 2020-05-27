@@ -576,9 +576,12 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 		for (let i = 0; i < pageI.length; i++){
 			let pis = new Array<IngredientIconInBox>();
 			for (let j = 0; j < pageI[i].length; j++){
-				pis.push(new IngredientIconInBox(
-					pageI[i][j].id, pageI[i][j], "icon_default", me, me.ClickOnIngredientIcon
-				))
+				let iInB = new IngredientIconInBox(
+					pageI[i][j].id, pageI[i][j],
+					this.craftingRamen.bowl.model.img, me, me.ClickOnIngredientIcon,
+					pageI[i][j]
+				)
+				pis.push(iInB);
 			}
 			let ip = new IngredientBox(pis);
 			this.ingredientPage.push(ip);
@@ -614,9 +617,10 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 		for (let i = 0; i < pageI.length; i++){
 			let pis = new Array<IngredientIconInBox>();
 			for (let j = 0; j < pageI[i].length; j++){
-				pis.push(new IngredientIconInBox(
+				let iInB = new IngredientIconInBox(
 					pageI[i][j].id, pageI[i][j], pageI[i][j].icon, me, me.ClickOnIngredientIcon
-				))
+				);
+				pis.push(iInB);
 			}
 			let ip = new IngredientBox(pis);
 			this.ingredientPage.push(ip);
@@ -811,7 +815,7 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 					.to({scaleX:1, scaleY:1}, brothAnimInTime, egret.Ease.quadOut)
 					.call(()=>{
 						if (!this.brothHighlight){
-							this.brothHighlight = new eui.Image(RES.getRes("broth_highlight"));
+							this.brothHighlight = new eui.Image(RES.getRes(ResName_Broth_Highlight));
 						}
 						this.Group_GameLayer.addChild(this.brothHighlight);
 						this.brothHighlight.anchorOffsetX = this.brothHighlight.width / 2;

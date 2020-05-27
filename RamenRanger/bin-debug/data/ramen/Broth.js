@@ -68,16 +68,46 @@ var BrothModel = (function () {
         shp.graphics.drawCircle(0, 0, radius);
         shp.graphics.endFill();
         //烫的渐变cover
+        var sizes = [0, 102, 216.75, 255];
         var alphas = new Array();
-        var sizes = new Array();
-        for (var i = 0; i < this.coverColor.length; i++) {
+        var loopLen = Math.min(sizes.length, this.coverColor.length);
+        for (var i = 0; i < loopLen; i++) {
             alphas.push(this.coverAlpha);
-            sizes.push((i + 1) * 255 / this.coverColor.length);
+            //sizes.push((i+1) * 255 / this.coverColor.length);
         }
         shp.graphics.beginGradientFill(egret.GradientType.RADIAL, this.coverColor, alphas, sizes, brothMatrix);
         shp.graphics.drawCircle(0, 0, radius);
         shp.graphics.endFill();
         return shp;
+    };
+    /**
+     * 获取用于场景中面条的的shape
+     * @param {egret.Graphics} toGraphic 要打印到的graphic
+     * @param {number} centerX 中心x坐标
+     * @param {number} centerY 中心y坐标
+     * @param {number} radius 半径
+     */
+    BrothModel.prototype.DrawToGraphic = function (toGraphic, centerX, centerY, radius) {
+        if (!toGraphic)
+            return;
+        var brothMatrix = new egret.Matrix();
+        brothMatrix.createGradientBox(radius * 2, radius * 2, 0, centerX - radius, centerY - radius);
+        //底色
+        toGraphic.lineStyle(1, this.backColor);
+        toGraphic.beginFill(this.backColor, 1);
+        toGraphic.drawCircle(centerX, centerY, radius);
+        toGraphic.endFill();
+        //烫的渐变cover
+        var sizes = [0, 102, 216.75, 255];
+        var alphas = new Array();
+        var loopLen = Math.min(sizes.length, this.coverColor.length);
+        for (var i = 0; i < loopLen; i++) {
+            alphas.push(this.coverAlpha);
+            //sizes.push((i+1) * 255 / this.coverColor.length);
+        }
+        toGraphic.beginGradientFill(egret.GradientType.RADIAL, this.coverColor, alphas, sizes, brothMatrix);
+        toGraphic.drawCircle(0, 0, radius);
+        toGraphic.endFill();
     };
     return BrothModel;
 }());

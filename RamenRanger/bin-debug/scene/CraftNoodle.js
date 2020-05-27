@@ -518,7 +518,8 @@ var CraftNoodle = (function (_super) {
         for (var i = 0; i < pageI.length; i++) {
             var pis = new Array();
             for (var j = 0; j < pageI[i].length; j++) {
-                pis.push(new IngredientIconInBox(pageI[i][j].id, pageI[i][j], "icon_default", me, me.ClickOnIngredientIcon));
+                var iInB = new IngredientIconInBox(pageI[i][j].id, pageI[i][j], this.craftingRamen.bowl.model.img, me, me.ClickOnIngredientIcon, pageI[i][j]);
+                pis.push(iInB);
             }
             var ip = new IngredientBox(pis);
             this.ingredientPage.push(ip);
@@ -550,7 +551,8 @@ var CraftNoodle = (function (_super) {
         for (var i = 0; i < pageI.length; i++) {
             var pis = new Array();
             for (var j = 0; j < pageI[i].length; j++) {
-                pis.push(new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].icon, me, me.ClickOnIngredientIcon));
+                var iInB = new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].icon, me, me.ClickOnIngredientIcon);
+                pis.push(iInB);
             }
             var ip = new IngredientBox(pis);
             this.ingredientPage.push(ip);
@@ -756,7 +758,7 @@ var CraftNoodle = (function (_super) {
                     .to({ scaleX: 1, scaleY: 1 }, brothAnimInTime, egret.Ease.quadOut)
                     .call(function () {
                     if (!_this.brothHighlight) {
-                        _this.brothHighlight = new eui.Image(RES.getRes("broth_highlight"));
+                        _this.brothHighlight = new eui.Image(RES.getRes(ResName_Broth_Highlight));
                     }
                     _this.Group_GameLayer.addChild(_this.brothHighlight);
                     _this.brothHighlight.anchorOffsetX = _this.brothHighlight.width / 2;

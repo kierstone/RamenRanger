@@ -1034,29 +1034,71 @@ var egret = window.egret;window.skins=window.skins||{};
 	__extends(TestSceneSkin, _super);
 	function TestSceneSkin() {
 		_super.call(this);
-		this.skinParts = ["gameLayer"];
+		this.skinParts = ["gameLayer","HSilder_Size","Label_Size","Button_Start"];
 		
 		this.height = 1334;
 		this.width = 750;
-		this.elementsContent = [this._Rect1_i(),this.gameLayer_i()];
+		this.elementsContent = [this._Rect1_i(),this.gameLayer_i(),this.HSilder_Size_i(),this._Label1_i(),this.Label_Size_i(),this.Button_Start_i()];
 	}
 	var _proto = TestSceneSkin.prototype;
 
 	_proto._Rect1_i = function () {
 		var t = new eui.Rect();
-		t.percentHeight = 100;
+		t.fillColor = 0x0086ff;
+		t.height = 2000;
 		t.horizontalCenter = 0;
-		t.verticalCenter = 0;
+		t.top = 0;
 		t.percentWidth = 100;
 		return t;
 	};
 	_proto.gameLayer_i = function () {
 		var t = new eui.Group();
 		this.gameLayer = t;
-		t.percentHeight = 60;
-		t.horizontalCenter = 0;
-		t.top = 0;
-		t.percentWidth = 100;
+		t.height = 800;
+		t.width = 750;
+		t.x = 0;
+		t.y = 0;
+		return t;
+	};
+	_proto.HSilder_Size_i = function () {
+		var t = new eui.HSlider();
+		this.HSilder_Size = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.height = 89;
+		t.maximum = 20;
+		t.minimum = -10;
+		t.value = 0;
+		t.width = 470;
+		t.x = 184.28;
+		t.y = 829.5;
+		return t;
+	};
+	_proto._Label1_i = function () {
+		var t = new eui.Label();
+		t.text = "画面尺寸";
+		t.x = 43.61;
+		t.y = 859;
+		return t;
+	};
+	_proto.Label_Size_i = function () {
+		var t = new eui.Label();
+		this.Label_Size = t;
+		t.text = "1.0";
+		t.x = 673.31;
+		t.y = 859;
+		return t;
+	};
+	_proto.Button_Start_i = function () {
+		var t = new eui.Button();
+		this.Button_Start = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.height = 75.76;
+		t.label = "开吃";
+		t.width = 240.91;
+		t.x = 163.61;
+		t.y = 1000;
 		return t;
 	};
 	return TestSceneSkin;
