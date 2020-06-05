@@ -6,11 +6,11 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
  * 只是吃面这个迷你游戏的每个回合要做些什么事情的数据结构
  */
 var EatTurnAction = (function () {
-    function EatTurnAction(eatIngredient, satisfy, badTaste) {
-        if (badTaste === void 0) { badTaste = BadTaste.None; }
+    function EatTurnAction(eatIngredient, satisfy, foodIsNoodle, badTaste) {
         this.eatIngredient = eatIngredient;
         this.satisfy = satisfy;
         this.badTaste = badTaste;
+        this.isEatingNoodles = foodIsNoodle;
     }
     /**
      * 根据这个回合的结果，算出需要做的动作序列
@@ -19,9 +19,14 @@ var EatTurnAction = (function () {
     EatTurnAction.prototype.GatherActionList = function (cha) {
         var res = new Array();
         //吃的动作
-        res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Eat), CharacterAction.Eat));
-        //咀嚼
-        res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Chew), CharacterAction.Chew));
+        var eatTimes = this.isEatingNoodles == true ? 3 : 1; //如果是面条则吃3下
+        for (var i = 0; i < eatTimes; i++) {
+            res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Eat), CharacterAction.Eat));
+        }
+        //咀嚼2口
+        for (var i = 0; i < 2; i++) {
+            res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Chew), CharacterAction.Chew));
+        }
         //如果恶心了，那么就做恶心的动作，否则就是根据高兴程度来
         var resAction = this.GetEatActionBySatisfy();
         res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, resAction), resAction));

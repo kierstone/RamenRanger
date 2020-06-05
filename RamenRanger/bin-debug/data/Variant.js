@@ -11,6 +11,6 @@ var BusBottomInGrid = -1; //小车的单元格坐标y，应该是地图区域往
 var RenderUpdateEveryLogicTick = 3; //每3个逻辑tick，渲染走1个tick
 var Scene_NoodleBrothSize = 60; //场景里的拉面的宽度高度
 var Scene_PosScale = 0.12; //这是摆面界面的尺寸转化到面碗尺寸
-var Scene_HorVerTimes = 0.6; //宽高比
+var Scene_HorVerTimes = 2 / 3; //宽高比
 var ResName_Broth_Highlight = "broth_highlight"; //汤上面的油光
 //# sourceMappingURL=Variant.js.map

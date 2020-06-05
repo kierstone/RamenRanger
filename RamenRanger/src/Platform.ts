@@ -12,6 +12,19 @@ declare interface Platform {
     createLoginButton(nextFunc, thisObj): Promise<any>;
 
     login(): Promise<any>
+
+    /**
+     * 分享游戏
+     * @param {string} titleText 分享标题
+     * @param {number} sX 截屏区域左上角x
+     * @param {number} sY 截屏区域左上角y
+     * @param {number} sWidth 截屏区域宽度
+     * @param {number} sHeight 截屏区域高度
+     * @param {number} stageWidth 当前的stage.stageWidth;
+     * @param {any} nextFuncCaller 完成的话执行的函数的宿主，没有就不会执行
+     * @param {any} nextFunc (nextFuncCaller:any, shareSuccessful:boolean)，完成执行的函数
+     */
+    shareGame(titleText,sX,sY,sWidth,sHeight,stageWidth,nextFuncCaller, nextFunc):Promise<any>;
 }
 
 
@@ -30,7 +43,12 @@ class DebugPlatform implements Platform {
     async getUserInfo(login){
         return { nickName: "施展" };
     }
-    
+    async shareGame(titleText,sX,sY,sWidth,sHeight,stageWidth,nextFuncCaller, nextFunc){
+        if (nextFunc && nextFuncCaller){
+            nextFunc(nextFuncCaller, true);
+        }
+        return;
+    }
 }
 
 

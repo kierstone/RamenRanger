@@ -15,8 +15,22 @@
 		</e:Group>
 		<e:Group id="Group_IngBox" x="0" height="700" anchorOffsetY="540" y="1334">
 			<e:Group id="Group_Box" width="100%" height="540" y="0" x="0"/>
-			<e:Button id="Button_PrevPage" label="" y="180" skinName="Button_IngredientBoxLeft" x="0"/>
-			<e:Button id="Button_NextPage" label="Button" y="180" skinName="Button_IngredientBox_Right" x="675"/>
+			<e:Button id="Button_PrevPage" label="" y="188" x="0">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="ui_craft_leftpage_up" source.down="ui_craft_leftpage_down" source.disabled="ui_craft_leftpage_up"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Button id="Button_NextPage" label="" y="188" x="750" scaleX="-1">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="ui_craft_leftpage_up" source.down="ui_craft_leftpage_down" source.disabled="ui_craft_leftpage_up"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
 		</e:Group>
 		<e:Group id="Group_Step" y="100" anchorOffsetX="0" width="480" horizontalCenter="0">
 			<e:Image id="Img_Step0" x="40" y="0" source="ui_craft_tab0" anchorOffsetX="40" anchorOffsetY="40"/>
@@ -26,7 +40,14 @@
 			<e:Image id="Img_Step4" x="440" y="0" source="ui_craft_tab4" anchorOffsetX="40" anchorOffsetY="40"/>
 		</e:Group>
 		<e:Button id="Button_NextStep" label="" x="560" y="800" skinName="Button_Craft_Next"/>
-		<e:Button id="Button_Prev" label="" x="12.5" y="50" skinName="Button_Craft_Prev"/>
+		<e:Button id="Button_Prev" label="" x="12.5" y="50">
+			<e:skinName>
+				<e:Skin states="up,down,disabled">
+				<e:Image width="100%" height="100%" source="ui_craft_backbutton_up" source.down="ui_craft_backbutton_down" source.disabled="ui_craft_backbutton_up"/>
+				<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+			</e:skinName>
+		</e:Button>
 	</e:Group>
 	<e:Image width="100%" top="0" horizontalCenter="0" source="ui_craft_border" fillMode="repeat" scaleY="-1"/>
 	<e:Image id="Img_BottomBorder" width="100%" horizontalCenter="0" source="ui_craft_border" fillMode="repeat" anchorOffsetY="52" y="1334"/>

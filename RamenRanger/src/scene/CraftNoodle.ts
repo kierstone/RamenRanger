@@ -35,6 +35,8 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 	private brothImage:egret.Shape;
 	private brothHighlight:eui.Image;
 	private noodleImage:eui.Image;
+	private steamImage:SpriteClip;
+	private steamFrameIndex:number = 0;
 
 	private uiState:CraftNoodleState;
 	private canControl:boolean = false;
@@ -170,7 +172,7 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 		//上一部
 		this.Button_Prev.addEventListener(egret.TouchEvent.TOUCH_TAP, this.OnPrevButtonClick, this);
 
-		let t = new egret.Timer(50);
+		let t = new egret.Timer(100);
 		t.addEventListener(egret.TimerEvent.TIMER, ()=>{
 			this.Update();
 		},this);
@@ -207,11 +209,26 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 			}break;
 			case CraftNoodleState.SelectTopping:{
 				//TODO 现在先弄个ramenSpriteClip在200，200
-				this.parent.addChild(new TestScene(this.craftingRamen));
-				this.parent.removeChild(this);
+				let areaHeight = Math.max(this.bowlImage.width, this.bowlImage.height);
+				let areaWidth = areaHeight * 5 / 4; //5:4的宽高比
+				let aScale = Math.min(areaWidth, this.stage.stageWidth) / areaWidth; //为了防止超出屏幕
+				areaWidth *= aScale;
+				areaHeight *= aScale;
+				platform.shareGame(
+					"我就试试分享", 
+					this.ramenCenterX - areaWidth / 2,
+					this.ramenCenterY - areaHeight / 2,
+					areaWidth, areaHeight, 
+					750, this, this.ToTestScene
+				);
 			}break;
 		}
 		
+	}
+
+	private ToTestScene(thisObj:CraftNoodle, shareSuccess:boolean){
+		thisObj.parent.addChild(new TestScene(thisObj.craftingRamen));
+		thisObj.parent.removeChild(thisObj);
 	}
 
 	//上一步按钮
@@ -243,6 +260,9 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 	//计时器函数
 	private Update(){
 		switch(this.uiState){
+			case CraftNoodleState.SelectTopping:{
+				
+			}break;
 			case CraftNoodleState.PlaceTopping:{
 				//按住旋转按钮就会一直转
 				if (this.orderRotateTopping == true){
@@ -257,6 +277,7 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 				}
 			}break;
 		}
+		this.steamAnimUpdate();
 	}
 
 	//手指Tap事件
@@ -327,7 +348,7 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 	private StagePointerUp(e:egret.TouchEvent){
 		switch(this.uiState){
 			case CraftNoodleState.SelectTopping:{
-
+				
 			}break;
 			case CraftNoodleState.PlaceTopping:{
 				this.draggingIng = false;
@@ -499,8 +520,15 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 					},this);
 			}break;
 		}
-		if (this.uiState != CraftNoodleState.PlaceTopping)
+
+		//TODO 这里有未知bug，所以只能先这样凑个效果
+		if (this.uiState != CraftNoodleState.PlaceTopping){
 			this.UpdateRamen();
+		}else{
+			//if (this.steamImage && this.steamImage.parent)
+			//	this.steamImage.parent.removeChild(this.steamImage);
+		}
+			
 	}
 
 	private ClearIngredientBoxes(){
@@ -739,10 +767,14 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 		let drawBrothHL = false;
 		let drawNoodle = false;
 		let drawTopping = false;
+		let drawSteam = false;
 
 		let bowlChanged = false;
 		let brothChanged = false;
 		let noodleChanged = false;
+
+		let steamYMod = 63;	//蒸汽往上移动这么多
+		let steamFrameCount = 8;	//蒸汽8帧
 
 		switch (this.uiState){
 			case CraftNoodleState.ChooseBowl:{
@@ -756,22 +788,26 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 				drawBroth = true;
 				drawBrothHL = true;
 				brothChanged = true;
+				drawSteam = true;
 			}break;
 			case CraftNoodleState.Noodles:{
 				drawBroth = true;
 				drawBrothHL = !this.craftingRamen.noodles ;
 				drawNoodle = true;
 				noodleChanged = true;
+				drawSteam = true;
 			}break;
 			case CraftNoodleState.SelectTopping:{
 				drawBroth = true;
 				drawNoodle = true;
 				drawTopping = true;
+				drawSteam = true;
 			}break;
 			case CraftNoodleState.PlaceTopping:{
 				drawBroth = true;
 				drawNoodle = true;
 				drawTopping = true;
+				drawSteam = true;
 			}break;
 		}
 
@@ -814,6 +850,7 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 				egret.Tween.get(this.brothImage)
 					.to({scaleX:1, scaleY:1}, brothAnimInTime, egret.Ease.quadOut)
 					.call(()=>{
+						//broth highlight special
 						if (!this.brothHighlight){
 							this.brothHighlight = new eui.Image(RES.getRes(ResName_Broth_Highlight));
 						}
@@ -826,6 +863,29 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 						egret.Tween.removeTweens(this.brothHighlight);
 						egret.Tween.get(this.brothHighlight)
 							.to({alpha:1}, brothAnimInTime, egret.Ease.quadOut)
+
+						//steam special
+						if (this.steamImage == null){
+							this.steamImage = new SpriteClip();
+							let preloadKey = new Array<string>();
+							for (let i = 0; i < steamFrameCount; i++){
+								preloadKey.push("zhengqi_" + i.toString());
+							}
+							this.steamImage.SetPreloadTextureByKeys(preloadKey);
+							this.steamImage.ChangeToPreloadTexture("zhengqi_0");
+						}
+						this.Group_GameLayer.addChild(this.steamImage);
+						this.steamImage.anchorOffsetX = this.steamImage.width / 2;
+						this.steamImage.anchorOffsetY = this.steamImage.height / 2;
+						this.steamImage.scaleX = 2;
+						this.steamImage.scaleY = 2;
+						this.steamImage.x = this.ramenCenterX;
+						this.steamImage.y = this.ramenCenterY - steamYMod;
+						this.steamImage.alpha = 0;
+						egret.Tween.removeTweens(this.steamImage);
+						egret.Tween.get(this.steamImage)
+							.to({alpha:1}, brothAnimInTime, egret.Ease.quadOut);
+
 					});
 			}
 		}
@@ -874,6 +934,34 @@ class CraftNoodle extends eui.Component implements  eui.UIComponent {
 			}
 		}
 		
+		//Steam
+		if (drawSteam == true && this.craftingRamen.broth && doBrothAnim == false){
+			if (this.steamImage == null){
+				this.steamImage = new SpriteClip();
+				let preloadKey = new Array<string>();
+				for (let i = 0; i < steamFrameCount; i++){
+					preloadKey.push("zhengqi_" + i.toString());
+				}
+				this.steamImage.SetPreloadTextureByKeys(preloadKey);
+				this.steamImage.ChangeToPreloadTexture("zhengqi_0");
+			}
+			this.Group_GameLayer.addChild(this.steamImage);
+			this.steamImage.anchorOffsetX = this.steamImage.width / 2;
+			this.steamImage.anchorOffsetY = this.steamImage.height / 2;
+			this.steamImage.scaleX = 2;
+			this.steamImage.scaleY = 2;
+			this.steamImage.x = this.ramenCenterX;
+			this.steamImage.y = this.ramenCenterY - steamYMod;
+		}
+	}
+
+	private steamAnimUpdate(){
+		if (!this.steamImage) return;
+		let steamFrameCount = 8;	
+		this.steamFrameIndex = (this.steamFrameIndex + 1) % steamFrameCount;	//一共8帧
+		this.steamImage.ChangeToPreloadTexture("zhengqi_"+this.steamFrameIndex.toString());
+		this.steamImage.anchorOffsetX = this.steamImage.width / 2;
+		this.steamImage.anchorOffsetY = this.steamImage.height / 2;
 	}
 }
 

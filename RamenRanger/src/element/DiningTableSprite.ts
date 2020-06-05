@@ -6,6 +6,8 @@ class DiningTableSprite extends SpriteGroup{
 	private table:eui.Image;
 
 	private eatingIngImg:eui.Image;	//正在吃的那个东西
+	private eatingNoodle:boolean;	//正在吃的东西是不是面条；
+	private noodlePos:egret.Point;	//面条的位置记录
 
 	private _cha:CharacterObj;
 	private head:SpriteClip;
@@ -18,6 +20,7 @@ class DiningTableSprite extends SpriteGroup{
 
 	public constructor() {
 		super();
+		this.noodlePos = new egret.Point(0,0);
 	}
 
 	protected childrenCreated():void
@@ -128,7 +131,7 @@ class DiningTableSprite extends SpriteGroup{
 		this._ramen = ramen;
 
 		this.ramen = new RamenSprite(this._ramen);
-		this.ramen.y = -30;	//TODO 写死
+		this.ramen.y = -24;	//TODO 写死
 		this.addChild(this.ramen);
 
 		if (this._cha && this._ramen)
@@ -140,16 +143,32 @@ class DiningTableSprite extends SpriteGroup{
 	/**
 	 * 根据eatGame状态重绘一些图形
 	 */
-	private UpdateByEatGame(){
+	private RefreshByEatGame(){
 		this.ramen.UpdateRamen();
 		
 		if (this.eatingIngImg && this.eatingIngImg.parent){
 			this.eatingIngImg.parent.removeChild(this.eatingIngImg);
 		}
-		this.eatingIngImg = this.eatGame.turnResult.eatIngredient.GatherSceneImage(
-			this, 0, 0
-		);
-console.log("eating ing refresh", this.eatingIngImg.anchorOffsetY);
+		
+		this.eatingNoodle = this.eatGame.turnResult.isEatingNoodles;
+		if (this.eatingNoodle == true){
+			//如果吃的是面条
+			this.eatingIngImg = new eui.Image();
+			this.eatingIngImg.source = RES.getRes("eating_noodle");
+			this.addChild(this.eatingIngImg);
+			this.eatingIngImg.anchorOffsetX = this.eatingIngImg.width /2;
+			this.eatingIngImg.anchorOffsetY = this.eatingIngImg.height;
+			this.eatingIngImg.x = this.ramen.x;
+			this.eatingIngImg.y = this.ramen.BrothOffsetY() + this.ramen.y;
+			this.eatingIngImg.scaleY = 0;
+			this.noodlePos.y = Number.MAX_VALUE;	//重置面条的位置
+		}else{
+			//如果吃的是Toppings
+			this.eatingIngImg = this.eatGame.turnResult.eatIngredient.GatherSceneImage(
+				this, 0, 0
+			);
+			this.eatingIngImg.scaleY = 1;
+		}
 		this.eatingIngImg.visible = false;
 		this.ResetZOrder();
 	}
@@ -164,14 +183,36 @@ console.log("eating ing refresh", this.eatingIngImg.anchorOffsetY);
 			this._cha.Update();
 
 			if (this.eatingIngImg){
-				if (this._cha.hasIngredientPoint == true){
-					this.eatingIngImg.visible = true;
+				let ingVisible = 	//吃的东西本帧是否可见？
+					this.eatingNoodle == true ? //吃的是面条和不是面条还不同
+					(this._cha.IsDoingAction(CharacterAction.Eat) && (this.eatingIngImg.visible == true || this._cha.hasIngredientPoint == true)):	//如果是面条，则看动作是否是吃、并且面条已经被绘制了
+					(this._cha.hasIngredientPoint == true)  //否则看的是有没有数据点
+
+				if (ingVisible == true){
 					let chaPos = this._cha.GetPos();
-					this.eatingIngImg.x = this._cha.ingredientPoint.x + chaPos.x;
-					this.eatingIngImg.y = this._cha.ingredientPoint.y + chaPos.y;
-				}else{
-					this.eatingIngImg.visible = false;
+					if (this.eatingNoodle == false){
+						//Topping跟着手的位置走
+						this.eatingIngImg.x = this._cha.ingredientPoint.x + chaPos.x;
+						this.eatingIngImg.y = this._cha.ingredientPoint.y + chaPos.y;		
+					}else{
+						//Noodle就拉伸
+						let noodleFlip = true; //是否要旋转面条
+						if (this._cha.hasIngredientPoint == true){
+							this.noodlePos.x = this._cha.ingredientPoint.x + chaPos.x;	//x坐标绝对信任
+							let noodlePosY = this._cha.ingredientPoint.y + chaPos.y;
+							if (noodlePosY <  this.noodlePos.y){
+								this.noodlePos.y = noodlePosY; //y取小的保持高度
+								noodleFlip = false;	//还在拉伸，所以不要抽搐
+							}
+						}
+						this.eatingIngImg.x = this.noodlePos.x;
+						let noodleScaleY = (this.eatingIngImg.y - this.noodlePos.y)/this.eatingIngImg.height;
+						this.eatingIngImg.scaleY = this.eatingIngImg.height > 0 ? noodleScaleY : 0;
+						if (noodleFlip == true) this.eatingIngImg.scaleX *= -1;
+					}
 				}
+
+				this.eatingIngImg.visible = ingVisible;
 			}
 		}
 	}
@@ -184,7 +225,7 @@ console.log("eating ing refresh", this.eatingIngImg.anchorOffsetY);
 		}
 		if (this.eatGame){
 			if (this.eatGame.FixedUpdate() == true){
-				this.UpdateByEatGame();
+				this.RefreshByEatGame();
 			}
 		}
 		return false;

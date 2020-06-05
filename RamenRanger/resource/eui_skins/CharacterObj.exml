@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="CharacterObjSkin" width="100" height="200" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
-	<w:Config id="1715804c99b" ></w:Config>
-	<e:Image id="body" x="10" y="62.8" source=""/>
-	<e:Image id="head" x="13" y="0" source=""/>
-</e:Skin>

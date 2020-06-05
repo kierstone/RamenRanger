@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,bow_bowl_json,catalog_json,rec_recipt_json,icons_json,character_animinfo_json,city_shanghai_json,bus_default_json,bus_default2_json,character_schoolgirl_json,street_shanghai_json,ingredient_test_json,ui_craft_json,broth_json,bowl_json,ingredient_json",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,bow_bowl_json,catalog_json,rec_recipt_json,icons_json,character_animinfo_json,city_shanghai_json,bus_default_json,bus_default2_json,character_schoolgirl_json,street_shanghai_json,ingredient_test_json,ui_craft_json,broth_json,noodle_steam_json,bowl_json,ingredient_json",
 			"name": "preload"
 		}
 	],
@@ -202,16 +202,22 @@
 			"name": "broth_json"
 		},
 		{
+			"name": "noodle_steam_json",
+			"type": "sheet",
+			"url": "assets/image/noodle_steam.json",
+			"subkeys": "zhengqi_0,zhengqi_1,zhengqi_2,zhengqi_3,zhengqi_4,zhengqi_5,zhengqi_6,zhengqi_7"
+		},
+		{
 			"name": "bowl_json",
 			"type": "sheet",
 			"url": "assets/image/bowl.json",
-			"subkeys": "bowl_normal,scene_bowl_normal"
+			"subkeys": "scene_bowl_normal,bowl_normal"
 		},
 		{
 			"name": "ingredient_json",
 			"type": "sheet",
 			"url": "assets/image/ingredient.json",
-			"subkeys": "scene_broad_bean,scene_bowl_normal,scene_sprouts,scene_spiced_corned_egg,scene_poached_egg,scene_orion_ring,scene_mushroom_pork_ball,scene_lettuce,scene_cucumber,scene_carrot,broth_highlight,icon_ketchup,icon_salt,icon_soy,ingredient_beef,ingredient_broad_bean,ingredient_carrot,ingredient_coriander,ingredient_cucumber,ingredient_ketchup,ingredient_lettuce,ingredient_mushroom_pork_ball,ingredient_noodle_normal,ingredient_onion_2,ingredient_onion,ingredient_orion_ring,ingredient_poached_egg,ingredient_salt,ingredient_soy,ingredient_spiced_corned_egg,ingredient_sprouts,ingredient_turnip,scene_beef,scene_coriander,scene_noodle,scene_onion_2,scene_onion,scene_turnip,ingredient_cantonese_sausage,ingredient_clam,ingredient_fish_board,ingredient_green_vegetable,ingredient_japanese_barbecue,ingredient_lotus_root,ingredient_mushrooms,ingredient_mussel,ingredient_prawn,ingredient_tofu,ingredient_tonkatsu,ingredient_venetian_pouch,scene_cantonese_sausage,scene_clam,scene_fish_board,scene_green_vegetable,scene_japanese_barbecue,scene_lotus_root,scene_mushrooms,scene_mussel,scene_prawn,scene_tofu,scene_tonkatsu,scene_venetian_pouch"
+			"subkeys": "scene_venetian_pouch,scene_tonkatsu,scene_tofu,scene_prawn,scene_mussel,scene_mushrooms,scene_lotus_root,scene_japanese_barbecue,scene_green_vegetable,scene_fish_board,scene_clam,scene_cantonese_sausage,ingredient_venetian_pouch,ingredient_tonkatsu,ingredient_tofu,ingredient_prawn,ingredient_mussel,ingredient_mushrooms,ingredient_lotus_root,ingredient_japanese_barbecue,ingredient_green_vegetable,ingredient_fish_board,ingredient_clam,ingredient_cantonese_sausage,scene_turnip,scene_onion,scene_onion_2,scene_noodle,scene_coriander,scene_beef,ingredient_turnip,ingredient_sprouts,ingredient_spiced_corned_egg,ingredient_soy,ingredient_salt,ingredient_poached_egg,ingredient_orion_ring,ingredient_onion,ingredient_onion_2,ingredient_noodle_normal,ingredient_mushroom_pork_ball,ingredient_lettuce,ingredient_ketchup,ingredient_cucumber,ingredient_coriander,ingredient_carrot,ingredient_broad_bean,ingredient_beef,icon_soy,icon_salt,icon_ketchup,broth_highlight,scene_carrot,scene_cucumber,scene_lettuce,scene_mushroom_pork_ball,scene_orion_ring,scene_poached_egg,scene_spiced_corned_egg,scene_sprouts,scene_broad_bean,eating_noodle"
 		}
 	]
 }

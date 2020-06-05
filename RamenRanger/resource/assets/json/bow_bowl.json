@@ -1,5 +1,5 @@
 {
     "data":[
-        {"id":"bowl0", "name":"测试用碗", "img":"bowl_normal", "icon": "scene_bowl_normal", "scene": "scene_bowl_normal", "x": 38, "y": 21, "radius":240, "cost":10}
+        {"id":"bowl0", "name":"测试用碗", "img":"bowl_normal", "icon": "scene_bowl_normal", "scene": "scene_bowl_normal", "x":36, "y":32, "radius":240, "cost":10}
     ]
 }

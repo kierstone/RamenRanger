@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,bow_bowl_json,catalog_json,rec_recipt_json,icons_json,character_animinfo_json,city_shanghai_json,bus_default_json,bus_default2_json,character_schoolgirl_json,street_shanghai_json,ingredient_test_json,ui_craft_json,broth_json,bowl_json,ingredient_json",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,bow_bowl_json,catalog_json,rec_recipt_json,icons_json,character_animinfo_json,city_shanghai_json,bus_default_json,bus_default2_json,character_schoolgirl_json,street_shanghai_json,ingredient_test_json,broth_json,noodle_steam_json,bowl_json,ingredient_json,ui_craft_json",
 			"name": "preload"
 		}
 	],
@@ -191,27 +191,33 @@
 			"name": "ingredient_test_json"
 		},
 		{
-			"url": "assets/image/ui_craft.json",
-			"type": "sheet",
-			"name": "ui_craft_json",
-			"subkeys": "ui_bowl_stick1,ui_craft_back,ui_craft_border,ui_craft_button_back,ui_craft_button_left,ui_craft_button_next,ui_craft_button_next1,ui_craft_button_right,ui_craft_hint_back,ui_craft_ingredientbox,ui_craft_ingredientname,ui_craft_tab0,ui_craft_tab1,ui_craft_tab2,ui_craft_tab3,ui_craft_tab4"
-		},
-		{
 			"url": "assets/json/broth.json",
 			"type": "json",
 			"name": "broth_json"
 		},
 		{
+			"name": "noodle_steam_json",
+			"type": "sheet",
+			"url": "assets/image/noodle_steam.json",
+			"subkeys": "zhengqi_0,zhengqi_1,zhengqi_2,zhengqi_3,zhengqi_4,zhengqi_5,zhengqi_6,zhengqi_7"
+		},
+		{
 			"name": "bowl_json",
 			"type": "sheet",
 			"url": "assets/image/bowl.json",
-			"subkeys": "bowl_normal,scene_bowl_normal"
+			"subkeys": "scene_bowl_normal,bowl_normal"
 		},
 		{
 			"name": "ingredient_json",
 			"type": "sheet",
 			"url": "assets/image/ingredient.json",
-			"subkeys": "scene_broad_bean,scene_bowl_normal,scene_sprouts,scene_spiced_corned_egg,scene_poached_egg,scene_orion_ring,scene_mushroom_pork_ball,scene_lettuce,scene_cucumber,scene_carrot,broth_highlight,icon_ketchup,icon_salt,icon_soy,ingredient_beef,ingredient_broad_bean,ingredient_carrot,ingredient_coriander,ingredient_cucumber,ingredient_ketchup,ingredient_lettuce,ingredient_mushroom_pork_ball,ingredient_noodle_normal,ingredient_onion_2,ingredient_onion,ingredient_orion_ring,ingredient_poached_egg,ingredient_salt,ingredient_soy,ingredient_spiced_corned_egg,ingredient_sprouts,ingredient_turnip,scene_beef,scene_coriander,scene_noodle,scene_onion_2,scene_onion,scene_turnip,ingredient_cantonese_sausage,ingredient_clam,ingredient_fish_board,ingredient_green_vegetable,ingredient_japanese_barbecue,ingredient_lotus_root,ingredient_mushrooms,ingredient_mussel,ingredient_prawn,ingredient_tofu,ingredient_tonkatsu,ingredient_venetian_pouch,scene_cantonese_sausage,scene_clam,scene_fish_board,scene_green_vegetable,scene_japanese_barbecue,scene_lotus_root,scene_mushrooms,scene_mussel,scene_prawn,scene_tofu,scene_tonkatsu,scene_venetian_pouch"
+			"subkeys": "eating_noodle,scene_broad_bean,scene_sprouts,scene_spiced_corned_egg,scene_poached_egg,scene_orion_ring,scene_mushroom_pork_ball,scene_lettuce,scene_cucumber,scene_carrot,broth_highlight,icon_ketchup,icon_salt,icon_soy,ingredient_beef,ingredient_broad_bean,ingredient_carrot,ingredient_coriander,ingredient_cucumber,ingredient_ketchup,ingredient_lettuce,ingredient_mushroom_pork_ball,ingredient_noodle_normal,ingredient_onion_2,ingredient_onion,ingredient_orion_ring,ingredient_poached_egg,ingredient_salt,ingredient_soy,ingredient_spiced_corned_egg,ingredient_sprouts,ingredient_turnip,scene_beef,scene_coriander,scene_noodle,scene_onion_2,scene_onion,scene_turnip,ingredient_cantonese_sausage,ingredient_clam,ingredient_fish_board,ingredient_green_vegetable,ingredient_japanese_barbecue,ingredient_lotus_root,ingredient_mushrooms,ingredient_mussel,ingredient_prawn,ingredient_tofu,ingredient_tonkatsu,ingredient_venetian_pouch,scene_cantonese_sausage,scene_clam,scene_fish_board,scene_green_vegetable,scene_japanese_barbecue,scene_lotus_root,scene_mushrooms,scene_mussel,scene_prawn,scene_tofu,scene_tonkatsu,scene_venetian_pouch"
+		},
+		{
+			"name": "ui_craft_json",
+			"type": "sheet",
+			"url": "assets/image/ui_craft.json",
+			"subkeys": "ui_dialog_text_back,ui_craft_selected,ui_button_green_down,ui_craft_icon_flip,ui_craft_icon_trash,ui_craft_hint_back,ui_craft_photomask,ui_craft_icon_rotateminus,ui_craft_sizebar_filler,ui_craft_button_right,ui_craft_icon_ok,ui_craft_tab0,ui_craft_tab1,ui_button_normal_up,ui_craft_tab3,ui_craft_button_delete_down,ui_craft_tab2,ui_cycle_button_up,ui_craft_sizebar_back,ui_icon_craftbook_down,ui_bowl_stick1,ui_craft_tab4,ui_dialog_button_close,ui_craft_leftpage_down,ui_craft_button_next1,ui_icon_craftbook,ui_craft_leftpage_up,ui_craft_border,ui_cycle_button_down,ui_dialog_back,ui_craft_cycle_button_up,ui_dialog_title,ui_craft_ingredientbox,ui_craft_button_left,ui_craft_back,ui_craft_sizebar_puller,ui_craft_sizebig_back,ui_icon_ok,ui_craft_backbutton_up,ui_craft_ingredientname,ui_craft_backbutton_down,ui_craft_sizesmall_back,ui_craft_button_delete_up,ui_normal_button_down,ui_craft_titleback,ui_craft_icon_rotateplus,ui_craft_button_back,ui_dialog_button_remove,ui_craft_cycle_button_down,ui_button_green_up,ui_craft_title_text,ui_craft_moving_sign,ui_craft_button_next,ui_icon_dialog"
 		}
 	]
 }

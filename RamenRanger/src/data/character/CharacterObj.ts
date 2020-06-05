@@ -97,7 +97,6 @@ class CharacterObj {
 			this.ingredientPoint.x = -this.head.anchorOffsetX + this.cInfo.eatIngredientPos[this.currentFrame].x;
 			this.ingredientPoint.y = -this.head.anchorOffsetY + this.cInfo.eatIngredientPos[this.currentFrame].y;
 
-console.log("ing pos", this.currentFrame, this.ingredientPoint,  this.cInfo.eatIngredientPos[this.currentFrame]);
 		}else{
 			this.hasIngredientPoint = false;
 		}
@@ -195,6 +194,17 @@ console.log("ing pos", this.currentFrame, this.ingredientPoint,  this.cInfo.eatI
 
 		return requireInstantDraw;
 	}
+
+	/**
+	 * 判断角色是否在做某个动作
+	 * @param {CharacterAction} action 要判断的动作
+	 * @returns {boolean} 是否是正在做的
+	 */
+	public IsDoingAction(action:CharacterAction):boolean{
+		return action == this.doingAction;
+	}
+
+
 	
 	/**
 	 * 渲染update

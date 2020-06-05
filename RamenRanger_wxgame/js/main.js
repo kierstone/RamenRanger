@@ -380,6 +380,16 @@ var DebugPlatform = (function () {
             });
         });
     };
+    DebugPlatform.prototype.shareGame = function (titleText, sX, sY, sWidth, sHeight, stageWidth, nextFuncCaller, nextFunc) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (nextFunc && nextFuncCaller) {
+                    nextFunc(nextFuncCaller, true);
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
     return DebugPlatform;
 }());
 __reflect(DebugPlatform.prototype, "DebugPlatform", ["Platform"]);
@@ -751,7 +761,7 @@ var BusBottomInGrid = -1; //小车的单元格坐标y，应该是地图区域往
 var RenderUpdateEveryLogicTick = 3; //每3个逻辑tick，渲染走1个tick
 var Scene_NoodleBrothSize = 60; //场景里的拉面的宽度高度
 var Scene_PosScale = 0.12; //这是摆面界面的尺寸转化到面碗尺寸
-var Scene_HorVerTimes = 0.6; //宽高比
+var Scene_HorVerTimes = 2 / 3; //宽高比
 var ResName_Broth_Highlight = "broth_highlight"; //汤上面的油光
 //吃饭的npc身上的buff，而不是玩家店铺的buff，是buffObj
 var CharacterBuff = (function () {
@@ -962,7 +972,6 @@ var CharacterObj = (function () {
             this.hasIngredientPoint = true;
             this.ingredientPoint.x = -this.head.anchorOffsetX + this.cInfo.eatIngredientPos[this.currentFrame].x;
             this.ingredientPoint.y = -this.head.anchorOffsetY + this.cInfo.eatIngredientPos[this.currentFrame].y;
-            console.log("ing pos", this.currentFrame, this.ingredientPoint, this.cInfo.eatIngredientPos[this.currentFrame]);
         }
         else {
             this.hasIngredientPoint = false;
@@ -1043,6 +1052,14 @@ var CharacterObj = (function () {
             }
         }
         return requireInstantDraw;
+    };
+    /**
+     * 判断角色是否在做某个动作
+     * @param {CharacterAction} action 要判断的动作
+     * @returns {boolean} 是否是正在做的
+     */
+    CharacterObj.prototype.IsDoingAction = function (action) {
+        return action == this.doingAction;
     };
     /**
      * 渲染update
@@ -1273,35 +1290,50 @@ var EatingRamen = (function () {
         }
         //根据吃的东西改变属性
         //根据吃的东西生成EatTurnAction和EatingAction
-        this.ThisTurnModify(eatIng);
+        this.ThisTurnModify(eatIng["ingredient"], eatIng["isNoodle"]);
     };
-    //从拉面里选出这回合吃啥，当然目前是测试的，今后要改规则
+    /**
+     * 从拉面里选出这回合吃啥，当然目前是测试的，今后要改规则
+     * @returns {Object} {ingredient:IngredientObj, isNoodle:boolean} 返回吃的东西以及是否是面条
+     */
     EatingRamen.prototype.ThisTurnEat = function () {
         if ((this.turnId % 2) == 0) {
             //偶数回合吃料优先，TODO 找出最想吃的
             if (this.ramen.topping.length > 0) {
                 var sIndex = Math.floor(Math.random() * this.ramen.topping.length);
-                return this.ramen.topping.splice(sIndex, 1)[0];
+                return {
+                    "ingredient": this.ramen.topping.splice(sIndex, 1)[0],
+                    "isNoodle": false
+                };
             }
             else if (this.ramen.noodlePercentage > 0) {
                 this.ramen.noodlePercentage -= 0.06; //TODO 先写死一口吃6%，应该来自于属性
-                return this.ramen.model.noodles;
+                return {
+                    "ingredient": this.ramen.model.noodles,
+                    "isNoodle": true
+                };
             }
         }
         else {
             if (this.ramen.noodlePercentage > 0) {
                 this.ramen.noodlePercentage -= 0.06; //TODO 先写死一口吃6%，应该来自于属性
-                return this.ramen.model.noodles;
+                return {
+                    "ingredient": this.ramen.model.noodles,
+                    "isNoodle": true
+                };
             }
             else if (this.ramen.topping.length > 0) {
                 var sIndex = Math.floor(Math.random() * this.ramen.topping.length);
-                return this.ramen.topping.splice(sIndex, 1)[0];
+                return {
+                    "ingredient": this.ramen.topping.splice(sIndex, 1)[0],
+                    "isNoodle": false
+                };
             }
         }
         return null;
     };
     //根据吃的东西改变属性，并且获得行为列表 TODO 都是临时写死的
-    EatingRamen.prototype.ThisTurnModify = function (eatIng) {
+    EatingRamen.prototype.ThisTurnModify = function (eatIng, isNoodle) {
         this.hungry -= 1;
         var satisify = Math.round(Math.random() * 200 - 100);
         var badTaste = BadTaste.None;
@@ -1319,12 +1351,13 @@ var EatingRamen = (function () {
             badTaste = BadTaste.TooHeavy;
         }
         if (!this.turnResult) {
-            this.turnResult = new EatTurnAction(eatIng, satisify, badTaste);
+            this.turnResult = new EatTurnAction(eatIng, satisify, isNoodle, badTaste);
         }
         else {
             this.turnResult.badTaste = badTaste;
             this.turnResult.eatIngredient = eatIng;
             this.turnResult.satisfy = satisify;
+            this.turnResult.isEatingNoodles = isNoodle;
         }
         this.turnActions = this.turnResult.GatherActionList(this.cha);
     };
@@ -1367,11 +1400,11 @@ __reflect(EatingRamen.prototype, "EatingRamen");
  * 只是吃面这个迷你游戏的每个回合要做些什么事情的数据结构
  */
 var EatTurnAction = (function () {
-    function EatTurnAction(eatIngredient, satisfy, badTaste) {
-        if (badTaste === void 0) { badTaste = BadTaste.None; }
+    function EatTurnAction(eatIngredient, satisfy, foodIsNoodle, badTaste) {
         this.eatIngredient = eatIngredient;
         this.satisfy = satisfy;
         this.badTaste = badTaste;
+        this.isEatingNoodles = foodIsNoodle;
     }
     /**
      * 根据这个回合的结果，算出需要做的动作序列
@@ -1380,9 +1413,14 @@ var EatTurnAction = (function () {
     EatTurnAction.prototype.GatherActionList = function (cha) {
         var res = new Array();
         //吃的动作
-        res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Eat), CharacterAction.Eat));
-        //咀嚼
-        res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Chew), CharacterAction.Chew));
+        var eatTimes = this.isEatingNoodles == true ? 3 : 1; //如果是面条则吃3下
+        for (var i = 0; i < eatTimes; i++) {
+            res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Eat), CharacterAction.Eat));
+        }
+        //咀嚼2口
+        for (var i = 0; i < 2; i++) {
+            res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Chew), CharacterAction.Chew));
+        }
         //如果恶心了，那么就做恶心的动作，否则就是根据高兴程度来
         var resAction = this.GetEatActionBySatisfy();
         res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, resAction), resAction));
@@ -2095,7 +2133,9 @@ var DiningTableSprite = (function (_super) {
     __extends(DiningTableSprite, _super);
     //TODO桌子信息等
     function DiningTableSprite() {
-        return _super.call(this) || this;
+        var _this = _super.call(this) || this;
+        _this.noodlePos = new egret.Point(0, 0);
+        return _this;
     }
     DiningTableSprite.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
@@ -2202,7 +2242,7 @@ var DiningTableSprite = (function (_super) {
             return;
         this._ramen = ramen;
         this.ramen = new RamenSprite(this._ramen);
-        this.ramen.y = -30; //TODO 写死
+        this.ramen.y = -24; //TODO 写死
         this.addChild(this.ramen);
         if (this._cha && this._ramen)
             this.eatGame = new EatingRamen(this._cha, this._ramen);
@@ -2211,13 +2251,29 @@ var DiningTableSprite = (function (_super) {
     /**
      * 根据eatGame状态重绘一些图形
      */
-    DiningTableSprite.prototype.UpdateByEatGame = function () {
+    DiningTableSprite.prototype.RefreshByEatGame = function () {
         this.ramen.UpdateRamen();
         if (this.eatingIngImg && this.eatingIngImg.parent) {
             this.eatingIngImg.parent.removeChild(this.eatingIngImg);
         }
-        this.eatingIngImg = this.eatGame.turnResult.eatIngredient.GatherSceneImage(this, 0, 0);
-        console.log("eating ing refresh", this.eatingIngImg.anchorOffsetY);
+        this.eatingNoodle = this.eatGame.turnResult.isEatingNoodles;
+        if (this.eatingNoodle == true) {
+            //如果吃的是面条
+            this.eatingIngImg = new eui.Image();
+            this.eatingIngImg.source = RES.getRes("eating_noodle");
+            this.addChild(this.eatingIngImg);
+            this.eatingIngImg.anchorOffsetX = this.eatingIngImg.width / 2;
+            this.eatingIngImg.anchorOffsetY = this.eatingIngImg.height;
+            this.eatingIngImg.x = this.ramen.x;
+            this.eatingIngImg.y = this.ramen.BrothOffsetY() + this.ramen.y;
+            this.eatingIngImg.scaleY = 0;
+            this.noodlePos.y = Number.MAX_VALUE; //重置面条的位置
+        }
+        else {
+            //如果吃的是Toppings
+            this.eatingIngImg = this.eatGame.turnResult.eatIngredient.GatherSceneImage(this, 0, 0);
+            this.eatingIngImg.scaleY = 1;
+        }
         this.eatingIngImg.visible = false;
         this.ResetZOrder();
     };
@@ -2225,15 +2281,35 @@ var DiningTableSprite = (function (_super) {
         if (this._cha) {
             this._cha.Update();
             if (this.eatingIngImg) {
-                if (this._cha.hasIngredientPoint == true) {
-                    this.eatingIngImg.visible = true;
+                var ingVisible = this.eatingNoodle == true ?
+                    (this._cha.IsDoingAction(CharacterAction.Eat) && (this.eatingIngImg.visible == true || this._cha.hasIngredientPoint == true)) :
+                    (this._cha.hasIngredientPoint == true); //否则看的是有没有数据点
+                if (ingVisible == true) {
                     var chaPos = this._cha.GetPos();
-                    this.eatingIngImg.x = this._cha.ingredientPoint.x + chaPos.x;
-                    this.eatingIngImg.y = this._cha.ingredientPoint.y + chaPos.y;
+                    if (this.eatingNoodle == false) {
+                        //Topping跟着手的位置走
+                        this.eatingIngImg.x = this._cha.ingredientPoint.x + chaPos.x;
+                        this.eatingIngImg.y = this._cha.ingredientPoint.y + chaPos.y;
+                    }
+                    else {
+                        //Noodle就拉伸
+                        var noodleFlip = true; //是否要旋转面条
+                        if (this._cha.hasIngredientPoint == true) {
+                            this.noodlePos.x = this._cha.ingredientPoint.x + chaPos.x; //x坐标绝对信任
+                            var noodlePosY = this._cha.ingredientPoint.y + chaPos.y;
+                            if (noodlePosY < this.noodlePos.y) {
+                                this.noodlePos.y = noodlePosY; //y取小的保持高度
+                                noodleFlip = false; //还在拉伸，所以不要抽搐
+                            }
+                        }
+                        this.eatingIngImg.x = this.noodlePos.x;
+                        var noodleScaleY = (this.eatingIngImg.y - this.noodlePos.y) / this.eatingIngImg.height;
+                        this.eatingIngImg.scaleY = this.eatingIngImg.height > 0 ? noodleScaleY : 0;
+                        if (noodleFlip == true)
+                            this.eatingIngImg.scaleX *= -1;
+                    }
                 }
-                else {
-                    this.eatingIngImg.visible = false;
-                }
+                this.eatingIngImg.visible = ingVisible;
             }
         }
     };
@@ -2245,7 +2321,7 @@ var DiningTableSprite = (function (_super) {
         }
         if (this.eatGame) {
             if (this.eatGame.FixedUpdate() == true) {
-                this.UpdateByEatGame();
+                this.RefreshByEatGame();
             }
         }
         return false;
@@ -2422,6 +2498,13 @@ var RamenSprite = (function (_super) {
             }
         }
     };
+    /**
+     * 获得汤的y坐标对应于整个拉面坐标(作为原点)的坐标y
+     * @returns {number} y坐标
+     */
+    RamenSprite.prototype.BrothOffsetY = function () {
+        return -this.bowlImg.anchorOffsetY + this.ramen.model.bowl.model.sceneCenterY;
+    };
     return RamenSprite;
 }(SpriteGroup));
 __reflect(RamenSprite.prototype, "RamenSprite");
@@ -2460,6 +2543,7 @@ var SpriteClip = (function (_super) {
      */
     SpriteClip.prototype.ChangeToPreloadTexture = function (key) {
         if (key == "" || !this.preloadTextures || !this.preloadTextures[key]) {
+            console.warn("texture not found", key, this.preloadTextures);
             return false;
         }
         this.texture = this.preloadTextures[key];
@@ -2628,6 +2712,7 @@ var CraftNoodle = (function (_super) {
     __extends(CraftNoodle, _super);
     function CraftNoodle() {
         var _this = _super.call(this) || this;
+        _this.steamFrameIndex = 0;
         _this.canControl = false;
         _this.stepId = 0; //0=着味，1=配汤，2=选面，3=浇头
         _this.pickingOffsetX = 0;
@@ -2722,7 +2807,7 @@ var CraftNoodle = (function (_super) {
         this.Button_NextStep.addEventListener(egret.TouchEvent.TOUCH_TAP, this.OnNextButtonClick, this);
         //上一部
         this.Button_Prev.addEventListener(egret.TouchEvent.TOUCH_TAP, this.OnPrevButtonClick, this);
-        var t = new egret.Timer(50);
+        var t = new egret.Timer(100);
         t.addEventListener(egret.TimerEvent.TIMER, function () {
             _this.Update();
         }, this);
@@ -2767,11 +2852,19 @@ var CraftNoodle = (function (_super) {
             case CraftNoodleState.SelectTopping:
                 {
                     //TODO 现在先弄个ramenSpriteClip在200，200
-                    this.parent.addChild(new TestScene(this.craftingRamen));
-                    this.parent.removeChild(this);
+                    var areaHeight = Math.max(this.bowlImage.width, this.bowlImage.height);
+                    var areaWidth = areaHeight * 5 / 4; //5:4的宽高比
+                    var aScale = Math.min(areaWidth, this.stage.stageWidth) / areaWidth; //为了防止超出屏幕
+                    areaWidth *= aScale;
+                    areaHeight *= aScale;
+                    platform.shareGame("我就试试分享", this.ramenCenterX - areaWidth / 2, this.ramenCenterY - areaHeight / 2, areaWidth, areaHeight, 750, this, this.ToTestScene);
                 }
                 break;
         }
+    };
+    CraftNoodle.prototype.ToTestScene = function (thisObj, shareSuccess) {
+        thisObj.parent.addChild(new TestScene(thisObj.craftingRamen));
+        thisObj.parent.removeChild(thisObj);
     };
     //上一步按钮
     CraftNoodle.prototype.OnPrevButtonClick = function () {
@@ -2807,6 +2900,10 @@ var CraftNoodle = (function (_super) {
     //计时器函数
     CraftNoodle.prototype.Update = function () {
         switch (this.uiState) {
+            case CraftNoodleState.SelectTopping:
+                {
+                }
+                break;
             case CraftNoodleState.PlaceTopping:
                 {
                     //按住旋转按钮就会一直转
@@ -2821,6 +2918,7 @@ var CraftNoodle = (function (_super) {
                 }
                 break;
         }
+        this.steamAnimUpdate();
     };
     //手指Tap事件
     CraftNoodle.prototype.StagePointerTap = function (e) {
@@ -3068,8 +3166,14 @@ var CraftNoodle = (function (_super) {
                 }
                 break;
         }
-        if (this.uiState != CraftNoodleState.PlaceTopping)
+        //TODO 这里有未知bug，所以只能先这样凑个效果
+        if (this.uiState != CraftNoodleState.PlaceTopping) {
             this.UpdateRamen();
+        }
+        else {
+            //if (this.steamImage && this.steamImage.parent)
+            //	this.steamImage.parent.removeChild(this.steamImage);
+        }
     };
     CraftNoodle.prototype.ClearIngredientBoxes = function () {
         if (this.ingredientPage && this.ingredientPage.length > 0) {
@@ -3293,9 +3397,12 @@ var CraftNoodle = (function (_super) {
         var drawBrothHL = false;
         var drawNoodle = false;
         var drawTopping = false;
+        var drawSteam = false;
         var bowlChanged = false;
         var brothChanged = false;
         var noodleChanged = false;
+        var steamYMod = 63; //蒸汽往上移动这么多
+        var steamFrameCount = 8; //蒸汽8帧
         switch (this.uiState) {
             case CraftNoodleState.ChooseBowl:
                 {
@@ -3313,6 +3420,7 @@ var CraftNoodle = (function (_super) {
                     drawBroth = true;
                     drawBrothHL = true;
                     brothChanged = true;
+                    drawSteam = true;
                 }
                 break;
             case CraftNoodleState.Noodles:
@@ -3321,6 +3429,7 @@ var CraftNoodle = (function (_super) {
                     drawBrothHL = !this.craftingRamen.noodles;
                     drawNoodle = true;
                     noodleChanged = true;
+                    drawSteam = true;
                 }
                 break;
             case CraftNoodleState.SelectTopping:
@@ -3328,6 +3437,7 @@ var CraftNoodle = (function (_super) {
                     drawBroth = true;
                     drawNoodle = true;
                     drawTopping = true;
+                    drawSteam = true;
                 }
                 break;
             case CraftNoodleState.PlaceTopping:
@@ -3335,6 +3445,7 @@ var CraftNoodle = (function (_super) {
                     drawBroth = true;
                     drawNoodle = true;
                     drawTopping = true;
+                    drawSteam = true;
                 }
                 break;
         }
@@ -3373,6 +3484,7 @@ var CraftNoodle = (function (_super) {
                 egret.Tween.get(this.brothImage)
                     .to({ scaleX: 1, scaleY: 1 }, brothAnimInTime, egret.Ease.quadOut)
                     .call(function () {
+                    //broth highlight special
                     if (!_this.brothHighlight) {
                         _this.brothHighlight = new eui.Image(RES.getRes(ResName_Broth_Highlight));
                     }
@@ -3384,6 +3496,27 @@ var CraftNoodle = (function (_super) {
                     _this.brothHighlight.alpha = 0;
                     egret.Tween.removeTweens(_this.brothHighlight);
                     egret.Tween.get(_this.brothHighlight)
+                        .to({ alpha: 1 }, brothAnimInTime, egret.Ease.quadOut);
+                    //steam special
+                    if (_this.steamImage == null) {
+                        _this.steamImage = new SpriteClip();
+                        var preloadKey = new Array();
+                        for (var i = 0; i < steamFrameCount; i++) {
+                            preloadKey.push("zhengqi_" + i.toString());
+                        }
+                        _this.steamImage.SetPreloadTextureByKeys(preloadKey);
+                        _this.steamImage.ChangeToPreloadTexture("zhengqi_0");
+                    }
+                    _this.Group_GameLayer.addChild(_this.steamImage);
+                    _this.steamImage.anchorOffsetX = _this.steamImage.width / 2;
+                    _this.steamImage.anchorOffsetY = _this.steamImage.height / 2;
+                    _this.steamImage.scaleX = 2;
+                    _this.steamImage.scaleY = 2;
+                    _this.steamImage.x = _this.ramenCenterX;
+                    _this.steamImage.y = _this.ramenCenterY - steamYMod;
+                    _this.steamImage.alpha = 0;
+                    egret.Tween.removeTweens(_this.steamImage);
+                    egret.Tween.get(_this.steamImage)
                         .to({ alpha: 1 }, brothAnimInTime, egret.Ease.quadOut);
                 });
             }
@@ -3424,6 +3557,34 @@ var CraftNoodle = (function (_super) {
                 var img = tp.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
             }
         }
+        //Steam
+        if (drawSteam == true && this.craftingRamen.broth && doBrothAnim == false) {
+            if (this.steamImage == null) {
+                this.steamImage = new SpriteClip();
+                var preloadKey = new Array();
+                for (var i = 0; i < steamFrameCount; i++) {
+                    preloadKey.push("zhengqi_" + i.toString());
+                }
+                this.steamImage.SetPreloadTextureByKeys(preloadKey);
+                this.steamImage.ChangeToPreloadTexture("zhengqi_0");
+            }
+            this.Group_GameLayer.addChild(this.steamImage);
+            this.steamImage.anchorOffsetX = this.steamImage.width / 2;
+            this.steamImage.anchorOffsetY = this.steamImage.height / 2;
+            this.steamImage.scaleX = 2;
+            this.steamImage.scaleY = 2;
+            this.steamImage.x = this.ramenCenterX;
+            this.steamImage.y = this.ramenCenterY - steamYMod;
+        }
+    };
+    CraftNoodle.prototype.steamAnimUpdate = function () {
+        if (!this.steamImage)
+            return;
+        var steamFrameCount = 8;
+        this.steamFrameIndex = (this.steamFrameIndex + 1) % steamFrameCount; //一共8帧
+        this.steamImage.ChangeToPreloadTexture("zhengqi_" + this.steamFrameIndex.toString());
+        this.steamImage.anchorOffsetX = this.steamImage.width / 2;
+        this.steamImage.anchorOffsetY = this.steamImage.height / 2;
     };
     return CraftNoodle;
 }(eui.Component));

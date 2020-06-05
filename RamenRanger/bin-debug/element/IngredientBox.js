@@ -23,8 +23,8 @@ var IngredientBox = (function (_super) {
         this.init();
     };
     IngredientBox.prototype.init = function () {
-        var xs = [62, 230, 396, 562];
-        var ys = [20, 182, 345];
+        var xs = [60, 228, 394, 560];
+        var ys = [26, 188, 351];
         var looplen = Math.min(this.listItems.length, 12);
         for (var i = 0; i < looplen; i++) {
             var iconItem = this.listItems[i];

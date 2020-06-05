@@ -19,8 +19,8 @@ class IngredientBox extends eui.Component implements  eui.UIComponent {
 	}
 
 	private init(){
-		let xs = [62, 230, 396, 562];
-		let ys = [20, 182, 345];
+		let xs = [60, 228, 394, 560];
+		let ys = [26, 188, 351];
 		let looplen = Math.min(this.listItems.length, 12);
 		for (let i = 0; i < looplen; i++){
 			let iconItem = this.listItems[i];

@@ -71,6 +71,13 @@ var RamenSprite = (function (_super) {
             }
         }
     };
+    /**
+     * 获得汤的y坐标对应于整个拉面坐标(作为原点)的坐标y
+     * @returns {number} y坐标
+     */
+    RamenSprite.prototype.BrothOffsetY = function () {
+        return -this.bowlImg.anchorOffsetY + this.ramen.model.bowl.model.sceneCenterY;
+    };
     return RamenSprite;
 }(SpriteGroup));
 __reflect(RamenSprite.prototype, "RamenSprite");

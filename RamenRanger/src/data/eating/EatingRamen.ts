@@ -50,34 +50,49 @@ class EatingRamen {
 
 		 //根据吃的东西改变属性
 		 //根据吃的东西生成EatTurnAction和EatingAction
-		 this.ThisTurnModify(eatIng);
+		 this.ThisTurnModify(eatIng["ingredient"], eatIng["isNoodle"]);
 	}
 
-	//从拉面里选出这回合吃啥，当然目前是测试的，今后要改规则
-	private ThisTurnEat():IngredientObj{
+	/**
+	 * 从拉面里选出这回合吃啥，当然目前是测试的，今后要改规则
+	 * @returns {Object} {ingredient:IngredientObj, isNoodle:boolean} 返回吃的东西以及是否是面条
+	 */
+	private ThisTurnEat():Object{
 		if ((this.turnId % 2) == 0){
 			//偶数回合吃料优先，TODO 找出最想吃的
 			if (this.ramen.topping.length > 0){
 				let sIndex = Math.floor(Math.random() * this.ramen.topping.length);
-				return this.ramen.topping.splice(sIndex, 1)[0];
+				return {
+					"ingredient":this.ramen.topping.splice(sIndex, 1)[0],
+					"isNoodle":false
+				};
 			}else if (this.ramen.noodlePercentage > 0){
-				this.ramen.noodlePercentage -= 0.06; //TODO 先写死一口吃6%，应该来自于属性
-				return this.ramen.model.noodles;
+				this.ramen.noodlePercentage -= 0.12; //TODO 先写死一口吃12%，应该来自于属性
+				return {
+					"ingredient":this.ramen.model.noodles,
+					"isNoodle":true
+				}
 			}
 		}else{
 			if (this.ramen.noodlePercentage > 0){
 				this.ramen.noodlePercentage -= 0.06; //TODO 先写死一口吃6%，应该来自于属性
-				return this.ramen.model.noodles;
+				return {
+					"ingredient":this.ramen.model.noodles,
+					"isNoodle":true
+				}
 			}else if (this.ramen.topping.length > 0){
 				let sIndex = Math.floor(Math.random() * this.ramen.topping.length);
-				return this.ramen.topping.splice(sIndex, 1)[0];
+				return {
+					"ingredient":this.ramen.topping.splice(sIndex, 1)[0],
+					"isNoodle":false
+				};
 			}
 		}
 		return null;
 	}
 
 	//根据吃的东西改变属性，并且获得行为列表 TODO 都是临时写死的
-	private ThisTurnModify(eatIng:IngredientObj){
+	private ThisTurnModify(eatIng:IngredientObj, isNoodle:boolean){
 		this.hungry -= 1;
 
 		let satisify = Math.round(Math.random() * 200 - 100);
@@ -95,12 +110,13 @@ class EatingRamen {
 
 		if (!this.turnResult){
 			this.turnResult = new EatTurnAction(
-				eatIng, satisify, badTaste
+				eatIng, satisify, isNoodle, badTaste
 			)
 		}else{
 			this.turnResult.badTaste = badTaste;
 			this.turnResult.eatIngredient = eatIng;
 			this.turnResult.satisfy = satisify;
+			this.turnResult.isEatingNoodles = isNoodle;
 		}
 
 		this.turnActions = this.turnResult.GatherActionList(this.cha);

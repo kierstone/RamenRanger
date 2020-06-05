@@ -1,16 +1,8 @@
 declare class Button_Craft_Next extends eui.Skin{
 }
-declare class Button_Craft_Prev extends eui.Skin{
-}
-declare class Button_IngredientBox_Right extends eui.Skin{
-}
-declare class Button_IngredientBoxLeft extends eui.Skin{
-}
 declare module skins{
 	class ButtonSkin extends eui.Skin{
 	}
-}
-declare class CharacterObjSkin extends eui.Skin{
 }
 declare module skins{
 	class CheckBoxSkin extends eui.Skin{

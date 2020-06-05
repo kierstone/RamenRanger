@@ -12,6 +12,7 @@ var CraftNoodle = (function (_super) {
     __extends(CraftNoodle, _super);
     function CraftNoodle() {
         var _this = _super.call(this) || this;
+        _this.steamFrameIndex = 0;
         _this.canControl = false;
         _this.stepId = 0; //0=着味，1=配汤，2=选面，3=浇头
         _this.pickingOffsetX = 0;
@@ -106,7 +107,7 @@ var CraftNoodle = (function (_super) {
         this.Button_NextStep.addEventListener(egret.TouchEvent.TOUCH_TAP, this.OnNextButtonClick, this);
         //上一部
         this.Button_Prev.addEventListener(egret.TouchEvent.TOUCH_TAP, this.OnPrevButtonClick, this);
-        var t = new egret.Timer(50);
+        var t = new egret.Timer(100);
         t.addEventListener(egret.TimerEvent.TIMER, function () {
             _this.Update();
         }, this);
@@ -151,11 +152,19 @@ var CraftNoodle = (function (_super) {
             case CraftNoodleState.SelectTopping:
                 {
                     //TODO 现在先弄个ramenSpriteClip在200，200
-                    this.parent.addChild(new TestScene(this.craftingRamen));
-                    this.parent.removeChild(this);
+                    var areaHeight = Math.max(this.bowlImage.width, this.bowlImage.height);
+                    var areaWidth = areaHeight * 5 / 4; //5:4的宽高比
+                    var aScale = Math.min(areaWidth, this.stage.stageWidth) / areaWidth; //为了防止超出屏幕
+                    areaWidth *= aScale;
+                    areaHeight *= aScale;
+                    platform.shareGame("我就试试分享", this.ramenCenterX - areaWidth / 2, this.ramenCenterY - areaHeight / 2, areaWidth, areaHeight, 750, this, this.ToTestScene);
                 }
                 break;
         }
+    };
+    CraftNoodle.prototype.ToTestScene = function (thisObj, shareSuccess) {
+        thisObj.parent.addChild(new TestScene(thisObj.craftingRamen));
+        thisObj.parent.removeChild(thisObj);
     };
     //上一步按钮
     CraftNoodle.prototype.OnPrevButtonClick = function () {
@@ -191,6 +200,10 @@ var CraftNoodle = (function (_super) {
     //计时器函数
     CraftNoodle.prototype.Update = function () {
         switch (this.uiState) {
+            case CraftNoodleState.SelectTopping:
+                {
+                }
+                break;
             case CraftNoodleState.PlaceTopping:
                 {
                     //按住旋转按钮就会一直转
@@ -205,6 +218,7 @@ var CraftNoodle = (function (_super) {
                 }
                 break;
         }
+        this.steamAnimUpdate();
     };
     //手指Tap事件
     CraftNoodle.prototype.StagePointerTap = function (e) {
@@ -452,8 +466,14 @@ var CraftNoodle = (function (_super) {
                 }
                 break;
         }
-        if (this.uiState != CraftNoodleState.PlaceTopping)
+        //TODO 这里有未知bug，所以只能先这样凑个效果
+        if (this.uiState != CraftNoodleState.PlaceTopping) {
             this.UpdateRamen();
+        }
+        else {
+            //if (this.steamImage && this.steamImage.parent)
+            //	this.steamImage.parent.removeChild(this.steamImage);
+        }
     };
     CraftNoodle.prototype.ClearIngredientBoxes = function () {
         if (this.ingredientPage && this.ingredientPage.length > 0) {
@@ -677,9 +697,12 @@ var CraftNoodle = (function (_super) {
         var drawBrothHL = false;
         var drawNoodle = false;
         var drawTopping = false;
+        var drawSteam = false;
         var bowlChanged = false;
         var brothChanged = false;
         var noodleChanged = false;
+        var steamYMod = 63; //蒸汽往上移动这么多
+        var steamFrameCount = 8; //蒸汽8帧
         switch (this.uiState) {
             case CraftNoodleState.ChooseBowl:
                 {
@@ -697,6 +720,7 @@ var CraftNoodle = (function (_super) {
                     drawBroth = true;
                     drawBrothHL = true;
                     brothChanged = true;
+                    drawSteam = true;
                 }
                 break;
             case CraftNoodleState.Noodles:
@@ -705,6 +729,7 @@ var CraftNoodle = (function (_super) {
                     drawBrothHL = !this.craftingRamen.noodles;
                     drawNoodle = true;
                     noodleChanged = true;
+                    drawSteam = true;
                 }
                 break;
             case CraftNoodleState.SelectTopping:
@@ -712,6 +737,7 @@ var CraftNoodle = (function (_super) {
                     drawBroth = true;
                     drawNoodle = true;
                     drawTopping = true;
+                    drawSteam = true;
                 }
                 break;
             case CraftNoodleState.PlaceTopping:
@@ -719,6 +745,7 @@ var CraftNoodle = (function (_super) {
                     drawBroth = true;
                     drawNoodle = true;
                     drawTopping = true;
+                    drawSteam = true;
                 }
                 break;
         }
@@ -757,6 +784,7 @@ var CraftNoodle = (function (_super) {
                 egret.Tween.get(this.brothImage)
                     .to({ scaleX: 1, scaleY: 1 }, brothAnimInTime, egret.Ease.quadOut)
                     .call(function () {
+                    //broth highlight special
                     if (!_this.brothHighlight) {
                         _this.brothHighlight = new eui.Image(RES.getRes(ResName_Broth_Highlight));
                     }
@@ -768,6 +796,27 @@ var CraftNoodle = (function (_super) {
                     _this.brothHighlight.alpha = 0;
                     egret.Tween.removeTweens(_this.brothHighlight);
                     egret.Tween.get(_this.brothHighlight)
+                        .to({ alpha: 1 }, brothAnimInTime, egret.Ease.quadOut);
+                    //steam special
+                    if (_this.steamImage == null) {
+                        _this.steamImage = new SpriteClip();
+                        var preloadKey = new Array();
+                        for (var i = 0; i < steamFrameCount; i++) {
+                            preloadKey.push("zhengqi_" + i.toString());
+                        }
+                        _this.steamImage.SetPreloadTextureByKeys(preloadKey);
+                        _this.steamImage.ChangeToPreloadTexture("zhengqi_0");
+                    }
+                    _this.Group_GameLayer.addChild(_this.steamImage);
+                    _this.steamImage.anchorOffsetX = _this.steamImage.width / 2;
+                    _this.steamImage.anchorOffsetY = _this.steamImage.height / 2;
+                    _this.steamImage.scaleX = 2;
+                    _this.steamImage.scaleY = 2;
+                    _this.steamImage.x = _this.ramenCenterX;
+                    _this.steamImage.y = _this.ramenCenterY - steamYMod;
+                    _this.steamImage.alpha = 0;
+                    egret.Tween.removeTweens(_this.steamImage);
+                    egret.Tween.get(_this.steamImage)
                         .to({ alpha: 1 }, brothAnimInTime, egret.Ease.quadOut);
                 });
             }
@@ -808,6 +857,34 @@ var CraftNoodle = (function (_super) {
                 var img = tp.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
             }
         }
+        //Steam
+        if (drawSteam == true && this.craftingRamen.broth && doBrothAnim == false) {
+            if (this.steamImage == null) {
+                this.steamImage = new SpriteClip();
+                var preloadKey = new Array();
+                for (var i = 0; i < steamFrameCount; i++) {
+                    preloadKey.push("zhengqi_" + i.toString());
+                }
+                this.steamImage.SetPreloadTextureByKeys(preloadKey);
+                this.steamImage.ChangeToPreloadTexture("zhengqi_0");
+            }
+            this.Group_GameLayer.addChild(this.steamImage);
+            this.steamImage.anchorOffsetX = this.steamImage.width / 2;
+            this.steamImage.anchorOffsetY = this.steamImage.height / 2;
+            this.steamImage.scaleX = 2;
+            this.steamImage.scaleY = 2;
+            this.steamImage.x = this.ramenCenterX;
+            this.steamImage.y = this.ramenCenterY - steamYMod;
+        }
+    };
+    CraftNoodle.prototype.steamAnimUpdate = function () {
+        if (!this.steamImage)
+            return;
+        var steamFrameCount = 8;
+        this.steamFrameIndex = (this.steamFrameIndex + 1) % steamFrameCount; //一共8帧
+        this.steamImage.ChangeToPreloadTexture("zhengqi_" + this.steamFrameIndex.toString());
+        this.steamImage.anchorOffsetX = this.steamImage.width / 2;
+        this.steamImage.anchorOffsetY = this.steamImage.height / 2;
     };
     return CraftNoodle;
 }(eui.Component));

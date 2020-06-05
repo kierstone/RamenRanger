@@ -43,6 +43,7 @@ var SpriteClip = (function (_super) {
      */
     SpriteClip.prototype.ChangeToPreloadTexture = function (key) {
         if (key == "" || !this.preloadTextures || !this.preloadTextures[key]) {
+            console.warn("texture not found", key, this.preloadTextures);
             return false;
         }
         this.texture = this.preloadTextures[key];

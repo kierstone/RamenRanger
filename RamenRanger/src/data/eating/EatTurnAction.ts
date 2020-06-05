@@ -6,11 +6,13 @@ class EatTurnAction {
 	public eatIngredient:IngredientObj;	//要吃掉的东西的对象
 	public satisfy:number;	//满意度-100到100
 	public badTaste:BadTaste;	//不满意类型，大多时候应该都是None，不然就……
+	public isEatingNoodles:boolean;	//这口吃的是不是面条
 
-	public constructor(eatIngredient:IngredientObj, satisfy:number, badTaste:BadTaste = BadTaste.None) {
+	public constructor(eatIngredient:IngredientObj, satisfy:number, foodIsNoodle:boolean, badTaste:BadTaste) {
 		this.eatIngredient = eatIngredient;
 		this.satisfy = satisfy;
 		this.badTaste = badTaste;
+		this.isEatingNoodles = foodIsNoodle;
 	}
 
 	/**
@@ -21,16 +23,21 @@ class EatTurnAction {
 		let res = new Array<EatingAction>();
 
 		//吃的动作
-		res.push(new EatingAction(
-			cha.GetActionFrameCount(cha.direction, CharacterAction.Eat), 
-			CharacterAction.Eat
-		));
+		let eatTimes = this.isEatingNoodles == true ? 3 : 1; //如果是面条则吃3下
+		for (let i = 0; i < eatTimes; i++){
+			res.push(new EatingAction(
+				cha.GetActionFrameCount(cha.direction, CharacterAction.Eat), 
+				CharacterAction.Eat
+			));
+		}
 
-		//咀嚼
-		res.push(new EatingAction(
-			cha.GetActionFrameCount(cha.direction, CharacterAction.Chew), 
-			CharacterAction.Chew)
-		);
+		//咀嚼2口
+		for (let i = 0; i < 2; i++){
+			res.push(new EatingAction(
+				cha.GetActionFrameCount(cha.direction, CharacterAction.Chew), 
+				CharacterAction.Chew)
+			);
+		}
 
 		//如果恶心了，那么就做恶心的动作，否则就是根据高兴程度来
 		let resAction = this.GetEatActionBySatisfy();

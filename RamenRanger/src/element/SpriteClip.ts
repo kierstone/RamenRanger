@@ -40,6 +40,7 @@ class SpriteClip extends eui.Image{
 	 */
 	public ChangeToPreloadTexture(key:string):boolean{
 		if (key == "" || !this.preloadTextures || !this.preloadTextures[key]){
+			console.warn("texture not found", key, this.preloadTextures);
 			return false;
 		}
 		this.texture = this.preloadTextures[key];

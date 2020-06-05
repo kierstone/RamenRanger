@@ -51,6 +51,34 @@ class WxgamePlatform {
         })
     }
 
+    shareGame(titleText,sX,sY,sWidth,sHeight,stageWidth,nextFuncCaller, nextFunc){
+        let sysInfo = wx.getSystemInfoSync();
+        let scales = stageWidth / sysInfo.screenWidth;
+        return new Promise((resolve, reject)=>{
+            wx.shareAppMessage({
+                title:titleText,
+                imageUrl:canvas.toTempFilePathSync({
+                    x: sX * scales,
+                    y: sY * scales,
+                    width: sWidth * scales,
+                    height: sHeight * scales,
+                    destWidth: 500,
+                    destHeight: 400
+                }),
+                success:(res)=>{
+                    console.log("转发成功",res);
+                    resolve(res);
+                },
+                fail:(err)=>{
+                    console.log("转发失败",err);
+                    reject(err);
+                }
+            })
+            if (nextFuncCaller && nextFunc){
+                nextFunc(nextFuncCaller, true);
+            }
+        })
+    }
 
     createLoginButton(nextFunc, thisObj) {
         return new Promise((resolve,reject)=>{

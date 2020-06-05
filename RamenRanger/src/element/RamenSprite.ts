@@ -75,5 +75,11 @@ class RamenSprite extends SpriteGroup{
 		}
 	}
 
-	
+	/**
+	 * 获得汤的y坐标对应于整个拉面坐标(作为原点)的坐标y
+	 * @returns {number} y坐标
+	 */
+	public BrothOffsetY():number{
+		return -this.bowlImg.anchorOffsetY + this.ramen.model.bowl.model.sceneCenterY;
+	}
 }
