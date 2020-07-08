@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="Button_Craft_Next" width="165" height="72" currentState="up" xmlns:e="http://ns.egret.com/eui" states="up,down,disabled" >
-	<e:Image source="ui_craft_button_next" horizontalCenter="0" verticalCenter="0" includeIn="up,down" source.down="ui_craft_button_next1"/>
-</e:Skin>

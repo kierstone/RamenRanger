@@ -50,7 +50,7 @@ var DebugPlatform = (function () {
             return __generator(this, function (_a) {
                 if (nextFunc)
                     nextFunc(thisObj);
-                return [2 /*return*/, { nickName: "施展", avatarUrl: "" }];
+                return [2 /*return*/, { nickName: "鲁大师", avatarUrl: "" }];
             });
         });
     };
@@ -67,11 +67,11 @@ var DebugPlatform = (function () {
     DebugPlatform.prototype.getUserInfo = function (login) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, { nickName: "施展" }];
+                return [2 /*return*/, { nickName: "鲁大师", avatarUrl: "icon_default" }];
             });
         });
     };
-    DebugPlatform.prototype.shareGame = function (titleText, sX, sY, sWidth, sHeight, stageWidth, nextFuncCaller, nextFunc) {
+    DebugPlatform.prototype.shareGame = function (titleText, sX, sY, sWidth, sHeight, stageWidth, stageHeight, nextFuncCaller, nextFunc) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 if (nextFunc && nextFuncCaller) {

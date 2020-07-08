@@ -57,19 +57,18 @@ class Main extends eui.UILayer {
         })
     }
 
-    private GameUserInfo;
     private async runGame() {
         egret.ImageLoader.crossOrigin = "anonymous";    //解决跨域问题
         await this.loadResource()
         let login = await platform.login();
         if (login) {
             //如果已经登陆了就这么办
-            this.GameUserInfo = await platform.getUserInfo(login);
+           GameUserInfo = await platform.getUserInfo(login);
             this.createGameScene();
         } else {
             //没有的话，就出现按钮
             await platform.createLoginButton((thisObj, userInfo)=>{
-                this.GameUserInfo = userInfo;
+                GameUserInfo = userInfo;
                 thisObj.createGameScene();
             },this);
         }
@@ -106,6 +105,7 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected async createGameScene() {
+        console.log("GameUserInfo", GameUserInfo);
         LoadGameData();
         Utils.UIRoot = this;
 
@@ -114,21 +114,14 @@ class Main extends eui.UILayer {
 
         console.log(GameData_Ingredients, GameData_Bowl);
 
-        // if (!GameScene_Street){
-        //     GameScene_Street = new Street();
-        // }
-        // this.addChild(GameScene_Street);
-
-        if (!GameScene_CraftNoodle){
-            GameScene_CraftNoodle = new CraftNoodle();
-        }
-        this.addChild(GameScene_CraftNoodle);
+        this.addChild(new WelcomeScene());
 
     }
 }
 
+var GameUserInfo:any;   //游戏账号信息，来自各个平台的
 var playerInfo:PlayerInfo;
-var GameScene_Street:Street;
+var GameScene_FoodCourt:HorizontalFoodCourt;
 var GameScene_CraftNoodle:CraftNoodle
 
 

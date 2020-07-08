@@ -49,7 +49,8 @@ enum CraftNoodleState{
 	SoupToBroth = 2,
 	Noodles = 3,
 	SelectTopping = 4,
-	PlaceTopping = 5
+	PlaceTopping = 5,
+	ShowPhoto = 6
 }
 
 //拉面食材难吃的类别，每吃一回合都有一个这个，当然大多值是none

@@ -31,12 +31,16 @@ var TestScene = (function (_super) {
         this.init();
     };
     TestScene.prototype.init = function () {
+        //this.PlaceCharacter("schoolgirl", 150, 450);
         var _this = this;
-        this.PlaceCharacter("schoolgirl", 150, 450);
-        this.actor = new CharacterObj(GetCharacterActionInfoByKey("schoolgirl"), 0, 0, new CharacterProperty());
+        this.actor = new CharacterObj("schoolgirl", new FoodCourtBuddy());
         this.PlaceTable(350, 500);
-        this.diningTable.SetCharacterToSeat(this.actor);
-        this.diningTable.PlaceRamen(this.ramenObj);
+        for (var i = 0; i < 3; i++) {
+            var _actor = new CharacterObj("schoolgirl", new FoodCourtBuddy());
+            var _ramen = this.ramenObj.Clone(false);
+            this.diningTable.SetCharacterToSeat(i, _actor, EatGameType.EatNoodle);
+            this.diningTable.PlaceRamenToSeat(i, _ramen);
+        }
         this.RearrangeSpritesZOrder();
         this.HSilder_Size.addEventListener(egret.Event.CHANGE, function () {
             var toSize = _this.HSilder_Size.value * 0.05 + 1;
@@ -44,16 +48,14 @@ var TestScene = (function (_super) {
             _this.Label_Size.text = toSize.toFixed(2).toString();
         }, this);
         this.Button_Start.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            if (_this.diningTable && _this.diningTable.eatGame) {
-                _this.diningTable.eatGame.StartEat();
+            if (_this.diningTable) {
+                _this.diningTable.StartEat();
             }
         }, this);
         //开启一个update和fixedUpdate的计时器
-        var t = new egret.Timer(30 * this.timeScale);
+        var t = new egret.Timer(Utils.TickTime * this.timeScale);
         t.addEventListener(egret.TimerEvent.TIMER, function () {
-            _this.FixedUpdate();
-            if (_this.toUpdateTicker == 0)
-                _this.Update();
+            _this.Update();
             _this.RearrangeSpritesZOrder(); //ZOrder每个逻辑tick都会重新排列，所以FixedUpdate中可以不用
             _this.tick += 1;
             _this.toUpdateTicker = (_this.toUpdateTicker + 1) % 3;
@@ -74,14 +76,6 @@ var TestScene = (function (_super) {
             this.diningTable.Update();
         }
     };
-    //用于逻辑刷新的Update
-    TestScene.prototype.FixedUpdate = function () {
-        //角色的
-        //this.actor.FixedUpdate();
-        if (this.diningTable) {
-            this.diningTable.FixedUpdate();
-        }
-    };
     //重新排序zOrder
     TestScene.prototype.RearrangeSpritesZOrder = function () {
         if (!this.sprites || this.sprites.length <= 0)
@@ -99,7 +93,7 @@ var TestScene = (function (_super) {
     //放一个角色，这里的x,y都是像素级
     TestScene.prototype.PlaceCharacter = function (key, x, y) {
         if (key === void 0) { key = "schoolgirl"; }
-        this.actor = new CharacterObj(GetCharacterActionInfoByKey(key), x, y, new CharacterProperty());
+        this.actor = new CharacterObj("schoolgirl", new FoodCourtBuddy());
         var aImg = new CharacterSprite(this.actor);
         aImg.x = x;
         aImg.y = y;
@@ -108,7 +102,11 @@ var TestScene = (function (_super) {
     };
     //放一张桌子，这里可不管能不能放的下，只管放上去的
     TestScene.prototype.PlaceTable = function (x, y) {
-        this.diningTable = new DiningTableSprite();
+        this.diningTable = new DiningTableSprite(new DiningTableObj(new DiningTableModel("wooden_single_table", [
+            new DiningSeatInfo("wooden_chair", 0, -50, 0, -24),
+            new DiningSeatInfo("wooden_chair", -75, -50, -75, -24),
+            new DiningSeatInfo("wooden_chair", 75, -50, 75, -24),
+        ], 240, new egret.Rectangle(30, 0, 10, 10))), EatGameType.EatNoodle);
         this.gameLayer.addChild(this.diningTable);
         this.diningTable.x = x;
         this.diningTable.y = y;

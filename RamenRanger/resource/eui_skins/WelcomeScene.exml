@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="WelcomeSceneSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="172db05e114" ></w:Config>
+	<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" locked="true"/>
+	<e:Button id="Button_Ramen" label="Ramen" x="28" y="58" anchorOffsetX="0" width="174" anchorOffsetY="0" height="108"/>
+	<e:Button id="Button_Street" label="Food Court" x="31" y="201" anchorOffsetX="0" width="171" anchorOffsetY="0" height="114"/>
+	<e:Button id="Button_Test" label="Test" x="31" y="356" anchorOffsetX="0" width="176"/>
+</e:Skin>

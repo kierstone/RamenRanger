@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="CraftTareListRemoveButton" width="55" height="55" currentState="up" xmlns:e="http://ns.egret.com/eui" states="up,down,disabled" >
+	<e:Image source="ui_dialog_button_remove" horizontalCenter="0" verticalCenter="0" alpha.disabled="0.4" scaleX.down="1.1" scaleY.down="1.1"/>
+</e:Skin>

@@ -13,4 +13,5 @@ var Scene_NoodleBrothSize = 60; //场景里的拉面的宽度高度
 var Scene_PosScale = 0.12; //这是摆面界面的尺寸转化到面碗尺寸
 var Scene_HorVerTimes = 2 / 3; //宽高比
 var ResName_Broth_Highlight = "broth_highlight"; //汤上面的油光
+var PlayerBaseHunger = 50; //玩家默认饱食度
 //# sourceMappingURL=Variant.js.map

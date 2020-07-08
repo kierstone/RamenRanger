@@ -5,48 +5,55 @@
 class EatTurnAction {
 	public eatIngredient:IngredientObj;	//要吃掉的东西的对象
 	public satisfy:number;	//满意度-100到100
+	public noodleReducePercentage:number; //吃面吃掉多少百分比
 	public badTaste:BadTaste;	//不满意类型，大多时候应该都是None，不然就……
 	public isEatingNoodles:boolean;	//这口吃的是不是面条
+	public actions:Array<EatingAction>;	//这回合的动作列表
+	public cha :CharacterObj;	//吃面的人
+	private cInfo:CharacterActionInfo;
 
-	public constructor(eatIngredient:IngredientObj, satisfy:number, foodIsNoodle:boolean, badTaste:BadTaste) {
+	public constructor(cha:CharacterObj, eatIngredient:IngredientObj, satisfy:number, foodIsNoodle:boolean, noodleReducePercentage:number, badTaste:BadTaste) {
 		this.eatIngredient = eatIngredient;
 		this.satisfy = satisfy;
 		this.badTaste = badTaste;
 		this.isEatingNoodles = foodIsNoodle;
+		this.noodleReducePercentage = noodleReducePercentage;
+		this.cha = cha;
+		this.cInfo = cha.GetCharacterActionInfo();
+		this.GatherActionList();
 	}
 
 	/**
 	 * 根据这个回合的结果，算出需要做的动作序列
-	 * @param {CharacterObj} cha 针对这个角色而算出的列表，因为要依赖动作长度
 	 */
-	public GatherActionList(cha:CharacterObj):Array<EatingAction>{
-		let res = new Array<EatingAction>();
+	private GatherActionList():Array<EatingAction>{
+		this.actions = new Array<EatingAction>();
 
 		//吃的动作
 		let eatTimes = this.isEatingNoodles == true ? 3 : 1; //如果是面条则吃3下
 		for (let i = 0; i < eatTimes; i++){
-			res.push(new EatingAction(
-				cha.GetActionFrameCount(cha.direction, CharacterAction.Eat), 
+			this.actions.push(new EatingAction(
+				this.cInfo.GetActionFrameCount(Direction.Down, CharacterAction.Eat), 
 				CharacterAction.Eat
 			));
 		}
 
 		//咀嚼2口
 		for (let i = 0; i < 2; i++){
-			res.push(new EatingAction(
-				cha.GetActionFrameCount(cha.direction, CharacterAction.Chew), 
+			this.actions.push(new EatingAction(
+				this.cInfo.GetActionFrameCount(Direction.Down, CharacterAction.Chew), 
 				CharacterAction.Chew)
 			);
 		}
 
 		//如果恶心了，那么就做恶心的动作，否则就是根据高兴程度来
 		let resAction = this.GetEatActionBySatisfy();
-		res.push(new EatingAction(
-			cha.GetActionFrameCount(cha.direction, resAction),
+		this.actions.push(new EatingAction(
+			this.cInfo.GetActionFrameCount(Direction.Down, resAction),
 			resAction
 		));
 
-		return res;
+		return this.actions;
 	}
 
 	//根据高兴程度获得吃这口面的结果
@@ -71,5 +78,20 @@ class EatTurnAction {
 		}else{
 			return CharacterAction.Chew
 		}
+	}
+}
+
+
+/**
+ * 吃东西的FixedUpdate的数据
+ */
+class EatingAction {
+	public tick:number; //要有多少个tick
+	public changeToAction:CharacterAction;	//变换为什么动作
+	//其他的比如喷出爱心等需要了再加
+
+	public constructor(tick:number, toAction:CharacterAction) {
+		this.tick = tick;
+		this.changeToAction = toAction;
 	}
 }

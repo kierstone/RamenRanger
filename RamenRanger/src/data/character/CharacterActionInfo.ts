@@ -23,11 +23,36 @@ class CharacterActionInfo {
 		this.allActions = new Array<Array<Array<CharacterFrameInfo>>>();
 	}
 
+	/**
+	 * 获得某个方向某个动作的每一帧信息
+	 * @param {Direction} direction 方向
+	 * @param {CharacterAction} action 动作
+	 * @returns {Array<CharacterFrameInfo>} 每一帧的数据，如果是null，代表没有这一动画。
+	 */
 	public GetFrameInfoArray(direction:Direction, action:CharacterAction):Array<CharacterFrameInfo>{
 		if (this.allActions && this.allActions[action]) return this.allActions[action][direction]; 
 		return null;
 	}
 
+	/**
+	 * 获得某个方向的某个动作需要的帧数
+	 * @param {Direction} direction 转向的方向
+	 * @param {CharacterAction} action 角色动作
+	 * @returns {number} 这个动作的帧数
+	 */
+	public GetActionFrameCount(direction:Direction, action:CharacterAction):number{
+		let toAction = this.GetFrameInfoArray(direction, action);
+		if (toAction != null){
+			return toAction.length ;
+		}
+
+		return 0;
+	}
+
+	/**
+	 * 从Json数据生成
+	 * @param {Object} data json文件中对应的一条数据
+	 */
 	public FromJson(data:Object){
 		this.key = data["key"]
 

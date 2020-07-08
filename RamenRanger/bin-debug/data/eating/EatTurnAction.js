@@ -6,31 +6,34 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
  * 只是吃面这个迷你游戏的每个回合要做些什么事情的数据结构
  */
 var EatTurnAction = (function () {
-    function EatTurnAction(eatIngredient, satisfy, foodIsNoodle, badTaste) {
+    function EatTurnAction(cha, eatIngredient, satisfy, foodIsNoodle, noodleReducePercentage, badTaste) {
         this.eatIngredient = eatIngredient;
         this.satisfy = satisfy;
         this.badTaste = badTaste;
         this.isEatingNoodles = foodIsNoodle;
+        this.noodleReducePercentage = noodleReducePercentage;
+        this.cha = cha;
+        this.cInfo = cha.GetCharacterActionInfo();
+        this.GatherActionList();
     }
     /**
      * 根据这个回合的结果，算出需要做的动作序列
-     * @param {CharacterObj} cha 针对这个角色而算出的列表，因为要依赖动作长度
      */
-    EatTurnAction.prototype.GatherActionList = function (cha) {
-        var res = new Array();
+    EatTurnAction.prototype.GatherActionList = function () {
+        this.actions = new Array();
         //吃的动作
         var eatTimes = this.isEatingNoodles == true ? 3 : 1; //如果是面条则吃3下
         for (var i = 0; i < eatTimes; i++) {
-            res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Eat), CharacterAction.Eat));
+            this.actions.push(new EatingAction(this.cInfo.GetActionFrameCount(Direction.Down, CharacterAction.Eat), CharacterAction.Eat));
         }
         //咀嚼2口
         for (var i = 0; i < 2; i++) {
-            res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Chew), CharacterAction.Chew));
+            this.actions.push(new EatingAction(this.cInfo.GetActionFrameCount(Direction.Down, CharacterAction.Chew), CharacterAction.Chew));
         }
         //如果恶心了，那么就做恶心的动作，否则就是根据高兴程度来
         var resAction = this.GetEatActionBySatisfy();
-        res.push(new EatingAction(cha.GetActionFrameCount(cha.direction, resAction), resAction));
-        return res;
+        this.actions.push(new EatingAction(this.cInfo.GetActionFrameCount(Direction.Down, resAction), resAction));
+        return this.actions;
     };
     //根据高兴程度获得吃这口面的结果
     EatTurnAction.prototype.GetEatActionBySatisfy = function () {
@@ -63,4 +66,16 @@ var EatTurnAction = (function () {
     return EatTurnAction;
 }());
 __reflect(EatTurnAction.prototype, "EatTurnAction");
+/**
+ * 吃东西的FixedUpdate的数据
+ */
+var EatingAction = (function () {
+    //其他的比如喷出爱心等需要了再加
+    function EatingAction(tick, toAction) {
+        this.tick = tick;
+        this.changeToAction = toAction;
+    }
+    return EatingAction;
+}());
+__reflect(EatingAction.prototype, "EatingAction");
 //# sourceMappingURL=EatTurnAction.js.map

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="GameButtonYellow" width="400" height="300" currentState="up" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" states="up,down,disabled" >
+	<e:Image width="100%" height="100%" horizontalCenter="0" verticalCenter="0" source="ui_button_normal_up_png" alpha.disabled="0.4" source.down="ui_button_normal_down_png"/>
+	<e:Label id="labelDisplay" text="Label" size="38" verticalAlign="middle" textAlign="center" width="100%" height="100%" horizontalCenter="0" verticalCenter="0" textColor="0x6d513a" size.up="32"/>
+</e:Skin>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="CraftHandBookButton" width="121" height="121" currentState="up" xmlns:e="http://ns.egret.com/eui" states="up,down,disabled" >
+	<e:Image source="ui_cycle_button_up" horizontalCenter="0" verticalCenter="0" source.down="ui_cycle_button_down"/>
+	<e:Image source="ui_icon_craftbook" horizontalCenter="0" verticalCenter="0" source.down="ui_icon_craftbook_down"/>
+</e:Skin>

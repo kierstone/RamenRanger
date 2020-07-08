@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="FoodCourt_StoreMenuSkin" width="750" height="600" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="17325b153ca" ></w:Config>
+	<e:Group id="Group_DishMenu" width="100%" height="600" horizontalCenter="0" top="0">
+		<e:layout>
+			<e:HorizontalLayout gap="10" horizontalAlign="center" verticalAlign="top"/>
+		</e:layout>
+	</e:Group>
+</e:Skin>

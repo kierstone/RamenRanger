@@ -14,6 +14,7 @@ var IngredientIconInBox = (function (_super) {
         if (broth === void 0) { broth = null; }
         var _this = _super.call(this) || this;
         _this.selected = false;
+        _this.id = id;
         _this.ingredient = ingredient;
         _this.eveCaller = caller;
         _this.eveFunc = func;
@@ -44,7 +45,8 @@ var IngredientIconInBox = (function (_super) {
     };
     IngredientIconInBox.prototype.SetSelected = function (s) {
         this.selected = s;
-        this.Img_Select.visible = s;
+        if (this.Img_Select)
+            this.Img_Select.visible = s;
     };
     /**
      * 因为汤比较特殊，所以得额外fill进来
@@ -75,6 +77,10 @@ var IngredientIconInBox = (function (_super) {
         brothHL.anchorOffsetY = brothHL.height / 2;
         brothHL.x = shp.x;
         brothHL.y = shp.y;
+        if (this.Img_Select) {
+            this.Img_Select.zIndex = Number.MAX_VALUE;
+            this.sortChildren();
+        }
     };
     return IngredientIconInBox;
 }(eui.Component));

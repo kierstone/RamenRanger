@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HorizontalFoodCourt_IngredientExpSkin" width="150" height="60" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="17306fe3a48" ></w:Config>
+	<e:Image id="Img_Icon" width="60" height="60" left="0" verticalCenter="0"/>
+	<e:Label id="Label_Exp" text="Label" stroke="2" width="90" right="0" textAlign="right" verticalCenter="0"/>
+</e:Skin>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="PlacingToolBoxSkin" width="700" height="475" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="17287c8193f" ></w:Config>
+	<e:Image width="100%" height="100%" source="ui_dialog_back" horizontalCenter="0" verticalCenter="0" scale9Grid="28,27,47,48"/>
+	<e:Button id="Button_OK" label="" x="455" y="380" skinName="GameButtonGreen" width="210" height="78"/>
+	<e:Button id="Button_Delete" label="Button" x="35" y="380" skinName="CraftButtonDelete"/>
+	<e:Group x="35" y="199" width="90%">
+		<e:Image width="100%" height="170" y="0" source="ui_dialog_text_back" scale9Grid="20,21,48,48" horizontalCenter="0"/>
+		<e:Button id="Button_RotateRight" label="Button" x="530" y="85" skinName="CraftButtonRotateRight" anchorOffsetX="71" anchorOffsetY="71"/>
+		<e:Button id="Button_RotateLeft" label="Button" x="100" y="85" skinName="CraftButtonRotateLeft" anchorOffsetX="71" anchorOffsetY="71"/>
+		<e:Button id="Button_Flip" label="" x="315" y="85" skinName="GameCycleButton" anchorOffsetX="71" anchorOffsetY="71"/>
+	</e:Group>
+	<e:Group x="35" y="33" width="90%">
+		<e:Image width="100%" height="145" x="0" y="0" source="ui_dialog_text_back" scale9Grid="20,21,48,48"/>
+		<e:Group id="Group_SizeBar" x="29" y="39">
+			<e:Image y="4" source="ui_craft_sizebar_back" x="0"/>
+			<e:Image id="SizeBar_Fill" x="9.5" y="13.5" source="ui_craft_sizebar_filler"/>
+			<e:Rect id="SizeBar_Mask" width="403" height="59" x="9.5" y="13.5" anchorOffsetX="0" anchorOffsetY="0" fillAlpha="0"/>
+			<e:Image id="SizeBarPuller" x="409" y="43" source="ui_craft_sizebar_puller" anchorOffsetX="13" anchorOffsetY="43"/>
+		</e:Group>
+		<e:Button id="Button_Reset" label="Button" x="480" y="12" skinName="CraftSizeButtonReset"/>
+	</e:Group>
+</e:Skin>

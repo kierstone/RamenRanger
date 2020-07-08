@@ -52,4 +52,10 @@ class BowlObj{
 	constructor(model:BowlModel){
 		this.model = model;
 	}
+
+	public RandomPosInBowl():egret.Point{
+		let ranRa = Math.random() * 360 / 180 * Math.PI;
+		let ranLen = Math.random() * this.model.radius * 0.9;
+		return new egret.Point(Math.cos(ranRa) * ranLen, Math.sin(ranRa) * ranLen);
+	}
 }

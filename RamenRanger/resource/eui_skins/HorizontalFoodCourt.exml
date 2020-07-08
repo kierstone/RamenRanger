@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HorizontalFoodCourtSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="172fc071dae" ></w:Config>
+	<e:Group id="Group_Street" x="0" y="0"/>
+	<e:Button id="Button_Go" label="前进" x="500" y="450" skinName="GameButtonYellow" anchorOffsetX="0" width="220" anchorOffsetY="0" height="100"/>
+	<e:Group x="19" y="20">
+		<e:Image width="40" height="40" x="0" y="0" source="scene_bowl_normal"/>
+		<e:Group x="55" y="0">
+			<e:Rect id="Rect_HungerBack" width="40" height="40" x="0" y="0" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xffffff" strokeAlpha="1" strokeWeight="2" fillAlpha="0"/>
+			<e:Rect id="Rect_HungerNow" width="36" height="36" x="2" y="2" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" strokeAlpha="0" fillColor="0x80f907"/>
+			<e:Rect id="Rect_HungerMinus" width="36" height="36" x="2" y="2" anchorOffsetX="0" anchorOffsetY="0" strokeColor="0xFFFFFF" strokeAlpha="0" strokeWeight="0" fillColor="0xff0000"/>
+			<e:Label id="Label_Hungry" text="Label" x="6" y="5" size="30" visible="false"/>
+		</e:Group>
+	</e:Group>
+	<e:Scroller id="Scroller_IngLearn" width="100%" height="200" x="0" y="1134">
+		<e:Group id="Group_Ing">
+			<e:layout>
+				<e:TileLayout orientation="rows" requestedColumnCount="3" horizontalGap="10" verticalGap="10"/>
+			</e:layout>
+		</e:Group>
+	</e:Scroller>
+	<e:Group id="Group_Test" width="200" height="200" x="248" y="878" visible="false"/>
+</e:Skin>

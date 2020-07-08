@@ -1,6 +1,2 @@
 {"file":"icons.png","frames":{
-"icon_default":{"x":155,"y":324,"w":83,"h":92,"offX":9,"offY":4,"sourceW":100,"sourceH":100},
-"icon_ingredient_chopped_green_orion":{"x":1,"y":375,"w":113,"h":111,"offX":1,"offY":0,"sourceW":114,"sourceH":114},
-"icon_ingredient_lard_oil":{"x":155,"y":223,"w":99,"h":99,"offX":0,"offY":0,"sourceW":100,"sourceH":100},
-"icon_ingredient_poached_eggs":{"x":1,"y":223,"w":152,"h":150,"offX":43,"offY":45,"sourceW":240,"sourceH":240},
-"icon_ingredient_thin_noodles":{"x":1,"y":1,"w":220,"h":220,"offX":90,"offY":90,"sourceW":400,"sourceH":400}}}
+"icon_default":{"x":1,"y":1,"w":83,"h":92,"offX":9,"offY":4,"sourceW":100,"sourceH":100}}}

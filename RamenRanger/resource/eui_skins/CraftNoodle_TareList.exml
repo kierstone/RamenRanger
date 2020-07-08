@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="CraftNoodle_TareListSkin" width="750" height="1500" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="1728d81fd6b" ></w:Config>
+	<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" fillAlpha="0.5" locked="true"/>
+	<e:Group id="Group_Dialog" x="45" y="361">
+		<e:Image width="660" y="57" height="540" source="ui_dialog_back" scale9Grid="25,25,50,50" x="0"/>
+		<e:Image y="0" source="ui_dialog_title" x="119"/>
+		<e:Label id="Label_Title" text="已经加入的调料" x="146" y="17" size="48" textColor="0xfff8e6" stroke="2" strokeColor="0x905b43" anchorOffsetX="0" width="368" verticalAlign="middle" textAlign="center" anchorOffsetY="0" height="66"/>
+		<e:Button id="Button_Close" label="Button" x="595" y="19" skinName="DialogCloseBtn"/>
+		<e:Group id="Group_ItemLayer" x="30" y="155">
+			<e:Image width="600" height="410" y="0" source="ui_dialog_text_back" anchorOffsetX="0" anchorOffsetY="0" scale9Grid="21,20,47,49" x="0"/>
+			<e:Image x="44" y="44" source="ui_craft_ingredient_slot"/>
+			<e:Image y="44" source="ui_craft_ingredient_slot" horizontalCenter="0"/>
+			<e:Image x="420" y="44" source="ui_craft_ingredient_slot"/>
+			<e:Image x="44" y="232" source="ui_craft_ingredient_slot"/>
+			<e:Image y="232" source="ui_craft_ingredient_slot" horizontalCenter="0"/>
+			<e:Image x="420" y="232" source="ui_craft_ingredient_slot"/>
+			<e:Group width="100%" height="100%" x="0" y="0">
+				<e:Button id="Button_Remove0" label="Button" x="152.5" y="16.5" skinName="CraftTareListRemoveButton"/>
+				<e:Button label="Button" x="340.5" y="16.5" skinName="CraftTareListRemoveButton" id="Button_Remove1"/>
+				<e:Button label="Button" x="528.5" y="16.5" skinName="CraftTareListRemoveButton" id="Button_Remove2"/>
+				<e:Button label="Button" x="152.5" y="206.5" skinName="CraftTareListRemoveButton" id="Button_Remove3"/>
+				<e:Button label="Button" x="340.5" y="206.5" skinName="CraftTareListRemoveButton" id="Button_Remove4"/>
+				<e:Button label="Button" x="528.5" y="206.5" skinName="CraftTareListRemoveButton" id="Button_Remove5"/>
+			</e:Group>
+		</e:Group>
+	</e:Group>
+</e:Skin>

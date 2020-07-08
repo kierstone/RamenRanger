@@ -39,16 +39,18 @@ class TestScene extends eui.Component implements  eui.UIComponent {
 	}
 
 	private init(){
-		this.PlaceCharacter("schoolgirl", 150, 450);
+		
+		//this.PlaceCharacter("schoolgirl", 150, 450);
 
-		this.actor = new CharacterObj(
-			GetCharacterActionInfoByKey("schoolgirl"), 
-			0, 0,
-			new CharacterProperty()
-		)
+		this.actor = new CharacterObj("schoolgirl", new FoodCourtBuddy());
 		this.PlaceTable(350, 500);
-		this.diningTable.SetCharacterToSeat(this.actor);
-		this.diningTable.PlaceRamen(this.ramenObj);
+		for (let i = 0; i < 3; i++){
+			let _actor = new CharacterObj("schoolgirl", new FoodCourtBuddy());
+			let _ramen = this.ramenObj.Clone(false);
+			this.diningTable.SetCharacterToSeat(i, _actor, EatGameType.EatNoodle);
+			this.diningTable.PlaceRamenToSeat(i, _ramen);
+		}
+		
 
 		this.RearrangeSpritesZOrder();
 
@@ -59,16 +61,15 @@ class TestScene extends eui.Component implements  eui.UIComponent {
 		},this);
 
 		this.Button_Start.addEventListener(egret.TouchEvent.TOUCH_TAP, ()=>{
-			if (this.diningTable && this.diningTable.eatGame){
-				this.diningTable.eatGame.StartEat();
+			if (this.diningTable){
+				this.diningTable.StartEat();
 			}
 		},this);
 
 		//开启一个update和fixedUpdate的计时器
-		let t = new egret.Timer(30*this.timeScale);
+		let t = new egret.Timer(Utils.TickTime * this.timeScale);
 		t.addEventListener(egret.TimerEvent.TIMER, ()=>{
-			this.FixedUpdate();
-			if (this.toUpdateTicker == 0) this.Update();
+			this.Update();
 			this.RearrangeSpritesZOrder();	//ZOrder每个逻辑tick都会重新排列，所以FixedUpdate中可以不用
 			
 			this.tick += 1;
@@ -92,17 +93,6 @@ class TestScene extends eui.Component implements  eui.UIComponent {
 			this.diningTable.Update();
 		}
 	}
-
-	//用于逻辑刷新的Update
-	private FixedUpdate(){
-		//角色的
-		//this.actor.FixedUpdate();
-		
-		if (this.diningTable){
-			this.diningTable.FixedUpdate();
-		}
-	}
-
 	
 	//重新排序zOrder
 	private RearrangeSpritesZOrder(){
@@ -121,11 +111,7 @@ class TestScene extends eui.Component implements  eui.UIComponent {
 
 	//放一个角色，这里的x,y都是像素级
 	private PlaceCharacter(key:string = "schoolgirl",x:number, y:number){
-		this.actor = new CharacterObj(
-			GetCharacterActionInfoByKey(key), 
-			x, y,
-			new CharacterProperty()
-		)
+		this.actor = new CharacterObj("schoolgirl", new FoodCourtBuddy());
 		let aImg = new CharacterSprite(this.actor);
 		aImg.x = x;
 		aImg.y = y;
@@ -135,7 +121,16 @@ class TestScene extends eui.Component implements  eui.UIComponent {
 
 	//放一张桌子，这里可不管能不能放的下，只管放上去的
 	private PlaceTable( x:number, y:number){
-		this.diningTable = new DiningTableSprite();
+		this.diningTable = new DiningTableSprite(new DiningTableObj(
+			new DiningTableModel(
+				"wooden_single_table", [
+					new DiningSeatInfo("wooden_chair", 0, -50, 0, -24),
+					new DiningSeatInfo("wooden_chair", -75, -50, -75, -24),
+					new DiningSeatInfo("wooden_chair", 75, -50, 75, -24),
+				],
+				240, new egret.Rectangle(30, 0, 10, 10)
+			),
+		), EatGameType.EatNoodle);
 		this.gameLayer.addChild(this.diningTable);
 		this.diningTable.x = x;
 		this.diningTable.y = y;

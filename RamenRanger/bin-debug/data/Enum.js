@@ -50,6 +50,7 @@ var CraftNoodleState;
     CraftNoodleState[CraftNoodleState["Noodles"] = 3] = "Noodles";
     CraftNoodleState[CraftNoodleState["SelectTopping"] = 4] = "SelectTopping";
     CraftNoodleState[CraftNoodleState["PlaceTopping"] = 5] = "PlaceTopping";
+    CraftNoodleState[CraftNoodleState["ShowPhoto"] = 6] = "ShowPhoto";
 })(CraftNoodleState || (CraftNoodleState = {}));
 //拉面食材难吃的类别，每吃一回合都有一个这个，当然大多值是none
 var BadTaste;

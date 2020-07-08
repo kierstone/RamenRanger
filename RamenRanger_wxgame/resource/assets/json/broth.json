@@ -1,20 +1,20 @@
 {
     "data":[
-        {"id":"broth0", "name":"豚骨汤", "backColor":15390375, "coverColor":[16494852,16494383,15976546,16761150], "coverAlpha":0.8},
-        {"id":"broth1", "name":"辣椒汤", "backColor":13512985, "coverColor":[16739842,16776960,16139814,16776960], "coverAlpha":0.19},
-        {"id":"broth2", "name":"牛肉汤", "backColor":14733979, "coverColor":[13616537,15459788,15650137,16776144], "coverAlpha":0.3},
-        {"id":"broth3", "name":"墨鱼汁汤", "backColor":0, "coverColor":[0,8026746,0,16777215], "coverAlpha":0.19},
-        {"id":"broth4", "name":"咖喱汤", "backColor":15175939, "coverColor":[6638616,8548117,9467158,16759296], "coverAlpha":0.19},
-        {"id":"broth5", "name":"番茄汤", "backColor":15761182, "coverColor":[16739842,16776960,16139814,16776960], "coverAlpha":0.19},
-        {"id":"broth6", "name":"羊肉汤", "backColor":14606807, "coverColor":[14998975,15983563,15723484,16777215], "coverAlpha":0.5},
-        {"id":"broth7", "name":"菌菇汤", "backColor":15527119, "coverColor":[13741057,14330630,16437831,16642140], "coverAlpha":0.75},
-        {"id":"broth8", "name":"酱油汤", "backColor":9055500, "coverColor":[11030587,7549467,6170119,16777215], "coverAlpha":0.19},
-        {"id":"broth9", "name":"冬阴功汤", "backColor":16676870, "coverColor":[14387295,9519140,13459750,16711680], "coverAlpha":0.19},
-        {"id":"broth10", "name":"鱼汤", "backColor":15721664, "coverColor":[16777215,14997914,14729105,16777215], "coverAlpha":0.3},
-        {"id":"broth11", "name":"鸡汤", "backColor":15064004, "coverColor":[14864929,16044830,15522161,16763904], "coverAlpha":0.6},
-        {"id":"broth12", "name":"沙茶汤", "backColor":16746817, "coverColor":[15966002,16751616,15783496,16757760], "coverAlpha":0.6},
-        {"id":"broth13", "name":"泡菜汤", "backColor":15165698, "coverColor":[16746375,16730441,16742238,16730955], "coverAlpha":0.3},
-        {"id":"broth14", "name":"老鸭汤", "backColor":15064004, "coverColor":[14864929,16044830,15522161,16763904], "coverAlpha":0.6},
-        {"id":"broth15", "name":"金汤", "backColor":16694022, "coverColor":[16776634,16705402,15909958,16580352], "coverAlpha":0.5}
+        {"id":"broth0", "name":"豚骨汤", "rare":8, "cost":2, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0, "backColor":15390375, "coverColor":[16494852,16494383,15976546,16761150], "coverAlpha":0.8},
+        {"id":"broth1", "name":"辣椒汤", "rare":8, "cost":2, "pungency":2, "spicy":0, "sweet":0, "salty":0, "sour":0, "backColor":13512985, "coverColor":[16739842,16776960,16139814,16776960], "coverAlpha":0.19},
+        {"id":"broth2", "name":"牛肉汤", "rare":8, "cost":2, "pungency":0, "spicy":0, "sweet":0, "salty":1, "sour":0, "backColor":14733979, "coverColor":[13616537,15459788,15650137,16776144], "coverAlpha":0.3},
+        {"id":"broth3", "name":"墨鱼汁汤", "rare":8, "cost":2, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0, "backColor":0, "coverColor":[0,8026746,0,16777215], "coverAlpha":0.19},
+        {"id":"broth4", "name":"咖喱汤", "rare":8, "cost":2, "pungency":1, "spicy":0, "sweet":0, "salty":1, "sour":0, "backColor":15175939, "coverColor":[6638616,8548117,9467158,16759296], "coverAlpha":0.19},
+        {"id":"broth5", "name":"番茄汤", "rare":8, "cost":2, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":2, "backColor":15761182, "coverColor":[16739842,16776960,16139814,16776960], "coverAlpha":0.19},
+        {"id":"broth6", "name":"羊肉汤", "rare":8, "cost":2, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0, "backColor":14606807, "coverColor":[14998975,15983563,15723484,16777215], "coverAlpha":0.5},
+        {"id":"broth7", "name":"菌菇汤", "rare":8, "cost":2, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0, "backColor":15527119, "coverColor":[13741057,14330630,16437831,16642140], "coverAlpha":0.75},
+        {"id":"broth8", "name":"酱油汤", "rare":8, "cost":2, "pungency":0, "spicy":0, "sweet":0, "salty":2, "sour":0, "backColor":9055500, "coverColor":[11030587,7549467,6170119,16777215], "coverAlpha":0.19},
+        {"id":"broth9", "name":"冬阴功汤", "rare":8, "cost":2, "pungency":2, "spicy":0, "sweet":0, "salty":0, "sour":0, "backColor":16676870, "coverColor":[14387295,9519140,13459750,16711680], "coverAlpha":0.19},
+        {"id":"broth10", "name":"鱼汤", "rare":8, "cost":2, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0, "backColor":15721664, "coverColor":[16777215,14997914,14729105,16777215], "coverAlpha":0.3},
+        {"id":"broth11", "name":"鸡汤", "rare":8, "cost":2, "pungency":0, "spicy":0, "sweet":0, "salty":0, "sour":0, "backColor":15064004, "coverColor":[14864929,16044830,15522161,16763904], "coverAlpha":0.6},
+        {"id":"broth12", "name":"沙茶汤", "rare":8, "cost":2, "pungency":1, "spicy":1, "sweet":0, "salty":0, "sour":0, "backColor":16746817, "coverColor":[15966002,16751616,15783496,16757760], "coverAlpha":0.6},
+        {"id":"broth13", "name":"泡菜汤", "rare":8, "cost":2, "pungency":2, "spicy":0, "sweet":0, "salty":0, "sour":1, "backColor":15165698, "coverColor":[16746375,16730441,16742238,16730955], "coverAlpha":0.3},
+        {"id":"broth14", "name":"老鸭汤", "rare":8, "cost":2, "pungency":0, "spicy":0, "sweet":0, "salty":1, "sour":0, "backColor":15064004, "coverColor":[14864929,16044830,15522161,16763904], "coverAlpha":0.6},
+        {"id":"broth15", "name":"金汤", "rare":8, "cost":2, "pungency":1, "spicy":0, "sweet":0, "salty":1, "sour":1, "backColor":16694022, "coverColor":[16776634,16705402,15909958,16580352], "coverAlpha":0.5}
     ]
 }

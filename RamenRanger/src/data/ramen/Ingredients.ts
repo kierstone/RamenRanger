@@ -12,6 +12,10 @@ class IngredientModel {
 	public liquid:boolean;
 	public tags:Array<string>;
 
+	public eat:boolean;	//吃面过程中是否吃这个
+	public rare:number;	//稀有度，也就是被发现的概率那个	
+	public cost:number;	//学习这个食材要额外消耗多少旅行点
+
 	public pungency:number;
 	public sweet:number;
 	public salty:number;
@@ -43,6 +47,10 @@ class IngredientModel {
 
 		this.canBeUsed = json["using"] ? json["using"] : 0;
 		this.liquid = json["liquid"] ? json["liquid"] : false;
+
+		this.eat = json["eat"] ? json["eat"] : false;
+		this.rare = json["rare"] ? json["rare"] : 0;
+		this.cost = json["cost"] ? json["cost"] : 0;
 
 		this.pungency = json["pungency"] ? json["pungency"] : 0;
 		this.sweet = json["sweet"] ? json["sweet"] : 0;
@@ -97,6 +105,7 @@ class IngredientModel {
 
 //实际使用的ingredient
 class IngredientObj{
+	public uniqueId:string;
 	public model:IngredientModel;
 
 	//放在浇头上的位置，如果在汤里、面里、作为着味就不会有这个
@@ -107,6 +116,7 @@ class IngredientObj{
 	public size:number = 1;	//From 0.5 to 2，放大倍数
 
 	constructor(model:IngredientModel, x:number = 0, y:number = 0, rotation:number = 0){
+		this.uniqueId = Utils.GetUniqueId("IngredientObj");
 		this.model = model;
 		this.x = x;
 		this.y = y;
@@ -198,15 +208,30 @@ class IngredientObj{
 
 	/**
 	 * 克隆一个自己
+	 * @param {boolean} sameUid 克隆出来的是否连uniqueId都和这个是一样的
 	 * @returns {IngredientObj} 克隆体
 	 */
-	public Clone(){
+	public Clone(sameUid:boolean = false){
 		let res = new IngredientObj(this.model, this.x, this.y, this.rotation);
+		if (sameUid == true) res.uniqueId = this.uniqueId;
 		res.xFlip = this.xFlip;
 		res.size = this.size;
 		return res;
 	}
 } 
+
+/**
+ * 玩家学会的素材配方
+ */
+class LearntIngredient{
+	public model:IngredientModel;
+	public vote:number = 0;	//被赞了多少次
+
+	constructor(model:IngredientModel){
+		this.model = model;
+	}
+}
+
 
 //素材用途
 enum IngredientUseType{

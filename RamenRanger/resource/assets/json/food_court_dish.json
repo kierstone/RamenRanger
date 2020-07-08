@@ -1,0 +1,59 @@
+{
+    "data":[
+        {
+            "id":"pgng", "name":"排骨年糕", "bowl":"bowl0", "broth":"", "rice":"", "feed":16, "type":3,
+            "tag":["one", "two", "sushi"],
+            "topping":[
+                {"ingredient":"tofu0", "x":50, "y":-100, "size":1.2, "rotate":-45},
+                {"ingredient":"tofu0", "x":20, "y":-70, "size":1.2, "rotate":-45},
+                {"ingredient":"tofu0", "x":-10, "y":-40, "size":1.2, "rotate":-45},
+                {"ingredient":"tonkatsu0", "x":80, "y":80, "size":1.1, "rotate":45}
+            ],
+            "reward":[
+                {"ingredient":"tonkatsu0", "exp":10}
+            ]
+        },
+        {
+            "id":"glnrt", "name":"咖喱牛肉汤", "bowl":"bowl0", "broth":"broth4", "rice":"", "feed":35, "type":1,
+            "tag":["ramen", "two", "sushi"],
+            "topping":[
+                {"ingredient":"beef0", "x":50, "y":-100, "size":1, "rotate":0},
+                {"ingredient":"beef0", "x":20, "y":-70, "size":1, "rotate":0},
+                {"ingredient":"beef0", "x":-10, "y":-40, "size":1, "rotate":0},
+                {"ingredient":"coriander0", "x":-10, "y":10, "size":0.7, "rotate":-20}
+            ],
+            "reward":[
+                {"ingredient":"coriander0", "exp":5},
+                {"ingredient":"beef0", "exp":10},
+                {"ingredient":"broth4", "exp":10, "broth":true}
+            ]
+        },
+        {
+            "id":"gdz", "name":"关东煮", "bowl":"bowl0", "broth":"broth4", "rice":"", "feed":28, "type":0,
+            "tag":["one", "two", "ramen"],
+            "topping":[
+                {"ingredient":"tofu0", "x":50, "y":-100, "size":1, "rotate":-45},
+                {"ingredient":"mushroom_pork_ball0", "x":-20, "y":-70, "size":1, "rotate":-45},
+                {"ingredient":"mushroom_pork_ball0", "x":-100, "y":-90, "size":1, "rotate":-45},
+                {"ingredient":"mushrooms0", "x":40, "y":60, "size":1, "rotate":-45},
+                {"ingredient":"mushrooms0", "x":80, "y":80, "size":1.1, "rotate":45}
+            ],
+            "reward":[
+                {"ingredient":"mushroom_pork_ball0", "exp":10},
+                {"ingredient":"mushrooms0", "exp":10}
+            ]
+        },
+        {
+            "id":"hbdb", "name":"荷包蛋饼", "bowl":"bowl0", "broth":"", "rice":"", "feed":22, "type":2,
+            "tag":["ramen", "two", "sushi"],
+            "topping":[
+                {"ingredient":"poached_egg0", "x":0, "y":0, "size":1.8, "rotate":0},
+                {"ingredient":"onion1", "x":0, "y":0, "size":1, "rotate":-75}
+            ],
+            "reward":[
+                {"ingredient":"poached_egg0", "exp":10},
+                {"ingredient":"onion1", "exp":5}
+            ]
+        }
+    ]
+}

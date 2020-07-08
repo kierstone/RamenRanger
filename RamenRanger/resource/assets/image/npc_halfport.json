@@ -1,0 +1,5 @@
+{"file":"npc_halfport.png","frames":{
+"npc_half_port_3":{"x":348,"y":198,"w":133,"h":218,"offX":4,"offY":0,"sourceW":140,"sourceH":218},
+"npc_half_port_2":{"x":1,"y":1,"w":179,"h":203,"offX":0,"offY":8,"sourceW":180,"sourceH":211},
+"npc_half_port_0":{"x":182,"y":1,"w":164,"h":215,"offX":2,"offY":10,"sourceW":170,"sourceH":225},
+"npc_half_port_1":{"x":348,"y":1,"w":150,"h":195,"offX":10,"offY":3,"sourceW":170,"sourceH":198}}}

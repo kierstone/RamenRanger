@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="CraftNoodleSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+<e:Skin class="CraftNoodleSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" >
 	<w:Config id="170d54af420" ></w:Config>
 	<e:Image id="Img_BKG" width="100" height="100" source="ui_craft_back" fillMode="repeat" y="0" x="0"/>
-	<e:Image id="Img_Stick" x="580" y="216" source="ui_bowl_stick1"/>
+	<e:Image id="Img_Stick" x="580" y="499" source="ui_bowl_stick1" anchorOffsetY="283"/>
 	<e:Group id="Group_GameLayer" width="100%" height="100%" horizontalCenter="0" verticalCenter="0">
 	</e:Group>
 	<e:Group id="Group_UILayer" width="100%" height="100%" horizontalCenter="0" verticalCenter="0" x="10" y="10">
-		<e:Group id="Group_PlaceTool" x="125" y="1020">
-			<e:HSlider id="HSilider_Size" width="500" height="50" x="0" y="0" anchorOffsetX="0" anchorOffsetY="0" maximum="4" value="2"/>
-			<e:Button id="Button_Rotate" label="旋转" x="121.15" y="82.85"/>
-			<e:Button id="Button_Flip" label="翻转" x="275.15" y="82.85"/>
-			<e:Button id="Button_OK" label="好的" x="125.15" y="165.58"/>
-			<e:Button id="Button_Delete" label="删除" x="275.15" y="165.58"/>
+		<e:Group id="Group_PhotoHead" x="-1" y="30" locked="true">
+			<e:Image source="ui_craft_titleback" x="0" y="0"/>
+			<e:Image x="115" y="30" source="ui_craft_title_text"/>
 		</e:Group>
-		<e:Group id="Group_IngBox" x="0" height="700" anchorOffsetY="540" y="1334">
-			<e:Group id="Group_Box" width="100%" height="540" y="0" x="0"/>
+		<e:Group id="Group_PlaceTool" y="1020" x="375" width="2">
+		</e:Group>
+		<e:Group id="Group_IngBox" x="0" height="700" anchorOffsetY="540" y="1334" locked="true">
+			<e:Group id="Group_Box" width="100%" height="540" y="0" x="0">
+			</e:Group>
 			<e:Button id="Button_PrevPage" label="" y="188" x="0">
 				<e:skinName>
 					<e:Skin states="up,down,disabled">
@@ -32,22 +32,40 @@
 				</e:skinName>
 			</e:Button>
 		</e:Group>
-		<e:Group id="Group_Step" y="100" anchorOffsetX="0" width="480" horizontalCenter="0">
+		<e:Group id="Group_Step" y="100" anchorOffsetX="0" width="480" horizontalCenter="0" locked="true">
 			<e:Image id="Img_Step0" x="40" y="0" source="ui_craft_tab0" anchorOffsetX="40" anchorOffsetY="40"/>
 			<e:Image id="Img_Step1" x="140" y="0" source="ui_craft_tab1" anchorOffsetX="40" anchorOffsetY="40"/>
 			<e:Image id="Img_Step2" x="240" y="0" source="ui_craft_tab2" anchorOffsetX="40" anchorOffsetY="40"/>
 			<e:Image id="Img_Step3" x="340" y="0" source="ui_craft_tab3" anchorOffsetX="40" anchorOffsetY="40"/>
 			<e:Image id="Img_Step4" x="440" y="0" source="ui_craft_tab4" anchorOffsetX="40" anchorOffsetY="40"/>
 		</e:Group>
-		<e:Button id="Button_NextStep" label="" x="560" y="800" skinName="Button_Craft_Next"/>
+		<e:Group id="Group_Hint" x="36" y="161">
+			<e:Image y="0" source="ui_craft_hint_back" x="0"/>
+			<e:Label id="Label_HintText" text="Label" x="0" y="0" width="678" height="73" textAlign="center" verticalAlign="middle" size="30" textColor="0x6d513a"/>
+		</e:Group>
+		<e:Group id="Group_PhotoMask" anchorOffsetX="341" anchorOffsetY="335" x="375" y="604" locked="true">
+			<e:Image y="0" source="ui_craft_photomask" anchorOffsetX="0" anchorOffsetY="0" x="0"/>
+			<e:Rect id="Mask_UserPortrait" width="146" height="146" x="80" y="650" ellipseWidth="146" fillAlpha="1" strokeColor="0x000000" strokeWeight="2" ellipseHeight="146"/>
+			<e:Image id="Img_UserPortrait" width="146" height="146" x="80" y="650"/>
+			<e:Rect width="146" height="146" x="80" y="650" ellipseWidth="146" fillAlpha="0" strokeColor="0x000000" strokeWeight="2" ellipseHeight="146"/>
+			<e:Label id="Label_UserName" text="Label" x="256" y="706" size="34" textColor="0x6d513a"/>
+		</e:Group>
+		<e:Rect id="Rect_PhotoTaker" width="750" height="600" x="400" y="572" anchorOffsetX="375" anchorOffsetY="300" fillAlpha="0" strokeColor="0xf40000"/>
+		<e:Group id="Group_PhotoButtons" x="50" y="1130.45" locked="true">
+			<e:Button id="Button_CraftDone" label="Button" x="352.5" y="0" skinName="CraftDoneButton"/>
+			<e:Button id="Button_ShareNoodle" label="Button" x="0" y="0" skinName="CraftShareButton"/>
+		</e:Group>
+		<e:Button id="Button_NextStep" label="下一步" x="560" y="872" skinName="GameButtonYellow" width="180" height="72" anchorOffsetY="72"/>
 		<e:Button id="Button_Prev" label="" x="12.5" y="50">
 			<e:skinName>
-				<e:Skin states="up,down,disabled">
+			<e:Skin states="up,down,disabled">
 				<e:Image width="100%" height="100%" source="ui_craft_backbutton_up" source.down="ui_craft_backbutton_down" source.disabled="ui_craft_backbutton_up"/>
 				<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
-				</e:Skin>
+			</e:Skin>
 			</e:skinName>
 		</e:Button>
+		<e:Button id="Button_TareList" label="出来" x="16" y="774" width="195" height="98" skinName="GameButtonYellow" anchorOffsetY="98"/>
+		<e:Button id="Button_Handbook" label="Button" x="19" y="751" skinName="CraftHandBookButton" anchorOffsetY="121"/>
 	</e:Group>
 	<e:Image width="100%" top="0" horizontalCenter="0" source="ui_craft_border" fillMode="repeat" scaleY="-1"/>
 	<e:Image id="Img_BottomBorder" width="100%" horizontalCenter="0" source="ui_craft_border" fillMode="repeat" anchorOffsetY="52" y="1334"/>

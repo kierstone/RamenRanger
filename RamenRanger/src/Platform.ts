@@ -21,10 +21,11 @@ declare interface Platform {
      * @param {number} sWidth 截屏区域宽度
      * @param {number} sHeight 截屏区域高度
      * @param {number} stageWidth 当前的stage.stageWidth;
+     * @param {number} stageHeight 当前的stage.stageHeight;
      * @param {any} nextFuncCaller 完成的话执行的函数的宿主，没有就不会执行
      * @param {any} nextFunc (nextFuncCaller:any, shareSuccessful:boolean)，完成执行的函数
      */
-    shareGame(titleText,sX,sY,sWidth,sHeight,stageWidth,nextFuncCaller, nextFunc):Promise<any>;
+    shareGame(titleText,sX,sY,sWidth,sHeight,stageWidth,stageHeight,nextFuncCaller, nextFunc):Promise<any>;
 }
 
 
@@ -32,7 +33,7 @@ class DebugPlatform implements Platform {
 
     async createLoginButton(nextFunc, thisObj) {
         if (nextFunc) nextFunc(thisObj);
-        return { nickName: "施展", avatarUrl:"" };
+        return { nickName: "鲁大师", avatarUrl:"" };
     }
     async login() {
         return {
@@ -41,9 +42,9 @@ class DebugPlatform implements Platform {
         }
     }
     async getUserInfo(login){
-        return { nickName: "施展" };
+        return { nickName: "鲁大师", avatarUrl:"icon_default"  };
     }
-    async shareGame(titleText,sX,sY,sWidth,sHeight,stageWidth,nextFuncCaller, nextFunc){
+    async shareGame(titleText,sX,sY,sWidth,sHeight,stageWidth,stageHeight,nextFuncCaller, nextFunc){
         if (nextFunc && nextFuncCaller){
             nextFunc(nextFuncCaller, true);
         }

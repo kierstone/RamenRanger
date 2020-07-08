@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HorizontalFoodCourt_StoreUISkin" width="750" height="2000" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="172fc789ca3" ></w:Config>
+	<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" fillAlpha="0.5" locked="true"/>
+	<e:Group id="Group_Window" y="500" horizontalCenter="0">
+		<e:Button id="Button_Cancel" label="不吃了(饱腹-5)" x="370" y="-250" anchorOffsetX="0" width="298" anchorOffsetY="0" height="126" skinName="GameButtonGreen"/>
+		<e:Image id="Img_Port" x="0" y="0" source="npc_half_port_0" anchorOffsetX="0" anchorOffsetY="225" scaleX="2" scaleY="2"/>
+		<e:Image id="Img_Back" width="700" height="350" x="0" y="0" source="ui_dialog_back" anchorOffsetX="0" anchorOffsetY="0" scale9Grid="25,31,50,43"/>
+		<e:Label id="Label_Dialog" text="" x="30" y="35" anchorOffsetX="0" width="620" anchorOffsetY="0" height="160" size="40" textColor="0x6D513A"/>
+	</e:Group>
+</e:Skin>

@@ -17,6 +17,13 @@ var BrothModel = (function () {
         this.name = json["name"] ? json["name"] : json["id"];
         this.backColor = json["backColor"] ? json["backColor"] : 0x000000;
         this.coverAlpha = json["coverAlpha"] ? json["coverAlpha"] : 0.18;
+        this.rare = json["rare"] ? json["rare"] : 0;
+        this.cost = json["cost"] ? json["cost"] : 0;
+        this.pungency = json["pungency"] ? json["pungency"] : 0;
+        this.spicy = json["spicy"] ? json["spicy"] : 0;
+        this.sweet = json["sweet"] ? json["sweet"] : 0;
+        this.salty = json["salty"] ? json["salty"] : 0;
+        this.sour = json["sour"] ? json["sour"] : 0;
         this.coverColor = new Array();
         if (json["coverColor"]) {
             var cc = json["coverColor"];
@@ -112,6 +119,14 @@ var BrothModel = (function () {
     return BrothModel;
 }());
 __reflect(BrothModel.prototype, "BrothModel");
+var LearntBroth = (function () {
+    function LearntBroth(model) {
+        this.vote = 0;
+        this.model = model;
+    }
+    return LearntBroth;
+}());
+__reflect(LearntBroth.prototype, "LearntBroth");
 var BrothObj = (function () {
     function BrothObj(model) {
         this.model = model;

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="CraftShareButton" width="315" height="115" currentState="up" xmlns:e="http://ns.egret.com/eui" states="up,down,disabled" >
+    <e:Image width="100%" height="100%" source="ui_button_normal_up_png" horizontalCenter="0" verticalCenter="0" source.down="ui_button_normal_down_png"/>
+	<e:Image x="35" y="25" source="ui_icon_dialog"/>
+	<e:Label text="分享" x="157.5" y="38.5" textColor="0x6d513a" size="38"/>
+</e:Skin>

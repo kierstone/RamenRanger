@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,bow_bowl_json,catalog_json,rec_recipt_json,icons_json,character_animinfo_json,city_shanghai_json,bus_default_json,bus_default2_json,character_schoolgirl_json,street_shanghai_json,ingredient_test_json,ui_craft_json,broth_json,noodle_steam_json,bowl_json,ingredient_json",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,bow_bowl_json,catalog_json,rec_recipt_json,character_animinfo_json,city_shanghai_json,bus_default_json,bus_default2_json,character_schoolgirl_json,street_shanghai_json,ingredient_test_json,broth_json,noodle_steam_json,ingredient_json,bowl_json,ui_button_green_up_png,ui_button_green_down_png,ui_button_normal_down_png,ui_button_normal_up_png,icons_json,ui_craft_json,travel_map_json,stall_json,npc_halfport_json,food_court_dish_json,random_port_json",
 			"name": "preload"
 		}
 	],
@@ -147,12 +147,6 @@
 			"name": "rec_recipt_json"
 		},
 		{
-			"url": "assets/image/icons.json",
-			"type": "sheet",
-			"name": "icons_json",
-			"subkeys": "icon_default,icon_ingredient_chopped_green_orion,icon_ingredient_lard_oil,icon_ingredient_poached_eggs,icon_ingredient_thin_noodles"
-		},
-		{
 			"url": "assets/json/character_animinfo.json",
 			"type": "json",
 			"name": "character_animinfo_json"
@@ -191,33 +185,91 @@
 			"name": "ingredient_test_json"
 		},
 		{
-			"url": "assets/image/ui_craft.json",
-			"type": "sheet",
-			"name": "ui_craft_json",
-			"subkeys": "ui_bowl_stick1,ui_craft_back,ui_craft_border,ui_craft_button_back,ui_craft_button_left,ui_craft_button_next,ui_craft_button_next1,ui_craft_button_right,ui_craft_hint_back,ui_craft_ingredientbox,ui_craft_ingredientname,ui_craft_tab0,ui_craft_tab1,ui_craft_tab2,ui_craft_tab3,ui_craft_tab4"
-		},
-		{
 			"url": "assets/json/broth.json",
 			"type": "json",
 			"name": "broth_json"
 		},
 		{
-			"name": "noodle_steam_json",
-			"type": "sheet",
 			"url": "assets/image/noodle_steam.json",
+			"type": "sheet",
+			"name": "noodle_steam_json",
 			"subkeys": "zhengqi_0,zhengqi_1,zhengqi_2,zhengqi_3,zhengqi_4,zhengqi_5,zhengqi_6,zhengqi_7"
 		},
 		{
-			"name": "bowl_json",
+			"url": "assets/image/ingredient.json",
 			"type": "sheet",
-			"url": "assets/image/bowl.json",
-			"subkeys": "scene_bowl_normal,bowl_normal"
+			"name": "ingredient_json",
+			"subkeys": "broth_highlight,eating_noodle,icon_ketchup,icon_salt,icon_soy,ingredient_beef,ingredient_broad_bean,ingredient_cantonese_sausage,ingredient_carrot,ingredient_clam,ingredient_coriander,ingredient_cucumber,ingredient_fish_board,ingredient_green_vegetable,ingredient_japanese_barbecue,ingredient_ketchup,ingredient_lettuce,ingredient_lotus_root,ingredient_mushroom_pork_ball,ingredient_mushrooms,ingredient_mussel,ingredient_noodle_normal,ingredient_onion,ingredient_onion_2,ingredient_orion_ring,ingredient_poached_egg,ingredient_prawn,ingredient_salt,ingredient_soy,ingredient_spiced_corned_egg,ingredient_sprouts,ingredient_tofu,ingredient_tonkatsu,ingredient_turnip,ingredient_venetian_pouch,scene_beef,scene_broad_bean,scene_cantonese_sausage,scene_carrot,scene_clam,scene_coriander,scene_cucumber,scene_fish_board,scene_green_vegetable,scene_japanese_barbecue,scene_lettuce,scene_lotus_root,scene_mushroom_pork_ball,scene_mushrooms,scene_mussel,scene_noodle,scene_onion,scene_onion_2,scene_orion_ring,scene_poached_egg,scene_prawn,scene_spiced_corned_egg,scene_sprouts,scene_tofu,scene_tonkatsu,scene_turnip,scene_venetian_pouch"
 		},
 		{
-			"name": "ingredient_json",
+			"url": "assets/image/bowl.json",
 			"type": "sheet",
-			"url": "assets/image/ingredient.json",
-			"subkeys": "scene_venetian_pouch,scene_tonkatsu,scene_tofu,scene_prawn,scene_mussel,scene_mushrooms,scene_lotus_root,scene_japanese_barbecue,scene_green_vegetable,scene_fish_board,scene_clam,scene_cantonese_sausage,ingredient_venetian_pouch,ingredient_tonkatsu,ingredient_tofu,ingredient_prawn,ingredient_mussel,ingredient_mushrooms,ingredient_lotus_root,ingredient_japanese_barbecue,ingredient_green_vegetable,ingredient_fish_board,ingredient_clam,ingredient_cantonese_sausage,scene_turnip,scene_onion,scene_onion_2,scene_noodle,scene_coriander,scene_beef,ingredient_turnip,ingredient_sprouts,ingredient_spiced_corned_egg,ingredient_soy,ingredient_salt,ingredient_poached_egg,ingredient_orion_ring,ingredient_onion,ingredient_onion_2,ingredient_noodle_normal,ingredient_mushroom_pork_ball,ingredient_lettuce,ingredient_ketchup,ingredient_cucumber,ingredient_coriander,ingredient_carrot,ingredient_broad_bean,ingredient_beef,icon_soy,icon_salt,icon_ketchup,broth_highlight,scene_carrot,scene_cucumber,scene_lettuce,scene_mushroom_pork_ball,scene_orion_ring,scene_poached_egg,scene_spiced_corned_egg,scene_sprouts,scene_broad_bean,eating_noodle"
+			"name": "bowl_json",
+			"subkeys": "bowl_normal,scene_bowl_normal"
+		},
+		{
+			"url": "assets/image/png/ui_button_green_up.png",
+			"type": "image",
+			"name": "ui_button_green_up_png",
+			"scale9grid": "22,20,170,31"
+		},
+		{
+			"url": "assets/image/png/ui_button_green_down.png",
+			"type": "image",
+			"name": "ui_button_green_down_png",
+			"scale9grid": "20,20,171,33"
+		},
+		{
+			"url": "assets/image/png/ui_button_normal_down.png",
+			"type": "image",
+			"name": "ui_button_normal_down_png",
+			"scale9grid": "20,19,172,35"
+		},
+		{
+			"url": "assets/image/png/ui_button_normal_up.png",
+			"type": "image",
+			"name": "ui_button_normal_up_png",
+			"scale9grid": "22,20,170,32"
+		},
+		{
+			"name": "icons_json",
+			"type": "sheet",
+			"url": "assets/image/icons.json",
+			"subkeys": "icon_default"
+		},
+		{
+			"name": "ui_craft_json",
+			"type": "sheet",
+			"url": "assets/image/ui_craft.json",
+			"subkeys": "ui_icon_dialog,ui_craft_button_next,ui_craft_moving_sign,ui_craft_title_text,ui_craft_cycle_button_down,ui_dialog_button_remove,ui_craft_icon_rotateplus,ui_craft_titleback,ui_craft_button_delete_up,ui_craft_sizesmall_back,ui_craft_backbutton_down,ui_craft_ingredientname,ui_craft_backbutton_up,ui_icon_ok,ui_craft_sizebig_back,ui_craft_sizebar_puller,ui_craft_back,ui_craft_ingredientbox,ui_dialog_title,ui_craft_cycle_button_up,ui_dialog_back,ui_cycle_button_down,ui_craft_border,ui_craft_leftpage_up,ui_icon_craftbook,ui_craft_button_next1,ui_craft_leftpage_down,ui_dialog_button_close,ui_craft_tab4,ui_bowl_stick1,ui_icon_craftbook_down,ui_craft_sizebar_back,ui_cycle_button_up,ui_craft_tab2,ui_craft_button_delete_down,ui_craft_tab3,ui_craft_tab1,ui_craft_tab0,ui_craft_icon_ok,ui_craft_sizebar_filler,ui_craft_icon_rotateminus,ui_craft_photomask,ui_craft_hint_back,ui_craft_icon_trash,ui_craft_icon_flip,ui_craft_selected,ui_dialog_text_back,ui_craft_ingredient_slot"
+		},
+		{
+			"name": "travel_map_json",
+			"type": "sheet",
+			"url": "assets/image/travel_map.json",
+			"subkeys": "stall_0_d,stall_1_d,stall_2_d,stall_3_d"
+		},
+		{
+			"name": "stall_json",
+			"type": "json",
+			"url": "assets/json/stall.json"
+		},
+		{
+			"name": "npc_halfport_json",
+			"type": "sheet",
+			"url": "assets/image/npc_halfport.json",
+			"subkeys": "npc_half_port_3,npc_half_port_2,npc_half_port_0,npc_half_port_1"
+		},
+		{
+			"name": "food_court_dish_json",
+			"type": "json",
+			"url": "assets/json/food_court_dish.json"
+		},
+		{
+			"name": "random_port_json",
+			"type": "sheet",
+			"url": "assets/image/random_port.json",
+			"subkeys": "female_brow_0,female_middle_hair_5,female_mouth_6,female_mouth_7,female_middle_hair_4,female_brow_1,female_brow_3,female_eye_8,female_middle_hair_6,female_mouth_5,female_mouth_4,female_middle_hair_7,female_eye_9,female_brow_2,female_brow_6,female_mouth_0,female_middle_hair_3,female_middle_hair_2,female_mouth_1,female_brow_7,female_brow_5,female_mouth_3,female_middle_hair_0,female_middle_hair_1,female_mouth_2,female_brow_4,female_glasses_3,female_eyeball_2,female_eyeball_3,female_glasses_2,female_glasses_0,female_eyeball_1,female_eyeball_0,female_glasses_1,female_glasses_5,female_eyeball_4,female_eyeball_5,female_glasses_4,female_neck,female_eyeball_7,female_eyeball_6,female_mouth_10,female_back_hair_6,female_back_hair_7,female_mouth_11,female_mouth_13,female_back_hair_5,female_eyeball_8,female_eyeball_9,female_back_hair_4,female_nose_4,female_mouth_12,female_nose_0,female_back_hair_0,female_back_hair_1,female_nose_1,female_nose_3,female_back_hair_3,female_back_hair_2,female_nose_2,female_mouth_14,female_brow_9,female_eye_2,female_eye_3,female_brow_8,female_eye_1,female_eye_0,female_face_1,female_eye_4,female_mouth_9,female_mouth_8,female_cloth_2,female_eye_5,female_face_0,female_face_2,female_eye_7,female_cloth_0,female_cloth_1,female_eye_6,female_face_3"
 		}
 	]
 }

@@ -19,7 +19,6 @@ var SpriteGroup = (function (_super) {
     };
     /**
      * 经过比较，我是否改到下面一层
-     * @returns {boolean} true代表我该去下一层
      */
     SpriteGroup.prototype.NeedToSendMeBack = function (compareGroup) {
         if (!compareGroup)
@@ -27,8 +26,6 @@ var SpriteGroup = (function (_super) {
         return this.y < compareGroup.y;
     };
     SpriteGroup.prototype.Update = function () { };
-    SpriteGroup.prototype.FixedUpdate = function () { return false; };
-    ;
     return SpriteGroup;
 }(eui.Group));
 __reflect(SpriteGroup.prototype, "SpriteGroup");

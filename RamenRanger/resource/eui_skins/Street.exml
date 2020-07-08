@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="StreetSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
-	<w:Config id="17158016b24" ></w:Config>
-	<e:Group id="gameLayer" width="100%" height="100%" x="0" y="0"/>
-</e:Skin>

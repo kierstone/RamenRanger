@@ -1,0 +1,8 @@
+{
+    "data":[
+        {"id":0, "name": "一层店", "source": "stall_0", "sell_tag":[]},
+        {"id":1, "name": "二层店", "source": "stall_1", "sell_tag":[]},
+        {"id":2, "name": "拉面摊", "source": "stall_2", "sell_tag":["meat","vegetable"]},
+        {"id":3, "name": "寿司店", "source": "stall_3", "sell_tag":["meat","seafood"]}
+    ]
+}

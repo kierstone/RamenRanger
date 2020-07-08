@@ -13,6 +13,7 @@ class IngredientIconInBox extends eui.Component implements  eui.UIComponent {
 
 	public constructor(id:string, ingredient:any, icon:string, caller:CraftNoodle, func:(caller:CraftNoodle, ing:IngredientModel)=>void, broth:BrothModel = null) {
 		super();
+		this.id = id;
 		this.ingredient = ingredient;
 		this.eveCaller = caller;
 		this.eveFunc = func;
@@ -51,7 +52,7 @@ class IngredientIconInBox extends eui.Component implements  eui.UIComponent {
 
 	public SetSelected(s:boolean){
 		this.selected = s;
-		this.Img_Select.visible = s;
+		if (this.Img_Select) this.Img_Select.visible = s;
 	}
 
 	/**
@@ -80,6 +81,11 @@ class IngredientIconInBox extends eui.Component implements  eui.UIComponent {
 		brothHL.anchorOffsetY = brothHL.height / 2;
 		brothHL.x = shp.x;
 		brothHL.y = shp.y;
+
+		if (this.Img_Select){
+			this.Img_Select.zIndex = Number.MAX_VALUE;
+			this.sortChildren();
+		}
 	}
 	
 }

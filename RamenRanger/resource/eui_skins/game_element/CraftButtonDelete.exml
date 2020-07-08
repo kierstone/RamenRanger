@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="CraftButtonDelete" width="78" height="78" currentState="up" xmlns:e="http://ns.egret.com/eui" states="up,down,disabled" >
+	<e:Image horizontalCenter="0" verticalCenter="0" source="ui_craft_button_delete_up" source.down="ui_craft_button_delete_down"/>
+	<e:Image source="ui_craft_icon_trash" horizontalCenter="0" verticalCenter="-4"/>
+</e:Skin>

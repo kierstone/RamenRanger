@@ -51,32 +51,58 @@ class WxgamePlatform {
         })
     }
 
-    shareGame(titleText,sX,sY,sWidth,sHeight,stageWidth,nextFuncCaller, nextFunc){
+    shareGame(titleText,sX,sY,sWidth,sHeight,stageWidth,stageHeight,nextFuncCaller, nextFunc){
         let sysInfo = wx.getSystemInfoSync();
-        let scales = stageWidth / sysInfo.screenWidth;
+        let scaleX = sysInfo.windowWidth / stageWidth * sysInfo.pixelRatio;
+        let scaleY = sysInfo.windowHeight / stageHeight * sysInfo.pixelRatio;
+        
         return new Promise((resolve, reject)=>{
-            wx.shareAppMessage({
-                title:titleText,
-                imageUrl:canvas.toTempFilePathSync({
-                    x: sX * scales,
-                    y: sY * scales,
-                    width: sWidth * scales,
-                    height: sHeight * scales,
-                    destWidth: 500,
-                    destHeight: 400
-                }),
+            canvas.toTempFilePath({
+                x: sX * scaleX,
+                y: sY * scaleY,
+                width: sWidth * scaleX,
+                height: sHeight * scaleY,
+                destWidth: 500,
+                destHeight: 400,
                 success:(res)=>{
-                    console.log("转发成功",res);
-                    resolve(res);
+                    console.log("photo taken");
+                    wx.shareAppMessage({
+                        title:titleText,
+                        imageUrl : res.tempFilePath
+                    })
+                    if (nextFuncCaller && nextFunc){
+                        nextFunc(nextFuncCaller, true);
+                    }
                 },
                 fail:(err)=>{
-                    console.log("转发失败",err);
-                    reject(err);
+                    console.warn("take photo failed");
+                    if (nextFuncCaller && nextFunc){
+                        nextFunc(nextFuncCaller, false);
+                    }
                 }
             })
-            if (nextFuncCaller && nextFunc){
-                nextFunc(nextFuncCaller, true);
-            }
+            // wx.shareAppMessage({
+            //     title:titleText,
+            //     imageUrl:canvas.toTempFilePathSync({
+            //         x: sX * scales,
+            //         y: sY * scales,
+            //         width: sWidth * scales,
+            //         height: sHeight * scales,
+            //         destWidth: 500,
+            //         destHeight: 400
+            //     }),
+            //     success:(res)=>{
+            //         console.log("转发成功",res);
+            //         resolve(res);
+            //     },
+            //     fail:(err)=>{
+            //         console.log("转发失败",err);
+            //         reject(err);
+            //     }
+            // })
+            // if (nextFuncCaller && nextFunc){
+            //     nextFunc(nextFuncCaller, true);
+            // }
         })
     }
 

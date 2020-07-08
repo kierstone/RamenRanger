@@ -8,82 +8,149 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
  * 而吃拉面的相关属性也放在这里，并不放在角色里，角色是一个被读取用的数据源
  */
 var EatingRamen = (function () {
-    function EatingRamen(cha, ramen) {
+    /**
+     * @param {CharacterObj} cha 谁吃面
+     * @param {RamenObj} ramen 吃的什么面
+     * @param {FoodCourtDishObj} dishInfo 要吃的食物，可以是null，毕竟只有小吃街才有
+     * @param {boolean} favour 是否喜欢，如果是美食街，应该有喜欢不喜欢，否则根据算出来的计算
+     */
+    function EatingRamen(cha, ramen, dishInfo, gameType) {
         //相关数据
         this.hungry = 100; //吃面的人的饥饿度，这个未来可以有算法，现在先100开始，到0就吃饱吃撑了
         this.heart = 0; //吃面开始到现在已经获得了多少爱心了
-        this.turnId = 0;
-        this.gameState = EatRamenGameState.Enter;
+        this.finalAction = CharacterAction.Stand; //TODO 吃完以后要做的动作，先写死
         this.cha = cha;
+        this.buddyInfo = cha.buddyInfo;
         this.ramen = ramen;
+        this.gameType = gameType;
+        this.learnedIngredientInfo = new Array();
+        this.dishInfo = dishInfo;
+        this.RunThisGame();
     }
     /**
-     * 执行一个回合的逻辑思维，这个只有在回合开始一瞬间执行了
-     * 当然是在EatRamenGameState.Eat才会运行
+     * 从头到尾模拟吃掉一碗面
      */
-    EatingRamen.prototype.RunATurn = function () {
-        //回合数先提高
-        this.turnId += 1;
-        //先看看你吃饱了就结束了
-        if (this.hungry <= 0) {
-            this.gameState = EatRamenGameState.ReadyToLeave;
-            this.cha.ChangeAction(this.cha.direction, CharacterAction.Stand);
-            return; //TODO 没东西吃了，应该去后续状态
+    EatingRamen.prototype.RunThisGame = function () {
+        this.turnResult = new Array();
+        this.toEatRamen = this.ramen.Clone(true);
+        var turnId = 0;
+        while (this.hungry > 0 && this.toEatRamen.HasFinished() == false) {
+            //选择要吃啥
+            var eatIng = this.ThisTurnEat(turnId);
+            if (eatIng == null) {
+                break; //TODO 没东西吃了，应该去后续状态
+            }
+            //根据吃的东西改变属性
+            //根据吃的东西生成EatTurnAction和EatingAction
+            var toEatIng = this.ramen.GetToppingByUniqueId(eatIng["ingredient"]);
+            this.ThisTurnModify(turnId, toEatIng, eatIng["isNoodle"] == true, eatIng["noodleReduce"]);
+            turnId += 1;
         }
-        //选择要吃啥
-        var eatIng = this.ThisTurnEat();
-        if (eatIng == null) {
-            this.gameState = EatRamenGameState.ReadyToLeave;
-            this.cha.ChangeAction(this.cha.direction, CharacterAction.Stand);
-            return; //TODO 没东西吃了，应该去后续状态
-        }
-        //根据吃的东西改变属性
-        //根据吃的东西生成EatTurnAction和EatingAction
-        this.ThisTurnModify(eatIng["ingredient"], eatIng["isNoodle"]);
     };
     /**
      * 从拉面里选出这回合吃啥，当然目前是测试的，今后要改规则
-     * @returns {Object} {ingredient:IngredientObj, isNoodle:boolean} 返回吃的东西以及是否是面条
+     * @returns {Object} {ingredient:string(IngredientObj.uniqueId), isNoodle:boolean, noodleReduce:number(吃了百分之多少)} 返回吃的东西以及是否是面条
      */
-    EatingRamen.prototype.ThisTurnEat = function () {
-        if ((this.turnId % 2) == 0) {
-            //偶数回合吃料优先，TODO 找出最想吃的
-            if (this.ramen.topping.length > 0) {
-                var sIndex = Math.floor(Math.random() * this.ramen.topping.length);
+    EatingRamen.prototype.ThisTurnEat = function (turnId) {
+        if (this.toEatRamen.HasFinished() == true)
+            return null;
+        var noodlePerTaste = Math.min((this.ramen.topping.length > 0 ? (1 / this.ramen.topping.length + 1) : 0.2), 0.2); //每一口吃掉多少
+        if ((turnId % 2) == 1) {
+            //奇数回合吃料优先，TODO 找出最想吃的
+            var ingForEat = this.toEatRamen.GetRandomToppingForEat();
+            if (this.toEatRamen.topping.length > 0 && ingForEat) {
+                var sIndex = this.toEatRamen.topping.indexOf(ingForEat);
                 return {
-                    "ingredient": this.ramen.topping.splice(sIndex, 1)[0],
-                    "isNoodle": false
+                    "ingredient": this.toEatRamen.topping.splice(sIndex, 1)[0].uniqueId,
+                    "isNoodle": false,
+                    "noodleReduce": 0
                 };
             }
-            else if (this.ramen.noodlePercentage > 0) {
-                this.ramen.noodlePercentage -= 0.12; //TODO 先写死一口吃12%，应该来自于属性
+            else if (this.toEatRamen.noodlePercentage > 0) {
+                this.toEatRamen.noodlePercentage -= noodlePerTaste; //TODO 先写死一口吃12%，应该来自于属性
                 return {
-                    "ingredient": this.ramen.model.noodles,
-                    "isNoodle": true
+                    "ingredient": this.toEatRamen.model.noodles.uniqueId,
+                    "isNoodle": true,
+                    "noodleReduce": noodlePerTaste
                 };
             }
         }
         else {
-            if (this.ramen.noodlePercentage > 0) {
-                this.ramen.noodlePercentage -= 0.06; //TODO 先写死一口吃6%，应该来自于属性
+            if (this.toEatRamen.noodlePercentage > 0) {
+                this.toEatRamen.noodlePercentage -= noodlePerTaste; //TODO 先写死一口吃6%，应该来自于属性
                 return {
-                    "ingredient": this.ramen.model.noodles,
-                    "isNoodle": true
+                    "ingredient": this.toEatRamen.model.noodles.uniqueId,
+                    "isNoodle": true,
+                    "noodleReduce": noodlePerTaste
                 };
             }
-            else if (this.ramen.topping.length > 0) {
-                var sIndex = Math.floor(Math.random() * this.ramen.topping.length);
+            else if (this.toEatRamen.topping.length > 0 && this.toEatRamen.GetRandomToppingForEat() != null) {
+                var ingForEat = this.toEatRamen.GetRandomToppingForEat();
+                var sIndex = this.toEatRamen.topping.indexOf(ingForEat);
                 return {
-                    "ingredient": this.ramen.topping.splice(sIndex, 1)[0],
-                    "isNoodle": false
+                    "ingredient": this.toEatRamen.topping.splice(sIndex, 1)[0].uniqueId,
+                    "isNoodle": false,
+                    "noodleReduce": 0
                 };
             }
         }
         return null;
     };
     //根据吃的东西改变属性，并且获得行为列表 TODO 都是临时写死的
-    EatingRamen.prototype.ThisTurnModify = function (eatIng, isNoodle) {
+    EatingRamen.prototype.ThisTurnModify = function (turnId, eatIng, isNoodle, noodleReducePercent) {
         this.hungry -= 1;
+        switch (this.gameType) {
+            case EatGameType.FoodCourt:
+                {
+                    this.turnResult.push(this.ThisTurnEatActionInFoodCourt(eatIng, isNoodle, noodleReducePercent));
+                    this.ThisTurnIngGatherInFoodCourt(turnId, eatIng, isNoodle);
+                }
+                break;
+            case EatGameType.EatNoodle:
+                {
+                    this.turnResult.push(this.ThisTurnInNormalEat(eatIng, isNoodle, noodleReducePercent));
+                }
+                break;
+        }
+    };
+    //如果是在小吃街模式
+    EatingRamen.prototype.ThisTurnEatActionInFoodCourt = function (eatIng, isNoodle, noodleReducePercent) {
+        var satisify = this.buddyInfo.isPlayer == true ? 100 :
+            ((this.dishInfo && this.buddyInfo.favourType == this.dishInfo.model.type) ?
+                this.buddyInfo.favourLevel * 10 : 0);
+        var badTaste = BadTaste.None;
+        return new EatTurnAction(this.cha, eatIng, 0, isNoodle, noodleReducePercent, badTaste);
+    };
+    EatingRamen.prototype.ThisTurnIngGatherInFoodCourt = function (turnId, eatIng, isNoodle) {
+        var favPlus = Utils.RandomInt(7, 14);
+        var learnedChance = (this.dishInfo && this.buddyInfo.favourType == this.dishInfo.model.type) ?
+            (this.buddyInfo.favourLevel * favPlus + 30) : 30; //基础习得率30%，喜欢吃就提高概率
+        if (Utils.RandomInt(0, 100) + learnedChance < 100)
+            return; //概率不够学会
+        if (isNoodle == true) {
+            //有可能学到汤底或者面条
+            var mayLearn = new Array();
+            //如果有可能学到汤
+            var bro = this.dishInfo.BrothInReward();
+            if (bro)
+                mayLearn.push(bro);
+            //如果有可能学到面条
+            var nod = this.dishInfo.IngredientInReward(eatIng.model.id);
+            if (nod)
+                mayLearn.push(nod);
+            //随机获得
+            if (mayLearn.length <= 0)
+                return;
+            this.learnedIngredientInfo.push(new EatGameIngredientGatherInfo(turnId, mayLearn[Utils.GetRandomIndexFromArray(mayLearn.length, 1)[0]]));
+        }
+        else {
+            var ingInfo = this.dishInfo.IngredientInReward(eatIng.model.id);
+            if (ingInfo)
+                this.learnedIngredientInfo.push(new EatGameIngredientGatherInfo(turnId, ingInfo));
+        }
+    };
+    //正常吃面模式
+    EatingRamen.prototype.ThisTurnInNormalEat = function (eatIng, isNoodle, noodleReducePercent) {
         var satisify = Math.round(Math.random() * 200 - 100);
         var badTaste = BadTaste.None;
         var ranRes = Math.random();
@@ -99,49 +166,26 @@ var EatingRamen = (function () {
         else if (ranRes >= 0.8) {
             badTaste = BadTaste.TooHeavy;
         }
-        if (!this.turnResult) {
-            this.turnResult = new EatTurnAction(eatIng, satisify, isNoodle, badTaste);
-        }
-        else {
-            this.turnResult.badTaste = badTaste;
-            this.turnResult.eatIngredient = eatIng;
-            this.turnResult.satisfy = satisify;
-            this.turnResult.isEatingNoodles = isNoodle;
-        }
-        this.turnActions = this.turnResult.GatherActionList(this.cha);
-    };
-    //返回是否立即重新绘制RamenSprite等内容
-    EatingRamen.prototype.FixedUpdate = function () {
-        var requireUpdate = false;
-        switch (this.gameState) {
-            case EatRamenGameState.Eat:
-                {
-                    if (this.turnActions && this.turnActions.length > 0) {
-                        var doingOne = this.turnActions[0];
-                        if (doingOne.tick > 0) {
-                            this.cha.ChangeAction(this.cha.direction, doingOne.changeToAction);
-                            doingOne.tick -= 1;
-                        }
-                        if (doingOne.tick <= 0) {
-                            this.turnActions.shift();
-                        }
-                    }
-                    else {
-                        this.RunATurn();
-                        requireUpdate = true;
-                    }
-                }
-                break;
-        }
-        return requireUpdate;
-    };
-    /**
-     * 临时的开吃
-     */
-    EatingRamen.prototype.StartEat = function () {
-        this.gameState = EatRamenGameState.Eat;
+        return new EatTurnAction(this.cha, eatIng, satisify, isNoodle, noodleReducePercent, badTaste);
     };
     return EatingRamen;
 }());
 __reflect(EatingRamen.prototype, "EatingRamen");
+//吃东西玩法的类型
+var EatGameType;
+(function (EatGameType) {
+    EatGameType[EatGameType["EatNoodle"] = 0] = "EatNoodle";
+    EatGameType[EatGameType["FoodCourt"] = 1] = "FoodCourt";
+})(EatGameType || (EatGameType = {}));
+/**
+ * 吃面玩法中，获得食材的提示
+ */
+var EatGameIngredientGatherInfo = (function () {
+    function EatGameIngredientGatherInfo(atTurn, learnedIngredient) {
+        this.atTurn = atTurn;
+        this.learnedIngredient = learnedIngredient;
+    }
+    return EatGameIngredientGatherInfo;
+}());
+__reflect(EatGameIngredientGatherInfo.prototype, "EatGameIngredientGatherInfo");
 //# sourceMappingURL=EatingRamen.js.map

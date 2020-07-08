@@ -4,16 +4,6 @@
         "class": "CraftNoodle",
         "parentPath": ""
     },
-    "17158016b24": {
-        "path": "scene/Street.ts",
-        "class": "Street",
-        "parentPath": ""
-    },
-    "171682e2c56": {
-        "path": "element/StreetGround.ts",
-        "class": "StreetGround",
-        "parentPath": ""
-    },
     "172140b872e": {
         "path": "element/IngredientBox.ts",
         "class": "IngredientBox",
@@ -27,6 +17,71 @@
     "17231442c30": {
         "path": "scene/TestScene.ts",
         "class": "TestScene",
+        "parentPath": ""
+    },
+    "17287c8193f": {
+        "path": "element/ui/PlacingToolBox.ts",
+        "class": "PlacingToolBox",
+        "parentPath": ""
+    },
+    "1728d81fd6b": {
+        "path": "scene/msgdlg/CraftNoodle_TareList.ts",
+        "class": "CraftNoodle_TareList",
+        "parentPath": ""
+    },
+    "1728f9753fe": {
+        "path": "element/ui/TareListItem.ts",
+        "class": "TareListItem",
+        "parentPath": ""
+    },
+    "172db05e114": {
+        "path": "scene/WelcomeScene.ts",
+        "class": "WelcomeScene",
+        "parentPath": ""
+    },
+    "172fc071dae": {
+        "path": "scene/HorizontalFoodCourt.ts",
+        "class": "HorizontalFoodCourt",
+        "parentPath": ""
+    },
+    "172fc789ca3": {
+        "path": "scene/msgdlg/horizontalFoodCourt/HorizontalFoodCourt_StoreUI.ts",
+        "class": "HorizontalFoodCourt_StoreUI",
+        "parentPath": ""
+    },
+    "172fc7d1701": {
+        "path": "scene/msgdlg/horizontalFoodCourt/HorizontalFoodCourt_DishButton.ts",
+        "class": "HorizontalFoodCourt_DishButton",
+        "parentPath": ""
+    },
+    "17306c16a43": {
+        "path": "scene/msgdlg/horizontalFoodCourt/HorizontalFoodCourt_BuddyInfo.ts",
+        "class": "HorizontalFoodCourt_BuddyInfo",
+        "parentPath": ""
+    },
+    "17306fe3a48": {
+        "path": "scene/msgdlg/horizontalFoodCourt/HorizontalFoodCourt_IngredientExp.ts",
+        "class": "HorizontalFoodCourt_IngredientExp",
+        "parentPath": ""
+    },
+    "1731fea2bdd": {
+        "path": "element/ui/food_court/FoodCourt_SelectBuddyList.ts",
+        "class": "FoodCourt_SelectBuddyList",
+        "parentPath": ""
+    },
+    "173202c52b6": {
+        "path": "scene/msgdlg/FoodCourtTeamBuild.ts",
+        "class": "FoodCourtTeamBuild",
+        "parentPath": ""
+    },
+    "1732571c49e": {
+        "path": "element/ui/food_court/FoodCourt_NormalMenu.ts",
+        "class": "FoodCourt_NormalMenu",
+        "parentPath": ""
+    },
+    "17325b153ca": {
+        "path": "element/ui/food_court/FoodCourt_StoreMenu.ts",
+        "class": "FoodCourt_StoreMenu",
         "parentPath": ""
     }
 }

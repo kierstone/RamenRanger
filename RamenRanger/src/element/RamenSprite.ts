@@ -34,10 +34,16 @@ class RamenSprite extends SpriteGroup{
 		backGroup.y = -this.bowlImg.anchorOffsetY + this.ramen.model.bowl.model.sceneCenterY;
 		this.addChild(backGroup);
 
-		this.brothShape = this.ramen.model.broth.model.SceneShape(0, 0, 30);	//美术设计拉面汤的宽度是60
-		backGroup.addChild(this.brothShape);
+		if (this.ramen.model.broth){
+			this.brothShape = this.ramen.model.broth.model.SceneShape(0, 0, 30);	//美术设计拉面汤的宽度是60
+			backGroup.addChild(this.brothShape);
+		}
 
-		this.noodleImg = this.ramen.model.noodles.GatherSceneImage(backGroup, 0, 0);
+		if (this.ramen.model.noodles){
+			this.noodleImg = this.ramen.model.noodles.GatherSceneImage(backGroup, 0, 0);
+			this.noodleImg.x = this.brothShape ? this.brothShape.x : 0;
+			this.noodleImg.y = this.brothShape ? this.brothShape.y : 0;
+		}
 		
 		this.ToppingImg = new Array<Object>();
 		for (let i = 0; i < this.ramen.topping.length; i++){
@@ -59,14 +65,23 @@ class RamenSprite extends SpriteGroup{
 	public UpdateRamen(){
 		//noodles
 		let noodleScale = Math.max(0, Math.min(this.ramen.noodlePercentage, 1));
-		this.noodleImg.scaleX = this.noodleImg.scaleY = noodleScale;
-
+		if (this.noodleImg){
+			this.noodleImg.scaleX = this.noodleImg.scaleY = noodleScale;
+		}
+		
 		//TODO broth
 		
 		//ingredients
 		let index = 0;
 		while (index < this.ToppingImg.length){
 			if (this.ramen.topping.indexOf(this.ToppingImg[index]["ingredient"]) >= 0){
+				if (this.ramen.cantEatToppings.indexOf(this.ToppingImg[index]["ingredient"]) >= 0){
+					let ingImg:eui.Image = this.ToppingImg[index]["img"];
+					let ing = this.ramen.topping[this.ramen.topping.indexOf(this.ToppingImg[index]["ingredient"])];
+					if (ingImg){
+						ingImg.scaleX = ingImg.scaleY = noodleScale * ing.size;
+					}
+				}
 				index += 1;
 			}else{
 				if (this.ToppingImg[index]["img"].parent) this.ToppingImg[index]["img"].parent.removeChild(this.ToppingImg[index]["img"]);

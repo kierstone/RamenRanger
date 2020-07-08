@@ -39,6 +39,11 @@ var BowlObj = (function () {
     function BowlObj(model) {
         this.model = model;
     }
+    BowlObj.prototype.RandomPosInBowl = function () {
+        var ranRa = Math.random() * 360 / 180 * Math.PI;
+        var ranLen = Math.random() * this.model.radius * 0.9;
+        return new egret.Point(Math.cos(ranRa) * ranLen, Math.sin(ranRa) * ranLen);
+    };
     return BowlObj;
 }());
 __reflect(BowlObj.prototype, "BowlObj");

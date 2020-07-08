@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HorizontalFoodCourt_DishButtonSkin" width="200" height="440" currentState="normal" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing"  states="normal,selected"  width.selected="300" height.selected="500" height.normal="250">
+	<w:Config id="172fc7d1701" ></w:Config>
+	<e:Image width="100%" height="100%" horizontalCenter="0" verticalCenter="0" source="ui_dialog_back" scale9Grid="29,29,47,45"/>
+	<e:Label id="Label_Name" text="Label" y="20" anchorOffsetX="0" anchorOffsetY="0" size="28" textColor="0x6D513A" width="180" verticalAlign="middle" textAlign="center" height="30" horizontalCenter="0" horizontalCenter.normal="0" y.normal="215" anchorOffsetY.normal="15" horizontalCenter.selected="2" y.selected="215" anchorOffsetY.selected="15" textAlign.selected="center"/>
+	<e:Group includeIn="selected" x="20" y="280">
+		<e:Label text="主要食材" y="0" anchorOffsetX="0" anchorOffsetY="0" size="20" textColor="0x6D513A" verticalAlign="middle" textAlign="left" includeIn="selected" x="0"/>
+		<e:Rect width="260" height="1" includeIn="selected" y="20" fillColor="0x6d513a" anchorOffsetX="0" anchorOffsetY="0" x="0"/>
+		<e:Group id="Group_Ingredient" width="156" height="50" x="104" y="-30" includeIn="selected" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1">
+			<e:layout>
+				<e:TileLayout requestedColumnCount="3" horizontalGap="3" requestedRowCount="1" orientation="rows" horizontalAlign="right" verticalAlign="top"/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+	<e:Group includeIn="selected" y="350" x="20">
+		<e:Label text="喜好队友" y="0" anchorOffsetX="0" anchorOffsetY="0" size="20" textColor="0x6D513A" verticalAlign="middle" textAlign="left" includeIn="selected" x="2"/>
+		<e:Rect width="260" height="1" includeIn="selected" y="20" fillColor="0x6D513A" anchorOffsetX="0" anchorOffsetY="0" x="0"/>
+		<e:Group id="Group_Buddy" width="156" height="50" x="104" y="-30" includeIn="selected">
+			<e:layout>
+				<e:TileLayout horizontalGap="3" verticalGap="0" horizontalAlign="right" verticalAlign="top" orientation="rows" requestedRowCount="1" requestedColumnCount="3"/>
+			</e:layout>
+		</e:Group>
+	</e:Group>
+	<e:Button id="Button_Eat" label="开吃" includeIn="selected" y="397" skinName="GameButtonYellow" width="260" height="80" horizontalCenter="0"/>
+	<e:Group x="20" y="20" horizontalCenter.normal="0" top.normal="20" horizontalCenter.selected="0" top.selected="20">
+		<e:Image width="160" height="160" y="60" anchorOffsetX="0" anchorOffsetY="0" source="ui_dialog_text_back" scale9Grid="20,19,48,47" x="20" x.normal="0" y.normal="0" x.selected="0" y.selected="0"/>
+		<e:Group id="Group_Ramen" x="100" anchorOffsetX="0" anchorOffsetY="0" scaleX="2" scaleY="2" y="210" x.normal="80" y.normal="150" x.selected="80" y.selected="150"/>
+		<e:Rect id="Rect_ColorSign" width="50" height="50" x="130" y="175" anchorOffsetX="0" anchorOffsetY="0" ellipseWidth="50" strokeColor="0x6d513a" strokeAlpha="1" strokeWeight="3" x.normal="110" y.normal="115" x.selected="110" y.selected="115"/>
+	</e:Group>
+</e:Skin>

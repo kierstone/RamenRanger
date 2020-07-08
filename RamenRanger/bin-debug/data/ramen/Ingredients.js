@@ -24,6 +24,9 @@ var IngredientModel = (function () {
         this.radius = json["radius"] ? json["radius"] : 0;
         this.canBeUsed = json["using"] ? json["using"] : 0;
         this.liquid = json["liquid"] ? json["liquid"] : false;
+        this.eat = json["eat"] ? json["eat"] : false;
+        this.rare = json["rare"] ? json["rare"] : 0;
+        this.cost = json["cost"] ? json["cost"] : 0;
         this.pungency = json["pungency"] ? json["pungency"] : 0;
         this.sweet = json["sweet"] ? json["sweet"] : 0;
         this.salty = json["salty"] ? json["salty"] : 0;
@@ -76,6 +79,7 @@ var IngredientObj = (function () {
         if (y === void 0) { y = 0; }
         if (rotation === void 0) { rotation = 0; }
         this.size = 1; //From 0.5 to 2，放大倍数
+        this.uniqueId = Utils.GetUniqueId("IngredientObj");
         this.model = model;
         this.x = x;
         this.y = y;
@@ -163,10 +167,14 @@ var IngredientObj = (function () {
     };
     /**
      * 克隆一个自己
+     * @param {boolean} sameUid 克隆出来的是否连uniqueId都和这个是一样的
      * @returns {IngredientObj} 克隆体
      */
-    IngredientObj.prototype.Clone = function () {
+    IngredientObj.prototype.Clone = function (sameUid) {
+        if (sameUid === void 0) { sameUid = false; }
         var res = new IngredientObj(this.model, this.x, this.y, this.rotation);
+        if (sameUid == true)
+            res.uniqueId = this.uniqueId;
         res.xFlip = this.xFlip;
         res.size = this.size;
         return res;
@@ -174,6 +182,17 @@ var IngredientObj = (function () {
     return IngredientObj;
 }());
 __reflect(IngredientObj.prototype, "IngredientObj");
+/**
+ * 玩家学会的素材配方
+ */
+var LearntIngredient = (function () {
+    function LearntIngredient(model) {
+        this.vote = 0; //被赞了多少次
+        this.model = model;
+    }
+    return LearntIngredient;
+}());
+__reflect(LearntIngredient.prototype, "LearntIngredient");
 //素材用途
 var IngredientUseType;
 (function (IngredientUseType) {

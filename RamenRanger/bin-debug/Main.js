@@ -98,37 +98,34 @@ var Main = (function (_super) {
     };
     Main.prototype.runGame = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            var login, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var login;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         egret.ImageLoader.crossOrigin = "anonymous"; //解决跨域问题
                         return [4 /*yield*/, this.loadResource()];
                     case 1:
-                        _b.sent();
+                        _a.sent();
                         return [4 /*yield*/, platform.login()];
                     case 2:
-                        login = _b.sent();
+                        login = _a.sent();
                         if (!login) return [3 /*break*/, 4];
-                        //如果已经登陆了就这么办
-                        _a = this;
                         return [4 /*yield*/, platform.getUserInfo(login)];
                     case 3:
                         //如果已经登陆了就这么办
-                        _a.GameUserInfo = _b.sent();
+                        GameUserInfo = _a.sent();
                         this.createGameScene();
                         return [3 /*break*/, 6];
                     case 4: 
                     //没有的话，就出现按钮
                     return [4 /*yield*/, platform.createLoginButton(function (thisObj, userInfo) {
-                            _this.GameUserInfo = userInfo;
+                            GameUserInfo = userInfo;
                             thisObj.createGameScene();
                         }, this)];
                     case 5:
                         //没有的话，就出现按钮
-                        _b.sent();
-                        _b.label = 6;
+                        _a.sent();
+                        _a.label = 6;
                     case 6: return [2 /*return*/];
                 }
             });
@@ -181,18 +178,12 @@ var Main = (function (_super) {
     Main.prototype.createGameScene = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                console.log("GameUserInfo", GameUserInfo);
                 LoadGameData();
                 Utils.UIRoot = this;
                 playerInfo = new PlayerInfo();
                 console.log(GameData_Ingredients, GameData_Bowl);
-                // if (!GameScene_Street){
-                //     GameScene_Street = new Street();
-                // }
-                // this.addChild(GameScene_Street);
-                if (!GameScene_CraftNoodle) {
-                    GameScene_CraftNoodle = new CraftNoodle();
-                }
-                this.addChild(GameScene_CraftNoodle);
+                this.addChild(new WelcomeScene());
                 return [2 /*return*/];
             });
         });
@@ -200,7 +191,8 @@ var Main = (function (_super) {
     return Main;
 }(eui.UILayer));
 __reflect(Main.prototype, "Main");
+var GameUserInfo; //游戏账号信息，来自各个平台的
 var playerInfo;
-var GameScene_Street;
+var GameScene_FoodCourt;
 var GameScene_CraftNoodle;
 //# sourceMappingURL=Main.js.map

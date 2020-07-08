@@ -6,6 +6,8 @@ var GameData_Bowl;
 var GameData_Broth;
 //角色动画
 var GameData_CharacterAction;
+//旅行模式的小吃们
+var GameData_FoodCourtDish;
 //读取数据
 var LoadGameData = function () {
     var catalog = RES.getRes("catalog_json");
@@ -74,6 +76,14 @@ var LoadGameData = function () {
         ca.FromJson(actionJson["data"][i]);
         GameData_CharacterAction.push(ca);
     }
+    //旅行模式的定食
+    GameData_FoodCourtDish = new Array();
+    var jsFile = RES.getRes("food_court_dish_json");
+    if (jsFile && jsFile["data"]) {
+        for (var i = 0; i < jsFile["data"].length; i++) {
+            GameData_FoodCourtDish.push(new FoodCourtDishModel(jsFile["data"][i]));
+        }
+    }
 };
 //根据key获得对应造型的动画信息
 var GetCharacterActionInfoByKey = function (key) {
@@ -92,6 +102,36 @@ var GetIngredientModelById = function (id) {
     for (var i = 0; i < GameData_Ingredients.length; i++) {
         if (GameData_Ingredients[i].id == id) {
             return GameData_Ingredients[i];
+        }
+    }
+    return null;
+};
+var GetBrothModelById = function (id) {
+    if (!GameData_Broth)
+        return null;
+    for (var i = 0; i < GameData_Broth.length; i++) {
+        if (GameData_Broth[i].id == id) {
+            return GameData_Broth[i];
+        }
+    }
+    return null;
+};
+var GetBowlModelById = function (id) {
+    if (!GameData_Bowl)
+        return null;
+    for (var i = 0; i < GameData_Bowl.length; i++) {
+        if (GameData_Bowl[i].id == id) {
+            return GameData_Bowl[i];
+        }
+    }
+    return null;
+};
+var GetFoodCourtDishModelById = function (id) {
+    if (!GameData_FoodCourtDish)
+        return null;
+    for (var i = 0; i < GameData_FoodCourtDish.length; i++) {
+        if (GameData_FoodCourtDish[i].id == id) {
+            return GameData_FoodCourtDish[i];
         }
     }
     return null;

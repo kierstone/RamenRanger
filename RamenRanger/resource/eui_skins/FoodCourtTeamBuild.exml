@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="FoodCourtTeamBuildSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="173202c52b6" ></w:Config>
+	<e:Group id="Group_Street" x="0" y="0"/>
+	<e:Group id="Group_HungerBar" x="20" y="420">
+		<e:Image x="0" y="0" source="scene_bowl_normal" width="30" height="30"/>
+		<e:Rect id="Rect_Hunger" width="20" height="20" x="40" y="5" fillColor="0x7aed21"/>
+	</e:Group>
+</e:Skin>

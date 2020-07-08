@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="FoodCourt_SelectBuddyListSkin" width="750" height="500" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="1731fea2bdd" ></w:Config>
+	<e:Label id="Label_BuddyCount" text="Label" horizontalCenter="0" top="15"/>
+	<e:Button id="Button_Done" label="选择完毕" skinName="GameButtonYellow" height="100" horizontalCenter="0" bottom="20"/>
+	<e:Scroller width="100%" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0" x="25" scaleX="1" scaleY="1" top="60" bottom="140">
+		<e:Group id="Group_Buddy">
+		<e:layout>
+			<e:TileLayout orientation="rows" horizontalGap="0" verticalGap="0" requestedColumnCount="5"/>
+		</e:layout>
+		</e:Group>
+	</e:Scroller>
+</e:Skin>
