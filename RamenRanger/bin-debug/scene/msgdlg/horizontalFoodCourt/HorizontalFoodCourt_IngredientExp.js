@@ -12,7 +12,7 @@ var HorizontalFoodCourt_IngredientExp = (function (_super) {
     __extends(HorizontalFoodCourt_IngredientExp, _super);
     function HorizontalFoodCourt_IngredientExp(ing) {
         var _this = _super.call(this) || this;
-        _this.ing = ing;
+        _this.ingredientInfo = ing;
         return _this;
     }
     HorizontalFoodCourt_IngredientExp.prototype.partAdded = function (partName, instance) {
@@ -23,9 +23,9 @@ var HorizontalFoodCourt_IngredientExp = (function (_super) {
         this.init();
     };
     HorizontalFoodCourt_IngredientExp.prototype.init = function () {
-        this.Label_Exp.text = this.ing.exp.toString();
-        if (this.ing.broth == true) {
-            var bm = GetBrothModelById(this.ing.ingredientId);
+        this.Label_Exp.text = this.ingredientInfo.exp.toString();
+        if (this.ingredientInfo.broth == true) {
+            var bm = GetBrothModelById(this.ingredientInfo.ingredientId);
             this.Img_Icon.visible = false;
             var ic = bm.IconShape(0, 0, 30);
             this.addChild(ic);
@@ -33,14 +33,27 @@ var HorizontalFoodCourt_IngredientExp = (function (_super) {
             ic.y = this.Img_Icon.y + 30;
         }
         else {
-            var im = GetIngredientModelById(this.ing.ingredientId);
+            var im = GetIngredientModelById(this.ingredientInfo.ingredientId);
             this.Img_Icon.visible = true;
-            this.Img_Icon.source = im.icon;
+            this.Img_Icon.texture = RES.getRes(im.icon);
         }
+    };
+    HorizontalFoodCourt_IngredientExp.prototype.IconStageX = function () {
+        return Utils.GetEuiScreenPos(this.Img_Icon)["x"] + this.Img_Icon.width / 2;
+    };
+    HorizontalFoodCourt_IngredientExp.prototype.IconStageY = function () {
+        return Utils.GetEuiScreenPos(this.Img_Icon)["y"] + this.Img_Icon.height / 2;
+    };
+    /**
+     * 添加经验，应该有个tween才对
+     */
+    HorizontalFoodCourt_IngredientExp.prototype.IncreaseExp = function (num) {
+        this.ingredientInfo.exp += num;
+        this.Update();
     };
     HorizontalFoodCourt_IngredientExp.prototype.Update = function () {
         if (this.Label_Exp)
-            this.Label_Exp.text = this.ing.exp.toString();
+            this.Label_Exp.text = this.ingredientInfo.exp.toString();
     };
     return HorizontalFoodCourt_IngredientExp;
 }(eui.Component));

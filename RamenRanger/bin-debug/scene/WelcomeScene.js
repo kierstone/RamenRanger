@@ -30,10 +30,7 @@ var WelcomeScene = (function (_super) {
     WelcomeScene.prototype.init = function () {
         var _this = this;
         this.Button_Ramen.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            if (!GameScene_CraftNoodle) {
-                GameScene_CraftNoodle = new CraftNoodle();
-            }
-            Utils.UIRoot.addChild(GameScene_CraftNoodle);
+            Utils.UIRoot.addChild(new CraftNoodle());
             _this.parent.removeChild(_this);
         }, this);
         this.Button_Street.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {

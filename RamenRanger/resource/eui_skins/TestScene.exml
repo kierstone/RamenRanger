@@ -6,5 +6,6 @@
 	<e:HSlider id="HSilder_Size" width="470" height="89" x="184.28" y="829.5" anchorOffsetX="0" anchorOffsetY="0" maximum="20" value="0" minimum="-10"/>
 	<e:Label text="画面尺寸" x="43.61" y="859"/>
 	<e:Label id="Label_Size" text="1.0" x="673.31" y="859"/>
-	<e:Button id="Button_Start" label="开吃" x="163.61" y="1000" anchorOffsetX="0" width="240.91" anchorOffsetY="0" height="75.76"/>
+	<e:Button id="Button_Start" label="开吃" x="116.61" y="1000" anchorOffsetX="0" width="240.91" anchorOffsetY="0" height="75.76"/>
+	<e:Button id="Button_Back" label="返回" x="392.28" y="1000" anchorOffsetX="0" width="240.91" anchorOffsetY="0" height="75.76"/>
 </e:Skin>

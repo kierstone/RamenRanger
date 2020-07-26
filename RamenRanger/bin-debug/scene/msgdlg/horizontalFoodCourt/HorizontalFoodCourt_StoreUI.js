@@ -47,7 +47,7 @@ var HorizontalFoodCourt_StoreUI = (function (_super) {
             this.Group_Window.addChild(b);
         }
         this.Button_Cancel.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            _this.caller.CancelEat(_this.caller);
+            //this.caller.CancelEat(this.caller);
             if (_this.parent)
                 _this.parent.removeChild(_this);
         }, this);

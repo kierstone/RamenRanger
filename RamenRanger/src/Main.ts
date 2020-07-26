@@ -121,7 +121,7 @@ class Main extends eui.UILayer {
 
 var GameUserInfo:any;   //游戏账号信息，来自各个平台的
 var playerInfo:PlayerInfo;
-var GameScene_FoodCourt:HorizontalFoodCourt;
-var GameScene_CraftNoodle:CraftNoodle
+// var GameScene_FoodCourt:HorizontalFoodCourt;
+// var GameScene_CraftNoodle:CraftNoodle
 
 

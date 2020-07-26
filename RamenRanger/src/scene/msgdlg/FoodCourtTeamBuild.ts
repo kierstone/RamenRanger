@@ -14,12 +14,12 @@ class FoodCourtTeamBuild extends eui.Component implements  eui.UIComponent {
 	private mainCharacter:CharacterSprite;
 	private car:eui.Image;
 	private carDoorX:number;
-	private floorY:number = 400;
-	private carHeight:number = 20;
+	private floorY:number = 430;
+	private carHeight:number = 40;
 	private npc:CharacterObj;
 	private npcSpr:CharacterSprite;
 	
-	private uiPosY = 480;	//下方UI的y坐标
+	private uiPosY = 430;	//下方UI的y坐标
 
 	public constructor() {
 		super();
@@ -59,6 +59,15 @@ class FoodCourtTeamBuild extends eui.Component implements  eui.UIComponent {
 	private InitBKG(){
 		let storeY = this.floorY;
 
+		//背景
+		let bkg = new eui.Image();
+		this.addChild(bkg);
+		bkg.texture = RES.getRes("bkg_shanghai");
+		bkg.fillMode = egret.BitmapFillMode.REPEAT;
+		// bkg.width = this.stage.stageWidth;
+		// bkg.height = storeY;
+
+		//小汽车
 		this.car = new eui.Image();
 		this.car.texture = RES.getRes("bus_default_paint");
 		this.addChild(this.car);
@@ -66,7 +75,7 @@ class FoodCourtTeamBuild extends eui.Component implements  eui.UIComponent {
 		this.car.anchorOffsetY = this.car.height;
 		this.car.scaleX = -1;	//TODO 就先转转
 		this.car.x = this.stage.stageWidth / 2;
-		this.car.y = storeY;
+		this.car.y = storeY + 30;
 
 		this.carDoorX = this.stage.stageWidth / 2 - 80;
 
@@ -242,10 +251,7 @@ class FoodCourtTeamBuild extends eui.Component implements  eui.UIComponent {
 					.to({x:1500},inTime, egret.Ease.quadIn)
 					.call(()=>{
 						//离开场景，进入履行了
-						if (!GameScene_FoodCourt){
-							GameScene_FoodCourt = new HorizontalFoodCourt(this.team);
-						}
-						Utils.UIRoot.addChild(GameScene_FoodCourt);
+						Utils.UIRoot.addChild(new HorizontalFoodCourt(this.team));
 						this.parent.removeChild(this);
 					})
 			})

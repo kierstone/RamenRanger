@@ -21,7 +21,6 @@ var HorizontalFoodCourt = (function (_super) {
         _this.uiPosY = 450; //下方UI的y坐标
         _this.uiOrderPosY = 650; //点菜的菜单y坐标
         _this.teamChaDis = 80; //角色之间距离
-        _this._ticked = 0;
         _this.buddies = team;
         return _this;
     }
@@ -36,13 +35,8 @@ var HorizontalFoodCourt = (function (_super) {
         var _this = this;
         this.canControl = false;
         this.NewGame();
-        this.Button_Go.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            if (_this.canControl == false)
-                return;
-            if (_this.hungry <= 0)
-                return;
-            _this.MoveToStepIndex(_this.stepIndex + 1);
-        }, this);
+        // this.Button_Go.addEventListener(egret.TouchEvent.TOUCH_TAP, ()=>{
+        // },this);
         var t = new egret.Timer(Utils.TickTime);
         t.addEventListener(egret.TimerEvent.TIMER, function () {
             _this.Update();
@@ -56,7 +50,6 @@ var HorizontalFoodCourt = (function (_super) {
         this.lastLearnedIngId = new Array();
         this.stepIndex = -1;
         this.hungry = 0;
-        this.ingredientExp = new Array();
         this.hungerMax = PlayerBaseHunger;
         for (var i = 0; i < this.buddies.length; i++) {
             this.hungerMax += this.buddies[i].hunger;
@@ -82,6 +75,7 @@ var HorizontalFoodCourt = (function (_super) {
     //角色走进场地，然后开始游戏，当然这时候UI也出来了
     HorizontalFoodCourt.prototype.ChaEnterSceneAndStartGame = function () {
         var _this = this;
+        this.Group_Street.x = 0;
         var inTime = Math.abs(this.mainCharacter.x - this.stage.stageWidth / 2) / 400 * 1000;
         var _loop_1 = function (i) {
             this_1.teamSpr[i].ChangeAction(Direction.Right, CharacterAction.Walk);
@@ -100,11 +94,18 @@ var HorizontalFoodCourt = (function (_super) {
             _loop_1(i);
         }
         if (!this.uiNormalMenu) {
-            this.uiNormalMenu = new FoodCourt_NormalMenu();
+            this.uiNormalMenu = new FoodCourt_NormalMenu(this);
             this.addChild(this.uiNormalMenu);
+            this.uiNormalMenu.width = this.stage.stageWidth;
             this.uiNormalMenu.height = this.stage.stageHeight - this.uiPosY;
+            this.uiNormalMenu.y = this.stage.stageHeight;
             //TODO 进入的动画
-            this.uiNormalMenu.y = this.uiPosY;
+            egret.Tween.removeTweens(this.uiNormalMenu);
+            egret.Tween.get(this.uiNormalMenu)
+                .to({ y: this.uiPosY }, 300, egret.Ease.quadOut)
+                .call(function () {
+                _this.uiNormalMenu.ShowIngredientExp(_this.ingredientExp);
+            });
         }
     };
     //一个角色应该处于街道的X坐标
@@ -138,11 +139,25 @@ var HorizontalFoodCourt = (function (_super) {
             this.mainCharacter.parent.removeChild(this.mainCharacter);
         }
         this.Group_Street.removeChildren();
-        //店铺
-        this.storeX = new Array();
+        //相关数据
         var startAt = 700;
         var storeDis = 350;
         var storeY = this.groundY;
+        //背景
+        var bkg = new eui.Image(RES.getRes("bkg_shanghai"));
+        this.Group_Street.addChild(bkg);
+        bkg.width = startAt * 2 + storeDis * this.store.length;
+        bkg.height = storeY + 50;
+        bkg.fillMode = egret.BitmapFillMode.REPEAT;
+        //小吃店地面floor, TODO 今后应该随着店铺变化的吧
+        var flr = new eui.Image(RES.getRes("floor_shanghai"));
+        this.Group_Street.addChild(flr);
+        flr.y = bkg.height;
+        flr.width = bkg.width;
+        flr.height = this.uiOrderPosY - storeY - 50;
+        flr.fillMode = egret.BitmapFillMode.REPEAT;
+        //店铺
+        this.storeX = new Array();
         for (var i = 0; i < this.store.length; i++) {
             var img = new eui.Image();
             img.texture = RES.getRes(this.store[i].source);
@@ -182,10 +197,11 @@ var HorizontalFoodCourt = (function (_super) {
         this.dTable.x = this.stage.stageWidth / 2;
         this.dTable.y = this.dtPosY;
         this.dTable.visible = false;
+        this.dtStagePos = new egret.Point(this.dTable.x, this.dTable.y);
         //学习的东西列表
         this.Scroller_IngLearn.y = this.stage.stageHeight;
-        this.Group_Ing.removeChildren();
-        this.IngHint = new Array();
+        //this.Group_Ing.removeChildren();
+        this.ingredientExp = new Array();
         //TEST
         // let img = new eui.Image("ui_craft_selected");
         // img.x = 100;
@@ -193,6 +209,23 @@ var HorizontalFoodCourt = (function (_super) {
         // this.addChild(img);
         // this.Group_Street.addChild(img);
         // this.Group_Test.addChild(img);
+    };
+    HorizontalFoodCourt.prototype.ButtonGoEvent = function () {
+        var _this = this;
+        if (this.canControl == false)
+            return;
+        if (this.hungry <= 0)
+            return;
+        this.canControl = false;
+        this.MoveToStepIndex(this.stepIndex + 1);
+        if (this.uiNormalMenu) {
+            egret.Tween.removeTweens(this.uiNormalMenu);
+            egret.Tween.get(this.uiNormalMenu)
+                .to({ y: this.uiOrderPosY }, 150, egret.Ease.quadOut)
+                .call(function () {
+                _this.uiNormalMenu.ShowIngredientExp(_this.ingredientExp);
+            });
+        }
     };
     //角色移动到某个格子
     HorizontalFoodCourt.prototype.MoveToStepIndex = function (index) {
@@ -221,7 +254,6 @@ var HorizontalFoodCourt = (function (_super) {
     HorizontalFoodCourt.prototype.EnterTheStall = function (store) {
         var _this = this;
         this.dTable.visible = true;
-        this.Button_Go.visible = false;
         var _loop_2 = function (i) {
             var seatInfo = this_2.dTable.GetSeatInfoByIndex(i);
             if (seatInfo == null) {
@@ -261,6 +293,7 @@ var HorizontalFoodCourt = (function (_super) {
             });
         };
         var this_2 = this;
+        //this.Button_Go.visible = false;
         for (var i = 0; i < this.teamSpr.length; i++) {
             var state_1 = _loop_2(i);
             if (state_1 === "break")
@@ -290,20 +323,21 @@ var HorizontalFoodCourt = (function (_super) {
                 .to({ x: teamX }, hMoveTime)
                 .call(function () {
                 _this.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Stand);
-                //TODO 出现等待移动的状态，以及界面更替
+                //出现等待移动的状态，以及界面更替
                 if (i == _this.teamSpr.length - 1) {
                     _this.dTable.visible = false;
-                    if (_this.uiNormalMenu) {
-                        egret.Tween.removeTweens(_this.uiNormalMenu);
-                        egret.Tween.get(_this.uiNormalMenu)
-                            .to({ y: _this.uiPosY }, 300, egret.Ease.quadOut)
-                            .call(function () {
-                            _this.BackToStreet();
-                        });
-                    }
-                    else {
+                    //面板退出
+                    egret.Tween.removeTweens(_this.uiEatingState);
+                    egret.Tween.get(_this.uiEatingState)
+                        .to({ y: _this.stage.stageHeight }, 300, egret.Ease.quadIn);
+                    //面板进入
+                    egret.Tween.removeTweens(_this.uiNormalMenu);
+                    egret.Tween.get(_this.uiNormalMenu)
+                        .to({ y: _this.uiPosY }, 300, egret.Ease.quadOut)
+                        .call(function () {
+                        _this.uiNormalMenu.ShowIngredientExp(_this.ingredientExp);
                         _this.BackToStreet();
-                    }
+                    });
                 }
             });
         };
@@ -316,11 +350,13 @@ var HorizontalFoodCourt = (function (_super) {
     //进入正常的等待状态
     HorizontalFoodCourt.prototype.BackToStreet = function () {
         if (this.IsGameOver() == false) {
-            this.Button_Go.visible = true;
+            //this.Button_Go.visible = true;
             this.canControl = true;
         }
         else {
             //TODO game over了，该退出这个玩法了
+            this.canControl = false;
+            this.addChild(new HorizontalFoodCourt_EndToChallenge(this, this.ingredientExp));
         }
     };
     //判断是否结束了
@@ -344,13 +380,6 @@ var HorizontalFoodCourt = (function (_super) {
             _this.canControl = true;
         });
     };
-    //给ui调用的不吃了的事件
-    HorizontalFoodCourt.prototype.CancelEat = function (caller) {
-        caller.hungry -= 5;
-        caller.hungry = Math.max(caller.hungry, 0);
-        caller.canControl = true;
-        //caller.Update();
-    };
     //给ui调用的吃的事件
     HorizontalFoodCourt.prototype.EatDish = function (caller, dish) {
         caller.canControl = false;
@@ -366,9 +395,10 @@ var HorizontalFoodCourt = (function (_super) {
         var toHun = Math.max(this.hungry - dish.model.feed, 0);
         this.HungerBarTweenTo(this.hungry, toHun);
         this.hungry = toHun;
+        var tweenTime = 250;
         egret.Tween.removeTweens(this.uiStoreMenu);
         egret.Tween.get(this.uiStoreMenu)
-            .to({ y: this.stage.stageHeight }, 200, egret.Ease.quadIn)
+            .to({ y: this.stage.stageHeight }, tweenTime, egret.Ease.quadIn)
             .call(function () {
             egret.Tween.removeTweens(_this.Scroller_IngLearn);
             egret.Tween.get(_this.Scroller_IngLearn)
@@ -382,6 +412,19 @@ var HorizontalFoodCourt = (function (_super) {
                 _this.uiStoreMenu = null;
             });
         });
+        if (!this.uiEatingState) {
+            this.uiEatingState = new FoodCourt_EatingState(this);
+            this.addChild(this.uiEatingState);
+            this.uiEatingState.y = this.stage.stageHeight;
+            this.uiEatingState.width = this.stage.stageWidth;
+            this.uiEatingState.height = this.stage.stageHeight - this.uiOrderPosY;
+        }
+        egret.Tween.removeTweens(this.uiEatingState);
+        egret.Tween.get(this.uiEatingState)
+            .to({ y: this.uiOrderPosY }, tweenTime, egret.Ease.quadOut)
+            .call(function () {
+            _this.uiEatingState.ShowIngredientExp(_this.ingredientExp);
+        });
     };
     /**
      * 给其他ui用的，选中一个dish，显示反应
@@ -393,39 +436,83 @@ var HorizontalFoodCourt = (function (_super) {
         if (caller.dTable) {
             caller.dTable.PlaceDishToAllCharacter(dish);
         }
-        for (var i = 0; i < caller.teamSpr.length; i++) {
-            if (caller.teamSpr[i].character.buddyInfo && caller.teamSpr[i].character.buddyInfo.isPlayer == false) {
-                var favColor = caller.teamSpr[i].character.buddyInfo.favourType;
-                if (favColor == dish.model.type) {
-                    //喜欢的
-                    caller.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Clap);
-                }
-                else {
-                    //一般般
-                    caller.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Stand);
-                }
+        for (var i = 0; i < caller.dTable.eatingCha.length; i++) {
+            var ec = caller.dTable.eatingCha[i];
+            if (ec.hasCha == false || !ec.chaSpr)
+                continue; //没有角色就下一个
+            if (ec.CharacterFavourDish() == false) {
+                ec.chaSpr.ChangeAction(Direction.Down, CharacterAction.Stand);
             }
             else {
-                //主角，所以没有buddyInfo
-                caller.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Stand);
+                ec.chaSpr.ChangeAction(Direction.Down, CharacterAction.Clap);
             }
         }
     };
-    HorizontalFoodCourt.prototype.AddIngredientExp = function (ing, favourCount) {
-        for (var i = 0; i < this.ingredientExp.length; i++) {
-            if (this.ingredientExp[i].broth == ing.broth && this.ingredientExp[i].ingredientId == ing.ingredientId) {
-                //修改存在的
-                this.ingredientExp[i].exp += Math.ceil(ing.exp * (1 + favourCount * 0.3));
-                return;
+    //每一帧检查，看看是不是要添加经验了
+    HorizontalFoodCourt.prototype.CheckForIngredientLearn = function () {
+        for (var i = 0; i < this.dTable.eatingCha.length; i++) {
+            var li = this.dTable.eatingCha[i].CurrentTurnGatherIngredient();
+            if (li) {
+                var fX = this.dTable.eatingCha[i].seatInfo.x + this.dtStagePos.x;
+                var fY = this.dTable.eatingCha[i].seatInfo.y + this.dtStagePos.y;
+                this.AddIngredientExp(li, fX, fY);
             }
         }
-        //添加新的
-        var newIng = new FoodCourtIngredient(ing.ingredientId, ing.exp, ing.broth);
-        this.ingredientExp.push(newIng);
-        var iHint = new HorizontalFoodCourt_IngredientExp(newIng);
-        this.IngHint.push(iHint);
-        this.Group_Ing.addChild(iHint);
-        //this.Update();
+    };
+    // 在界面上添加Ingredient的经验值
+    HorizontalFoodCourt.prototype.AddIngredientExp = function (ing, fromX, fromY) {
+        var _this = this;
+        var iHint = this.TryAddNewIngHint(ing.ingredientId, ing.broth); //不管新老，先找到
+        //创建一个图标飞过去
+        var ic;
+        if (ing.broth == true) {
+            var bm = GetBrothModelById(ing.ingredientId);
+            ic = bm.IconShape(0, 0, 30);
+            this.addChild(ic);
+            ic.x = fromX;
+            ic.y = fromY;
+        }
+        else {
+            var im = GetIngredientModelById(ing.ingredientId);
+            ic = new eui.Image();
+            ic.texture = RES.getRes(im.icon);
+            this.addChild(ic);
+            ic.width = ic.height = 60;
+            ic.anchorOffsetX = ic.width / 2;
+            ic.anchorOffsetY = ic.height / 2;
+            ic.x = fromX;
+            ic.y = fromY;
+        }
+        var tarX = iHint.IconStageX();
+        var tarY = iHint.IconStageY();
+        var dis = Math.sqrt(Math.pow(tarX - fromX, 2) + Math.pow(tarY - fromY, 2));
+        var inTime = dis / 300 * 1000;
+        egret.Tween.get(ic)
+            .to({ x: tarX, y: tarY }, inTime, egret.Ease.quartIn)
+            .call(function () {
+            iHint.IncreaseExp(ing.exp);
+            _this.removeChild(ic);
+            ic = null;
+        });
+    };
+    //找到IngHint中对应ingredientId的那个，如果是Null就是还没有
+    HorizontalFoodCourt.prototype.GetIngHintByIngredientId = function (ingId, broth) {
+        for (var i = 0; i < this.ingredientExp.length; i++) {
+            if (this.ingredientExp[i].ingredientInfo.ingredientId == ingId && this.ingredientExp[i].ingredientInfo.broth == broth) {
+                return this.ingredientExp[i];
+            }
+        }
+        return null;
+    };
+    //添加一个新的ingredient的hint，并且设置经验值为0
+    HorizontalFoodCourt.prototype.TryAddNewIngHint = function (ingId, broth) {
+        var oldOne = this.GetIngHintByIngredientId(ingId, broth);
+        if (oldOne)
+            return oldOne; //已经有了
+        var ingh = new HorizontalFoodCourt_IngredientExp(new FoodCourtIngredient(ingId, 0, broth));
+        this.ingredientExp.push(ingh);
+        this.uiEatingState.AddIngredientExp(ingh);
+        return ingh;
     };
     //满腹条
     HorizontalFoodCourt.prototype.HungerBarLength = function (v) {
@@ -464,15 +551,14 @@ var HorizontalFoodCourt = (function (_super) {
         }
     };
     HorizontalFoodCourt.prototype.Update = function () {
-        this.Label_Hungry.text = "满腹度：" + this.hungry.toString() + "/" + this.hungerMax.toString();
-        //主角
+        //所有角色
         for (var i = 0; i < this.teamSpr.length; i++) {
             this.teamSpr[i].Update();
         }
-        //学习的东西
-        for (var i = 0; i < this.IngHint.length; i++) {
-            this.IngHint[i].Update();
-        }
+        // //学习的东西
+        // for (let i = 0; i < this.ingredientExp.length; i++){
+        // 	this.ingredientExp[i].Update();
+        // }
         //桌子
         if (this.dTable) {
             this.dTable.Update();
@@ -481,6 +567,9 @@ var HorizontalFoodCourt = (function (_super) {
             if (this.dTable.AllFinished() == true) {
                 this.eating = false;
                 this.LeaveTheStore();
+            }
+            else {
+                this.CheckForIngredientLearn();
             }
         }
         //饱食度条子

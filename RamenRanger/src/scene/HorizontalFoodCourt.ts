@@ -1,7 +1,7 @@
 class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 	private Label_Hungry:eui.Label;
 	private Group_Street:eui.Group;
-	private Button_Go:eui.Button;
+	//private Button_Go:eui.Button;
 
 	private Group_Test:eui.Group;
 
@@ -13,6 +13,7 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 
 	private uiNormalMenu:FoodCourt_NormalMenu;
 	private uiStoreMenu:FoodCourt_StoreMenu;
+	private uiEatingState:FoodCourt_EatingState;
 	
 	private Scroller_IngLearn:eui.Scroller;
 
@@ -21,17 +22,17 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 	private Rect_HungerNow:eui.Rect;
 
 	private dTable:DiningTableSprite;	//餐桌，其实是可以开始就建立好的
+	private dtStagePos:egret.Point;
 	private dtPosY:number = 600;	//餐桌位置
 
 	private lastLearnedIngId:Array<string>;	//上一轮学会的素材
 	private stepIndex:number;
 
-	private Group_Ing:eui.Group;
-	private IngHint:Array<HorizontalFoodCourt_IngredientExp>;
+	//private Group_Ing:eui.Group;
+	private ingredientExp:Array<HorizontalFoodCourt_IngredientExp>;
 
 	public hungry:number = 0;
 	public hungerMax:number = 0;
-	private ingredientExp:Array<FoodCourtIngredient>;
 	
 	public canControl:boolean = true;
 	private eating:boolean = false;	//角色们是否正在吃东西
@@ -63,11 +64,9 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 		this.canControl = false;
 		this.NewGame();
 
-		this.Button_Go.addEventListener(egret.TouchEvent.TOUCH_TAP, ()=>{
-			if (this.canControl == false) return;
-			if (this.hungry <= 0) return;
-			this.MoveToStepIndex(this.stepIndex + 1);
-		},this);
+		// this.Button_Go.addEventListener(egret.TouchEvent.TOUCH_TAP, ()=>{
+			
+		// },this);
 
 
 		let t = new egret.Timer(Utils.TickTime);
@@ -76,17 +75,15 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 		}, this);
 		t.start();
 	}
-	private _ticked:number = 0;
 
 
 	//根据要求开店，现在店里的内容都写死
-	private NewGame(){
+	public NewGame(){
 		//初始化逻辑数据
 		this.store = new Array<FoodCourtStoreObj>();
 		this.lastLearnedIngId = new Array<string>();
 		this.stepIndex = -1;
 		this.hungry = 0;
-		this.ingredientExp = new Array<FoodCourtIngredient>();
 
 		this.hungerMax = PlayerBaseHunger;
 		for (let i = 0; i < this.buddies.length; i++){
@@ -117,6 +114,7 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 
 	//角色走进场地，然后开始游戏，当然这时候UI也出来了
 	private ChaEnterSceneAndStartGame(){
+		this.Group_Street.x = 0;
 		let inTime = Math.abs(this.mainCharacter.x - this.stage.stageWidth / 2) / 400 * 1000;
 		for (let i = 0; i < this.teamSpr.length; i++){
 			this.teamSpr[i].ChangeAction(Direction.Right, CharacterAction.Walk);
@@ -132,11 +130,18 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 		}
 
 		if (!this.uiNormalMenu){
-			this.uiNormalMenu = new FoodCourt_NormalMenu();
+			this.uiNormalMenu = new FoodCourt_NormalMenu(this);
 			this.addChild(this.uiNormalMenu);
+			this.uiNormalMenu.width = this.stage.stageWidth;
 			this.uiNormalMenu.height = this.stage.stageHeight - this.uiPosY;
+			this.uiNormalMenu.y = this.stage.stageHeight;
 			//TODO 进入的动画
-			this.uiNormalMenu.y = this.uiPosY;
+			egret.Tween.removeTweens(this.uiNormalMenu);
+			egret.Tween.get(this.uiNormalMenu)
+				.to({y: this.uiPosY}, 300, egret.Ease.quadOut)
+				.call(()=>{
+					this.uiNormalMenu.ShowIngredientExp(this.ingredientExp);
+				})
 		}
 	}
 
@@ -176,11 +181,30 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 		}
 		this.Group_Street.removeChildren();
 
-		//店铺
-		this.storeX = new Array<number>();
+		//相关数据
 		let startAt = 700;
 		let storeDis = 350;
 		let storeY = this.groundY;
+
+		//背景
+		let bkg = new eui.Image(RES.getRes("bkg_shanghai"));
+		this.Group_Street.addChild(bkg);
+		bkg.width = startAt * 2 + storeDis * this.store.length;
+		bkg.height = storeY + 50;
+		bkg.fillMode = egret.BitmapFillMode.REPEAT;
+
+		//小吃店地面floor, TODO 今后应该随着店铺变化的吧
+		let flr = new eui.Image(RES.getRes("floor_shanghai"));
+		this.Group_Street.addChild(flr);
+		flr.y = bkg.height;
+		flr.width = bkg.width;
+		flr.height = this.uiOrderPosY - storeY - 50;
+		flr.fillMode = egret.BitmapFillMode.REPEAT;
+
+
+		//店铺
+		this.storeX = new Array<number>();
+		
 		for (let i = 0; i < this.store.length; i++){
 			let img = new eui.Image();
 			img.texture = RES.getRes(this.store[i].source);
@@ -234,12 +258,12 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 		this.dTable.x = this.stage.stageWidth / 2;
 		this.dTable.y = this.dtPosY;
 		this.dTable.visible = false;
-		
+		this.dtStagePos = new egret.Point(this.dTable.x, this.dTable.y);
 		
 		//学习的东西列表
 		this.Scroller_IngLearn.y = this.stage.stageHeight;
-		this.Group_Ing.removeChildren();
-		this.IngHint = new Array<HorizontalFoodCourt_IngredientExp>();
+		//this.Group_Ing.removeChildren();
+		this.ingredientExp = new Array<HorizontalFoodCourt_IngredientExp>();
 		
 		//TEST
 		// let img = new eui.Image("ui_craft_selected");
@@ -248,6 +272,21 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 		// this.addChild(img);
 		// this.Group_Street.addChild(img);
 		// this.Group_Test.addChild(img);
+	}
+
+	public ButtonGoEvent(){
+		if (this.canControl == false) return;
+		if (this.hungry <= 0) return;
+		this.canControl = false;
+		this.MoveToStepIndex(this.stepIndex + 1);
+		if (this.uiNormalMenu){
+			egret.Tween.removeTweens(this.uiNormalMenu);
+			egret.Tween.get(this.uiNormalMenu)
+				.to({y:this.uiOrderPosY}, 150, egret.Ease.quadOut)
+				.call(()=>{
+					this.uiNormalMenu.ShowIngredientExp(this.ingredientExp);
+				});
+		}
 	}
 
 	//角色移动到某个格子
@@ -280,7 +319,7 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 	//进入一家店铺，然后出现菜单
 	private EnterTheStall(store:FoodCourtStoreObj){
 		this.dTable.visible = true;
-		this.Button_Go.visible = false;
+		//this.Button_Go.visible = false;
 
 		for (let i = 0; i < this.teamSpr.length; i++){
 			let seatInfo = this.dTable.GetSeatInfoByIndex(i);
@@ -360,19 +399,21 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 				.call(()=>{
 					this.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Stand);
 					
-					//TODO 出现等待移动的状态，以及界面更替
+					//出现等待移动的状态，以及界面更替
 					if ( i == this.teamSpr.length - 1){
 						this.dTable.visible = false;
-						if (this.uiNormalMenu){
-							egret.Tween.removeTweens(this.uiNormalMenu);
-							egret.Tween.get(this.uiNormalMenu)
-								.to({y:this.uiPosY}, 300, egret.Ease.quadOut)
-								.call(()=>{
-									this.BackToStreet();
-								})
-						}else{
-							this.BackToStreet();
-						}
+						//面板退出
+						egret.Tween.removeTweens(this.uiEatingState);
+						egret.Tween.get(this.uiEatingState)
+							.to({y:this.stage.stageHeight}, 300, egret.Ease.quadIn);
+						//面板进入
+						egret.Tween.removeTweens(this.uiNormalMenu);
+						egret.Tween.get(this.uiNormalMenu)
+							.to({y:this.uiPosY}, 300, egret.Ease.quadOut)
+							.call(()=>{
+								this.uiNormalMenu.ShowIngredientExp(this.ingredientExp);
+								this.BackToStreet();
+							})
 					}
 				})
 		}
@@ -381,10 +422,14 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 	//进入正常的等待状态
 	private BackToStreet(){
 		if (this.IsGameOver() == false){
-			this.Button_Go.visible = true;
+			//this.Button_Go.visible = true;
 			this.canControl = true;
 		}else{
 			//TODO game over了，该退出这个玩法了
+			this.canControl = false;
+			this.addChild(
+				new HorizontalFoodCourt_EndToChallenge(this, this.ingredientExp)
+			);
 		}
 		
 	}
@@ -413,13 +458,7 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 			})
 	}
 
-	//给ui调用的不吃了的事件
-	public CancelEat(caller:HorizontalFoodCourt){
-		caller.hungry -= 5;
-		caller.hungry = Math.max(caller.hungry, 0);
-		caller.canControl = true;
-		//caller.Update();
-	}
+	
 
 	//给ui调用的吃的事件
 	public EatDish(caller:HorizontalFoodCourt, dish:FoodCourtDishObj){
@@ -438,9 +477,11 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 		this.HungerBarTweenTo(this.hungry, toHun);
 		this.hungry = toHun;
 
+		let tweenTime = 250;
+
 		egret.Tween.removeTweens(this.uiStoreMenu);
 		egret.Tween.get(this.uiStoreMenu)
-			.to({y:this.stage.stageHeight}, 200, egret.Ease.quadIn)
+			.to({y:this.stage.stageHeight}, tweenTime, egret.Ease.quadIn)
 			.call(()=>{
 				egret.Tween.removeTweens(this.Scroller_IngLearn)
 				egret.Tween.get(this.Scroller_IngLearn)
@@ -453,10 +494,21 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 						this.uiStoreMenu = null;
 					})
 			})
+		
+		if (!this.uiEatingState){
+			this.uiEatingState = new FoodCourt_EatingState(this);
+			this.addChild(this.uiEatingState);
+			this.uiEatingState.y = this.stage.stageHeight;
+			this.uiEatingState.width = this.stage.stageWidth;
+			this.uiEatingState.height = this.stage.stageHeight - this.uiOrderPosY;
+		}
+		egret.Tween.removeTweens(this.uiEatingState);
+		egret.Tween.get(this.uiEatingState)
+			.to({y:this.uiOrderPosY}, tweenTime, egret.Ease.quadOut)
+			.call(()=>{
+				this.uiEatingState.ShowIngredientExp(this.ingredientExp);
+			});
 	}
-
-
-
 
 
 
@@ -470,40 +522,89 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 		if (caller.dTable){
 			caller.dTable.PlaceDishToAllCharacter(dish);
 		}
-		for (let i = 0; i < caller.teamSpr.length; i++){
-			if (caller.teamSpr[i].character.buddyInfo && caller.teamSpr[i].character.buddyInfo.isPlayer == false){
-				let favColor = caller.teamSpr[i].character.buddyInfo.favourType;
-				if (favColor == dish.model.type){
-					//喜欢的
-					caller.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Clap);
-				}else{
-					//一般般
-					caller.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Stand);
-				}
+		for (let i = 0; i < caller.dTable.eatingCha.length; i++){
+			let ec = caller.dTable.eatingCha[i];
+			if (ec.hasCha == false || !ec.chaSpr) continue;	//没有角色就下一个
+			if (ec.CharacterFavourDish() == false){
+				ec.chaSpr.ChangeAction(Direction.Down, CharacterAction.Stand);
 			}else{
-				//主角，所以没有buddyInfo
-				caller.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Stand);
+				ec.chaSpr.ChangeAction(Direction.Down, CharacterAction.Clap);
 			}
 		}
 	}
 
-	private AddIngredientExp(ing:FoodCourtIngredient, favourCount:number){
+
+	//每一帧检查，看看是不是要添加经验了
+	private CheckForIngredientLearn(){
+		for (let i = 0; i < this.dTable.eatingCha.length; i++){
+			let li = this.dTable.eatingCha[i].CurrentTurnGatherIngredient();
+			if (li){
+				let fX = this.dTable.eatingCha[i].seatInfo.x + this.dtStagePos.x;
+				let fY = this.dTable.eatingCha[i].seatInfo.y + this.dtStagePos.y;
+				this.AddIngredientExp(li, fX, fY);
+			}
+		}
+	}
+
+	// 在界面上添加Ingredient的经验值
+	private AddIngredientExp(ing:FoodCourtIngredient, fromX:number, fromY:number){
+		let iHint = this.TryAddNewIngHint(ing.ingredientId, ing.broth); //不管新老，先找到
+
+		//创建一个图标飞过去
+		let ic : any;
+		if (ing.broth == true){
+			let bm = GetBrothModelById(ing.ingredientId);
+			ic = bm.IconShape(0, 0, 30);
+			this.addChild(ic);
+			ic.x = fromX;
+			ic.y = fromY;
+		}else{
+			let im = GetIngredientModelById(ing.ingredientId);
+			ic = new eui.Image();
+			ic.texture = RES.getRes(im.icon);
+			this.addChild(ic);
+			ic.width = ic.height = 60;
+			ic.anchorOffsetX = ic.width / 2;
+			ic.anchorOffsetY = ic.height / 2;
+			ic.x = fromX;
+			ic.y = fromY;
+		}
+
+		let tarX = iHint.IconStageX();
+		let tarY = iHint.IconStageY();
+		let dis = Math.sqrt(Math.pow(tarX - fromX, 2) + Math.pow(tarY - fromY, 2));
+		let inTime = dis / 300 * 1000;
+		egret.Tween.get(ic)
+			.to({x:tarX, y:tarY}, inTime, egret.Ease.quartIn)
+			.call(()=>{
+				iHint.IncreaseExp(ing.exp);
+				this.removeChild(ic);
+				ic = null;
+			})
+	}
+
+	//找到IngHint中对应ingredientId的那个，如果是Null就是还没有
+	private GetIngHintByIngredientId(ingId:string, broth:boolean):HorizontalFoodCourt_IngredientExp{
 		for (let i = 0; i < this.ingredientExp.length; i++){
-			if (this.ingredientExp[i].broth == ing.broth && this.ingredientExp[i].ingredientId == ing.ingredientId){
-				//修改存在的
-				this.ingredientExp[i].exp += Math.ceil(ing.exp * (1 + favourCount * 0.3));
-				return;
+			if (this.ingredientExp[i].ingredientInfo.ingredientId == ingId && this.ingredientExp[i].ingredientInfo.broth == broth){
+				return this.ingredientExp[i];
 			}
 		}
-		//添加新的
-		let newIng = new FoodCourtIngredient(ing.ingredientId, ing.exp, ing.broth);
-		this.ingredientExp.push(newIng);
-		let iHint = new HorizontalFoodCourt_IngredientExp(newIng);
-		this.IngHint.push(iHint);
-		this.Group_Ing.addChild(iHint);
-
-		//this.Update();
+		return null;
 	}
+	//添加一个新的ingredient的hint，并且设置经验值为0
+	private TryAddNewIngHint(ingId:string, broth:boolean):HorizontalFoodCourt_IngredientExp{
+		let oldOne = this.GetIngHintByIngredientId(ingId, broth);
+		if (oldOne) return oldOne; //已经有了
+		let ingh = new HorizontalFoodCourt_IngredientExp(
+			new FoodCourtIngredient(ingId, 0, broth)
+		);
+		this.ingredientExp.push(ingh);
+		this.uiEatingState.AddIngredientExp(ingh);
+		return ingh;
+	}
+
+
 
 	//满腹条
 	private  HungerBarLength(v:number):number{
@@ -545,15 +646,14 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 
 
 	public Update(){
-		this.Label_Hungry.text = "满腹度：" + this.hungry.toString() + "/" + this.hungerMax.toString();
-		//主角
+		//所有角色
 		for (let i = 0; i < this.teamSpr.length; i++){
 			this.teamSpr[i].Update();
 		}
-		//学习的东西
-		for (let i = 0; i < this.IngHint.length; i++){
-			this.IngHint[i].Update();
-		}
+		// //学习的东西
+		// for (let i = 0; i < this.ingredientExp.length; i++){
+		// 	this.ingredientExp[i].Update();
+		// }
 		//桌子
 		if (this.dTable){
 			this.dTable.Update();
@@ -562,6 +662,8 @@ class HorizontalFoodCourt extends eui.Component implements  eui.UIComponent {
 			if (this.dTable.AllFinished() == true){
 				this.eating = false;
 				this.LeaveTheStore();
+			}else{
+				this.CheckForIngredientLearn();
 			}
 		}
 		//饱食度条子

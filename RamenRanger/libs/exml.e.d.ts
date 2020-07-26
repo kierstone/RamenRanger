@@ -10,7 +10,11 @@ declare class CraftNoodle_TareListSkin extends eui.Skin{
 }
 declare class CraftNoodleSkin extends eui.Skin{
 }
+declare class FoodCourt_EatingStateSkin extends eui.Skin{
+}
 declare class FoodCourt_NormalMenuSkin extends eui.Skin{
+}
+declare class FoodCourt_QuestListItemSkin extends eui.Skin{
 }
 declare class FoodCourt_SelectBuddyListSkin extends eui.Skin{
 }
@@ -45,6 +49,8 @@ declare class GameCycleButton extends eui.Skin{
 declare class HorizontalFoodCourt_BuddyInfoSkin extends eui.Skin{
 }
 declare class HorizontalFoodCourt_DishButtonSkin extends eui.Skin{
+}
+declare class HorizontalFoodCourt_EndToChallengeSkin extends eui.Skin{
 }
 declare class HorizontalFoodCourt_IngredientExpSkin extends eui.Skin{
 }
@@ -81,6 +87,8 @@ declare module skins{
 declare module skins{
 	class RadioButtonSkin extends eui.Skin{
 	}
+}
+declare class RamenQuest_RequirementListItemSkin extends eui.Skin{
 }
 declare module skins{
 	class ScrollerSkin extends eui.Skin{

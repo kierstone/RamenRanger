@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,bow_bowl_json,catalog_json,rec_recipt_json,character_animinfo_json,city_shanghai_json,bus_default_json,bus_default2_json,character_schoolgirl_json,ingredient_test_json,broth_json,noodle_steam_json,ingredient_json,bowl_json,ui_button_green_up_png,ui_button_green_down_png,ui_button_normal_down_png,ui_button_normal_up_png,icons_json,ui_craft_json,stall_json,npc_halfport_json,food_court_dish_json,random_port_json,travel_map_json",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,bow_bowl_json,catalog_json,rec_recipt_json,character_animinfo_json,city_shanghai_json,bus_default_json,character_schoolgirl_json,ingredient_test_json,broth_json,noodle_steam_json,ingredient_json,bowl_json,ui_button_green_up_png,ui_button_green_down_png,ui_button_normal_down_png,ui_button_normal_up_png,icons_json,ui_craft_json,stall_json,npc_halfport_json,food_court_dish_json,random_port_json,travel_map_json,ingredient_mutual_json,bus_default2_json",
 			"name": "preload"
 		}
 	],
@@ -162,12 +162,6 @@
 			"name": "bus_default_json"
 		},
 		{
-			"url": "assets/image/bus_default.json",
-			"type": "sheet",
-			"name": "bus_default2_json",
-			"subkeys": "advboard_test,bus_default_inner,bus_default_paint,bus_eave,bus_top_noddle"
-		},
-		{
 			"url": "assets/image/character_schoolgirl.json",
 			"type": "sheet",
 			"name": "character_schoolgirl_json",
@@ -264,6 +258,17 @@
 			"type": "sheet",
 			"url": "assets/image/travel_map.json",
 			"subkeys": "stall_3_d,stall_2_d,stall_1_d,stall_0_d,wooden_chair,wooden_single_table"
+		},
+		{
+			"name": "ingredient_mutual_json",
+			"type": "json",
+			"url": "assets/json/ingredient_mutual.json"
+		},
+		{
+			"name": "bus_default2_json",
+			"type": "sheet",
+			"url": "assets/image/bus_default.json",
+			"subkeys": "bkg_shanghai,advboard_test,bus_default_inner,bus_default_paint,bus_eave,bus_top_noddle,floor_shanghai"
 		}
 	]
 }

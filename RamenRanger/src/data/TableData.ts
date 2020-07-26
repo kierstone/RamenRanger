@@ -14,6 +14,8 @@ var GameData_CharacterAction:Array<CharacterActionInfo>;
 //旅行模式的小吃们
 var GameData_FoodCourtDish:Array<FoodCourtDishModel>;
 
+//食材的组合
+var GameData_IngredientMutual:Array<IngredientMutual>;
 
 
 //读取数据
@@ -98,7 +100,18 @@ var LoadGameData = function(){
         }
     }
 
-    
+    //食材组合
+    GameData_IngredientMutual = new Array<IngredientMutual>();
+    let ingMutualFile = RES.getRes("ingredient_mutual_json");
+    if (ingMutualFile && ingMutualFile["data"]){
+        for (let i = 0; i < ingMutualFile["data"].length; i++){
+            GameData_IngredientMutual.push(new IngredientMutual(
+                ingMutualFile["data"][i]
+            ))
+        }
+    }
+
+
 }
 
 //根据key获得对应造型的动画信息

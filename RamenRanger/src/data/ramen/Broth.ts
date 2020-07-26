@@ -166,7 +166,10 @@ class LearntBroth{
 
 class BrothObj{
 	public model:BrothModel;
+	public tare:Array<IngredientObj>; //TODO 汤底里面选的料，这个暂时先空着，以后有了汤的玩法是要的
+
 	constructor(model:BrothModel){
 		this.model = model;
+		this.tare = new Array<IngredientObj>();
 	}
 }

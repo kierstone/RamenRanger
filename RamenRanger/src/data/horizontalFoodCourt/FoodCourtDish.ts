@@ -144,7 +144,7 @@ class FoodCourtDishObj {
 	public IngredientInReward(ingredientId:string):FoodCourtIngredient{
 		for (let i = 0; i < this.model.reward.length; i++){
 			if (this.model.reward[i].ingredientId == ingredientId){
-				return this.model.reward[i];
+				return this.model.reward[i].Clone();
 			}
 		}
 		return null;
@@ -157,7 +157,7 @@ class FoodCourtDishObj {
 	public BrothInReward():FoodCourtIngredient{
 		for (let i = 0; i < this.model.reward.length; i++){
 			if (this.model.reward[i].broth == true){
-				return this.model.reward[i];
+				return this.model.reward[i].Clone();
 			}
 		}
 		return null;
@@ -173,6 +173,10 @@ class FoodCourtIngredient{
 		this.ingredientId = ingredientId;
 		this.exp = exp;
 		this.broth = broth;
+	}
+
+	public Clone(){
+		return new FoodCourtIngredient(this.ingredientId, this.exp, this.broth);
 	}
 }
 

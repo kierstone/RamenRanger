@@ -2,7 +2,7 @@
 <e:Skin class="HorizontalFoodCourtSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
 	<w:Config id="172fc071dae" ></w:Config>
 	<e:Group id="Group_Street" x="0" y="0"/>
-	<e:Button id="Button_Go" label="前进" x="500" y="450" skinName="GameButtonYellow" anchorOffsetX="0" width="220" anchorOffsetY="0" height="100"/>
+	<e:Button id="Button_Go" label="前进" x="500" y="450" skinName="GameButtonYellow" anchorOffsetX="0" width="220" anchorOffsetY="0" height="100" visible="false"/>
 	<e:Group x="19" y="20">
 		<e:Image width="40" height="40" x="0" y="0" source="scene_bowl_normal"/>
 		<e:Group x="55" y="0">

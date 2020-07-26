@@ -5,14 +5,13 @@ class RamenModel {
 	public bowl:BowlObj;
 	
 	public broth:BrothObj;
-	public tare:Array<IngredientObj>;
 	public noodles:IngredientObj
 	public topping:Array<IngredientObj>;
 
 	public reciptId:string;	//激活的recipt。
 
 	public constructor() {
-		this.tare = new Array<IngredientObj>();
+		//this.tare = new Array<IngredientObj>();
 		this.topping = new Array<IngredientObj>();
 		this.reciptId = "";
 	}
@@ -81,42 +80,35 @@ class RamenModel {
 	 * @param {boolean} removeTouchOne 是否从tare里面移除掉这个
 	 * @returns {IngredientObj} 点中的那个，null代表没有
 	 */
-	public TouchedTare(x:number, y:number, thisX:number, thisY:number, removeTouchOne:boolean):IngredientObj{
-		if (!this.tare || this.tare.length <= 0) return null;
-		//越后面的在越上面，越容易被点到
-		for (let i = this.tare.length - 1; i >= 0; i--){
-			let tp = this.tare[i];
-			if (tp.TouchOnMe(x, y, thisX, thisY) == true){
-				if (removeTouchOne == true){
-					return this.tare.splice(i, 1)[0];
-				}else{
-					return tp;
-				}
-			}
-		}
-		return null;
-	}
+	// public TouchedTare(x:number, y:number, thisX:number, thisY:number, removeTouchOne:boolean):IngredientObj{
+	// 	if (!this.tare || this.tare.length <= 0) return null;
+	// 	//越后面的在越上面，越容易被点到
+	// 	for (let i = this.tare.length - 1; i >= 0; i--){
+	// 		let tp = this.tare[i];
+	// 		if (tp.TouchOnMe(x, y, thisX, thisY) == true){
+	// 			if (removeTouchOne == true){
+	// 				return this.tare.splice(i, 1)[0];
+	// 			}else{
+	// 				return tp;
+	// 			}
+	// 		}
+	// 	}
+	// 	return null;
+	// }
 
 	/**
 	 * 随机创建一碗“拉面”
 	 * @param {BowlModel} bowl 用的碗的model，这个必须有
 	 * @param {BrothModel} broth 用的汤底，可以是null
-	 * @param {Array<IngredientModel>} tare 着味，可以是null
 	 * @param {IngredientModel} noodles 用的面条，可以是null
 	 * @param {Array<IngredientModel>} toppings 盖浇，当然也可以是null
 	 */
-	public RandomRamen(bowl:BowlModel, broth:BrothModel, tare:Array<IngredientModel>, noodles:IngredientModel, toppings:Array<IngredientModel>){
+	public RandomRamen(bowl:BowlModel, broth:BrothModel, noodles:IngredientModel, toppings:Array<IngredientModel>){
 		if (!bowl) return;
 		this.bowl = new BowlObj(bowl);
 
 		if (broth){
 			this.broth = new BrothObj(broth);
-		}
-
-		if (tare){
-			for (let i = 0; i < tare.length; i++){
-				this.tare.push(new IngredientObj(tare[i]));
-			}
 		}
 
 		if (noodles){
@@ -142,6 +134,68 @@ class RamenModel {
 		}
 	}
 
+	/**
+	 * 返回满足类型的食材的个数，包含汤底里的
+	 * @param {IngredientSubject} ingSubject 需要找的类型
+	 * @returns {number} 符合的个数
+	 */
+	public GetIngredientCountBySubject(ingSubject:IngredientSubject):number{
+		let res = 0;
+		
+		if (this.broth && this.broth.tare){
+			for (let i = 0; i < this.broth.tare.length; i++){
+				if (this.broth.tare[i].model.subject.Fit(ingSubject) == true){
+					res += 1;
+				}
+			}
+		}
+
+		for (let i = 0; i < this.topping.length; i++){
+			if (this.topping[i].model.subject.Fit(ingSubject) == true){
+				res += 1;
+			}
+		}
+
+		return res;
+	}
+
+	/**
+	 * 获得这碗拉面解锁的组合的索引
+	 * @param {IngredientModel} withIng 可以是null，如果有这个食材的话，满足的组合有哪些。
+	 * @returns {Array<IngredientMutual>} 符合的组合索引数组
+	 */
+	public GetMutuals(withIng:IngredientModel):Array<IngredientMutual>{
+		let res = new Array<IngredientMutual>();
+		if (!GameData_IngredientMutual) return res;
+		
+		let checkIng = new Array<IngredientModel>();
+		if (this.broth && this.broth.tare){
+			for (let i = 0; i < this.broth.tare.length; i++){
+				checkIng.push(this.broth.tare[i].model);
+			}
+		}
+		for (let i = 0; i < this.topping.length; i++){
+			checkIng.push(this.topping[i].model);
+		}
+		if (withIng){
+			checkIng.push(withIng);
+		}
+
+		for (let i = 0; i < checkIng.length - 1; i++){
+			for (let j = i + 1; j < checkIng.length; j++){
+				for (let n = 0; n < GameData_IngredientMutual.length; n++){
+					if (res.indexOf(GameData_IngredientMutual[n]) < 0){
+						if (GameData_IngredientMutual[n].FitThisMutual(checkIng[i], checkIng[j]) == true){
+							res.push(GameData_IngredientMutual[n]);
+						}
+					}
+				}
+			}
+		}
+
+		return res;
+	}
+	
 }
 
 

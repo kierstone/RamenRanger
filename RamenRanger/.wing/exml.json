@@ -83,5 +83,25 @@
         "path": "element/ui/food_court/FoodCourt_StoreMenu.ts",
         "class": "FoodCourt_StoreMenu",
         "parentPath": ""
+    },
+    "1735a109eb1": {
+        "path": "element/ui/craft_noodle/RamenQuest_RequirementListItem.ts",
+        "class": "RamenQuest_RequirementListItem",
+        "parentPath": ""
+    },
+    "173787a5f0c": {
+        "path": "element/ui/food_court/FoodCourt_EatingState.ts",
+        "class": "FoodCourt_EatingState",
+        "parentPath": ""
+    },
+    "173789fd097": {
+        "path": "scene/msgdlg/HorizontalFoodCourt_EndToChallenge.ts",
+        "class": "HorizontalFoodCourt_EndToChallenge",
+        "parentPath": ""
+    },
+    "17378a52cbe": {
+        "path": "element/ui/food_court/FoodCourt_QuestListItem.ts",
+        "class": "FoodCourt_QuestListItem",
+        "parentPath": ""
     }
 }

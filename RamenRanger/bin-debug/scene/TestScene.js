@@ -52,6 +52,10 @@ var TestScene = (function (_super) {
                 _this.diningTable.StartEat();
             }
         }, this);
+        this.Button_Back.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            Utils.UIRoot.addChild(new FoodCourtTeamBuild());
+            _this.parent.removeChild(_this);
+        }, this);
         //开启一个update和fixedUpdate的计时器
         var t = new egret.Timer(Utils.TickTime * this.timeScale);
         t.addEventListener(egret.TimerEvent.TIMER, function () {

@@ -8,13 +8,19 @@ class IngredientModel {
 	public scene:string;
 	public radius:number;
 
+	public subject:IngredientSubject;
+	// public ingType:string;	//是哪个大类
+	// public ingClass:string;	//是哪个中类
+	// public ingCatagory:string;	//是哪个小类
+
+	public tasty:number;	//入味度
+	public affect:number;	//着味度
+
 	public canBeUsed:number;
 	public liquid:boolean;
 	public tags:Array<string>;
 
 	public eat:boolean;	//吃面过程中是否吃这个
-	public rare:number;	//稀有度，也就是被发现的概率那个	
-	public cost:number;	//学习这个食材要额外消耗多少旅行点
 
 	public pungency:number;
 	public sweet:number;
@@ -49,8 +55,13 @@ class IngredientModel {
 		this.liquid = json["liquid"] ? json["liquid"] : false;
 
 		this.eat = json["eat"] ? json["eat"] : false;
-		this.rare = json["rare"] ? json["rare"] : 0;
-		this.cost = json["cost"] ? json["cost"] : 0;
+		this.tasty = json["tasty"] ? json["tasty"] : 0;
+		this.affect = json["affect"] ? json["affect"] : 0;
+
+		let iType = json["type"] ? json["type"] : "";
+		let iClass = json["class"] ? json["class"] : "";
+		let iCatagory = json["catagory"] ? json["catagory"] : "";
+		this.subject = new IngredientSubject(iType, iClass, iCatagory);
 
 		this.pungency = json["pungency"] ? json["pungency"] : 0;
 		this.sweet = json["sweet"] ? json["sweet"] : 0;
@@ -229,6 +240,39 @@ class LearntIngredient{
 
 	constructor(model:IngredientModel){
 		this.model = model;
+	}
+}
+
+/**
+ * 一个食材所属的大类、细类、品类
+ */
+class IngredientSubject{
+	public ingCatagory:string;	//品类
+	public ingClass:string;		//细类
+	public ingType:string;		//大类
+
+	constructor(ingType:string, ingClass:string = "", ingCatagory:string = ""){
+		this.ingType = ingType;
+		this.ingClass = ingClass;
+		this.ingCatagory = ingCatagory;
+	}
+
+	/**
+	 * 判断是否和传进来的类型是同类的东西
+	 * @param {IngredientSubject} ingSubject 要判断的是否与自己一样的类型
+	 * @returns {boolean} 是否一样
+	 */
+	public Fit(ingSubject:IngredientSubject):boolean{
+		//如果大类不确定，或者大类不相同，就肯定不是同类
+		if (this.ingType == "" || ingSubject.ingType == "" || this.ingType != ingSubject.ingType) return false;
+
+		//到这里，如果细类一样，才有可能比下去，哪怕两者的品类都是空（无要求），所以延伸到品类了，那么细类也必须填写
+		if (this.ingClass == ingSubject.ingClass){
+			//如果品类都一样，哪怕都是空的，也代表都是一样的货色，或者其中有一个品类要求是空的
+			return (this.ingCatagory == "" || ingSubject.ingCatagory == "" || this.ingCatagory == ingSubject.ingCatagory);
+		}
+
+		return false;	//都对不上，只有false了
 	}
 }
 

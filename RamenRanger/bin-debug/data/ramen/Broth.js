@@ -130,6 +130,7 @@ __reflect(LearntBroth.prototype, "LearntBroth");
 var BrothObj = (function () {
     function BrothObj(model) {
         this.model = model;
+        this.tare = new Array();
     }
     return BrothObj;
 }());

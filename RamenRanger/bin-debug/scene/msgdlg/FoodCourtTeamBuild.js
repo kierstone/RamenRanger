@@ -13,9 +13,9 @@ var FoodCourtTeamBuild = (function (_super) {
     function FoodCourtTeamBuild() {
         var _this = _super.call(this) || this;
         _this.canControl = false;
-        _this.floorY = 400;
-        _this.carHeight = 20;
-        _this.uiPosY = 480; //下方UI的y坐标
+        _this.floorY = 430;
+        _this.carHeight = 40;
+        _this.uiPosY = 430; //下方UI的y坐标
         _this.team = new Array();
         return _this;
     }
@@ -44,6 +44,14 @@ var FoodCourtTeamBuild = (function (_super) {
     };
     FoodCourtTeamBuild.prototype.InitBKG = function () {
         var storeY = this.floorY;
+        //背景
+        var bkg = new eui.Image();
+        this.addChild(bkg);
+        bkg.texture = RES.getRes("bkg_shanghai");
+        bkg.fillMode = egret.BitmapFillMode.REPEAT;
+        // bkg.width = this.stage.stageWidth;
+        // bkg.height = storeY;
+        //小汽车
         this.car = new eui.Image();
         this.car.texture = RES.getRes("bus_default_paint");
         this.addChild(this.car);
@@ -51,7 +59,7 @@ var FoodCourtTeamBuild = (function (_super) {
         this.car.anchorOffsetY = this.car.height;
         this.car.scaleX = -1; //TODO 就先转转
         this.car.x = this.stage.stageWidth / 2;
-        this.car.y = storeY;
+        this.car.y = storeY + 30;
         this.carDoorX = this.stage.stageWidth / 2 - 80;
         this.Rect_Hunger.width = 0;
         //主角
@@ -212,10 +220,7 @@ var FoodCourtTeamBuild = (function (_super) {
                 .to({ x: 1500 }, inTime, egret.Ease.quadIn)
                 .call(function () {
                 //离开场景，进入履行了
-                if (!GameScene_FoodCourt) {
-                    GameScene_FoodCourt = new HorizontalFoodCourt(_this.team);
-                }
-                Utils.UIRoot.addChild(GameScene_FoodCourt);
+                Utils.UIRoot.addChild(new HorizontalFoodCourt(_this.team));
                 _this.parent.removeChild(_this);
             });
         });

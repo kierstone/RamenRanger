@@ -1,5 +1,7 @@
 {"file":"travel_map.png","frames":{
-"stall_0_d":{"x":220,"y":169,"w":223,"h":157,"offX":0,"offY":0,"sourceW":223,"sourceH":157},
-"stall_1_d":{"x":1,"y":171,"w":216,"h":160,"offX":0,"offY":0,"sourceW":216,"sourceH":160},
+"stall_3_d":{"x":220,"y":1,"w":218,"h":166,"offX":0,"offY":0,"sourceW":218,"sourceH":166},
 "stall_2_d":{"x":1,"y":1,"w":217,"h":168,"offX":0,"offY":0,"sourceW":217,"sourceH":168},
-"stall_3_d":{"x":220,"y":1,"w":218,"h":166,"offX":0,"offY":0,"sourceW":218,"sourceH":166}}}
+"stall_1_d":{"x":1,"y":171,"w":216,"h":160,"offX":0,"offY":0,"sourceW":216,"sourceH":160},
+"stall_0_d":{"x":220,"y":169,"w":223,"h":157,"offX":0,"offY":0,"sourceW":223,"sourceH":157},
+"wooden_chair":{"x":440,"y":1,"w":43,"h":60,"offX":16,"offY":15,"sourceW":75,"sourceH":75},
+"wooden_single_table":{"x":219,"y":328,"w":73,"h":75,"offX":1,"offY":0,"sourceW":75,"sourceH":75}}}

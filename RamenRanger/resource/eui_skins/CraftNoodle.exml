@@ -34,10 +34,10 @@
 		</e:Group>
 		<e:Group id="Group_Step" y="100" anchorOffsetX="0" width="480" horizontalCenter="0" locked="true">
 			<e:Image id="Img_Step0" x="40" y="0" source="ui_craft_tab0" anchorOffsetX="40" anchorOffsetY="40"/>
-			<e:Image id="Img_Step1" x="140" y="0" source="ui_craft_tab1" anchorOffsetX="40" anchorOffsetY="40"/>
-			<e:Image id="Img_Step2" x="240" y="0" source="ui_craft_tab2" anchorOffsetX="40" anchorOffsetY="40"/>
-			<e:Image id="Img_Step3" x="340" y="0" source="ui_craft_tab3" anchorOffsetX="40" anchorOffsetY="40"/>
-			<e:Image id="Img_Step4" x="440" y="0" source="ui_craft_tab4" anchorOffsetX="40" anchorOffsetY="40"/>
+			<e:Image id="Img_Step1" x="140" y="0" source="ui_craft_tab1" anchorOffsetX="40" anchorOffsetY="40" visible="false"/>
+			<e:Image id="Img_Step2" x="139" y="-2.5" source="ui_craft_tab2" anchorOffsetX="40" anchorOffsetY="40"/>
+			<e:Image id="Img_Step3" x="239" y="-2.5" source="ui_craft_tab3" anchorOffsetX="40" anchorOffsetY="40"/>
+			<e:Image id="Img_Step4" x="339" y="-2.5" source="ui_craft_tab4" anchorOffsetX="40" anchorOffsetY="40"/>
 		</e:Group>
 		<e:Group id="Group_Hint" x="36" y="161">
 			<e:Image y="0" source="ui_craft_hint_back" x="0"/>
@@ -65,7 +65,24 @@
 			</e:skinName>
 		</e:Button>
 		<e:Button id="Button_TareList" label="出来" x="16" y="774" width="195" height="98" skinName="GameButtonYellow" anchorOffsetY="98"/>
-		<e:Button id="Button_Handbook" label="Button" x="19" y="751" skinName="CraftHandBookButton" anchorOffsetY="121"/>
+		<e:Button id="Button_Handbook" label="Button" x="20" y="750" skinName="CraftHandBookButton" anchorOffsetY="121" anchorOffsetX="0"/>
+		<e:Group id="Group_QuestList" x="20" y="750" anchorOffsetY="380" scaleX="0" scaleY="0">
+			<e:Image width="360" height="380" x="0" y="0" source="ui_dialog_back" scale9Grid="26,30,51,45" anchorOffsetX="0" anchorOffsetY="0"/>
+			<e:Image width="320" height="280" y="25" source="ui_dialog_text_back" scale9Grid="24,25,41,36" horizontalCenter="0"/>
+			<e:Group id="Group_QuestItemList" width="300" height="270" y="30" x="30">
+				<e:layout>
+					<e:VerticalLayout gap="5" horizontalAlign="left" verticalAlign="top"/>
+				</e:layout>
+			</e:Group>
+			<e:Button id="Button_CloseQuestList" label="" x="24.5" y="316.5" scaleX="1" scaleY="0.5">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="ui_craft_backbutton_up"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+		</e:Group>
 	</e:Group>
 	<e:Image width="100%" top="0" horizontalCenter="0" source="ui_craft_border" fillMode="repeat" scaleY="-1"/>
 	<e:Image id="Img_BottomBorder" width="100%" horizontalCenter="0" source="ui_craft_border" fillMode="repeat" anchorOffsetY="52" y="1334"/>

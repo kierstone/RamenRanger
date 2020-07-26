@@ -10,14 +10,29 @@ r.prototype = e.prototype, t.prototype = new r();
 };
 var FoodCourt_NormalMenu = (function (_super) {
     __extends(FoodCourt_NormalMenu, _super);
-    function FoodCourt_NormalMenu() {
-        return _super.call(this) || this;
+    function FoodCourt_NormalMenu(caller) {
+        var _this = _super.call(this) || this;
+        _this.caller = caller;
+        return _this;
     }
     FoodCourt_NormalMenu.prototype.partAdded = function (partName, instance) {
         _super.prototype.partAdded.call(this, partName, instance);
     };
     FoodCourt_NormalMenu.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
+        this.init();
+    };
+    FoodCourt_NormalMenu.prototype.init = function () {
+        var _this = this;
+        this.Button_Go.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            _this.caller.ButtonGoEvent();
+        }, this);
+    };
+    FoodCourt_NormalMenu.prototype.ShowIngredientExp = function (ingExp) {
+        this.Group_IngExp.removeChildren();
+        for (var i = 0; i < ingExp.length; i++) {
+            this.Group_IngExp.addChild(ingExp[i]);
+        }
     };
     return FoodCourt_NormalMenu;
 }(eui.Component));

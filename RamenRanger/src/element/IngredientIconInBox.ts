@@ -11,7 +11,7 @@ class IngredientIconInBox extends eui.Component implements  eui.UIComponent {
 	private eveFunc:(caller:CraftNoodle, ing:any)=>void;
 	private bModel: BrothModel;
 
-	public constructor(id:string, ingredient:any, icon:string, caller:CraftNoodle, func:(caller:CraftNoodle, ing:IngredientModel)=>void, broth:BrothModel = null) {
+	public constructor(id:string, ingredient:any, icon:string, defaultSelected:boolean, caller:CraftNoodle, func:(caller:CraftNoodle, ing:IngredientModel)=>void, broth:BrothModel = null) {
 		super();
 		this.id = id;
 		this.ingredient = ingredient;
@@ -19,6 +19,7 @@ class IngredientIconInBox extends eui.Component implements  eui.UIComponent {
 		this.eveFunc = func;
 		this.icon = icon;
 		this.bModel = broth;
+		this.selected = defaultSelected;
 	}
 
 	protected partAdded(partName:string,instance:any):void

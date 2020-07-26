@@ -109,7 +109,7 @@ var FoodCourtDishObj = (function () {
     FoodCourtDishObj.prototype.IngredientInReward = function (ingredientId) {
         for (var i = 0; i < this.model.reward.length; i++) {
             if (this.model.reward[i].ingredientId == ingredientId) {
-                return this.model.reward[i];
+                return this.model.reward[i].Clone();
             }
         }
         return null;
@@ -121,7 +121,7 @@ var FoodCourtDishObj = (function () {
     FoodCourtDishObj.prototype.BrothInReward = function () {
         for (var i = 0; i < this.model.reward.length; i++) {
             if (this.model.reward[i].broth == true) {
-                return this.model.reward[i];
+                return this.model.reward[i].Clone();
             }
         }
         return null;
@@ -137,6 +137,9 @@ var FoodCourtIngredient = (function () {
         this.exp = exp;
         this.broth = broth;
     }
+    FoodCourtIngredient.prototype.Clone = function () {
+        return new FoodCourtIngredient(this.ingredientId, this.exp, this.broth);
+    };
     return FoodCourtIngredient;
 }());
 __reflect(FoodCourtIngredient.prototype, "FoodCourtIngredient");

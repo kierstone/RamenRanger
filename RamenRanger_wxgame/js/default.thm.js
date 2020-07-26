@@ -10,7 +10,7 @@ var egret = window.egret;window.skins=window.skins||{};
                 window.generateEUI = window.generateEUI||{};
                 generateEUI.paths = generateEUI.paths||{};
                 generateEUI.styles = undefined;
-                generateEUI.skins = {"eui.Button":"resource/eui_skins/ButtonSkin.exml","eui.CheckBox":"resource/eui_skins/CheckBoxSkin.exml","eui.HScrollBar":"resource/eui_skins/HScrollBarSkin.exml","eui.HSlider":"resource/eui_skins/HSliderSkin.exml","eui.Panel":"resource/eui_skins/PanelSkin.exml","eui.TextInput":"resource/eui_skins/TextInputSkin.exml","eui.ProgressBar":"resource/eui_skins/ProgressBarSkin.exml","eui.RadioButton":"resource/eui_skins/RadioButtonSkin.exml","eui.Scroller":"resource/eui_skins/ScrollerSkin.exml","eui.ToggleSwitch":"resource/eui_skins/ToggleSwitchSkin.exml","eui.VScrollBar":"resource/eui_skins/VScrollBarSkin.exml","eui.VSlider":"resource/eui_skins/VSliderSkin.exml","eui.ItemRenderer":"resource/eui_skins/ItemRendererSkin.exml","CraftNoodle":"resource/eui_skins/CraftNoodle.exml","Street":"resource/eui_skins/Street.exml","StreetGround":"resource/eui_skins/StreetGround.exml","IngredientBox":"resource/eui_skins/IngredientBox.exml","IngredientIconInBox":"resource/eui_skins/IngredientIconInBox.exml","TestScene":"resource/eui_skins/TestScene.exml","PlacingToolBox":"resource/eui_skins/PlacingToolBox.exml","CraftNoodle_TareList":"resource/eui_skins/CraftNoodle_TareList.exml","TareListItem":"resource/eui_skins/TareListItem.exml","WelcomeScene":"resource/eui_skins/WelcomeScene.exml","HorizontalFoodCourt":"resource/eui_skins/HorizontalFoodCourt.exml","HorizontalFoodCourt_StoreUI":"resource/eui_skins/HorizontalFoodCourt_StoreUI.exml","HorizontalFoodCourt_DishButton":"resource/eui_skins/HorizontalFoodCourt_DishButton.exml","HorizontalFoodCourt_BuddyInfo":"resource/eui_skins/HorizontalFoodCourt_BuddyInfo.exml","HorizontalFoodCourt_IngredientExp":"resource/eui_skins/HorizontalFoodCourt_IngredientExp.exml","FoodCourt_SelectBuddyList":"resource/eui_skins/FoodCourt_SelectBuddyList.exml","FoodCourtTeamBuild":"resource/eui_skins/FoodCourtTeamBuild.exml","FoodCourt_NormalMenu":"resource/eui_skins/FoodCourt_NormalMenu.exml","FoodCourt_StoreMenu":"resource/eui_skins/FoodCourt_StoreMenu.exml"};generateEUI.paths['resource/eui_skins/ButtonSkin.exml'] = window.skins.ButtonSkin = (function (_super) {
+                generateEUI.skins = {"eui.Button":"resource/eui_skins/ButtonSkin.exml","eui.CheckBox":"resource/eui_skins/CheckBoxSkin.exml","eui.HScrollBar":"resource/eui_skins/HScrollBarSkin.exml","eui.HSlider":"resource/eui_skins/HSliderSkin.exml","eui.Panel":"resource/eui_skins/PanelSkin.exml","eui.TextInput":"resource/eui_skins/TextInputSkin.exml","eui.ProgressBar":"resource/eui_skins/ProgressBarSkin.exml","eui.RadioButton":"resource/eui_skins/RadioButtonSkin.exml","eui.Scroller":"resource/eui_skins/ScrollerSkin.exml","eui.ToggleSwitch":"resource/eui_skins/ToggleSwitchSkin.exml","eui.VScrollBar":"resource/eui_skins/VScrollBarSkin.exml","eui.VSlider":"resource/eui_skins/VSliderSkin.exml","eui.ItemRenderer":"resource/eui_skins/ItemRendererSkin.exml","CraftNoodle":"resource/eui_skins/CraftNoodle.exml","IngredientBox":"resource/eui_skins/IngredientBox.exml","IngredientIconInBox":"resource/eui_skins/IngredientIconInBox.exml","TestScene":"resource/eui_skins/TestScene.exml","PlacingToolBox":"resource/eui_skins/PlacingToolBox.exml","CraftNoodle_TareList":"resource/eui_skins/CraftNoodle_TareList.exml","TareListItem":"resource/eui_skins/TareListItem.exml","WelcomeScene":"resource/eui_skins/WelcomeScene.exml","HorizontalFoodCourt":"resource/eui_skins/HorizontalFoodCourt.exml","HorizontalFoodCourt_StoreUI":"resource/eui_skins/HorizontalFoodCourt_StoreUI.exml","HorizontalFoodCourt_DishButton":"resource/eui_skins/HorizontalFoodCourt_DishButton.exml","HorizontalFoodCourt_BuddyInfo":"resource/eui_skins/HorizontalFoodCourt_BuddyInfo.exml","HorizontalFoodCourt_IngredientExp":"resource/eui_skins/HorizontalFoodCourt_IngredientExp.exml","FoodCourt_SelectBuddyList":"resource/eui_skins/FoodCourt_SelectBuddyList.exml","FoodCourtTeamBuild":"resource/eui_skins/FoodCourtTeamBuild.exml","FoodCourt_NormalMenu":"resource/eui_skins/FoodCourt_NormalMenu.exml","FoodCourt_StoreMenu":"resource/eui_skins/FoodCourt_StoreMenu.exml","RamenQuest_RequirementListItem":"resource/eui_skins/RamenQuest_RequirementListItem.exml","FoodCourt_EatingState":"resource/eui_skins/FoodCourt_EatingState.exml","HorizontalFoodCourt_EndToChallenge":"resource/eui_skins/HorizontalFoodCourt_EndToChallenge.exml","FoodCourt_QuestListItem":"resource/eui_skins/FoodCourt_QuestListItem.exml"};generateEUI.paths['resource/eui_skins/ButtonSkin.exml'] = window.skins.ButtonSkin = (function (_super) {
 	__extends(ButtonSkin, _super);
 	function ButtonSkin() {
 		_super.call(this);
@@ -752,13 +752,53 @@ var egret = window.egret;window.skins=window.skins||{};
 		return CraftNoodleSkin$Skin3;
 	})(eui.Skin);
 
+	var CraftNoodleSkin$Skin4 = 	(function (_super) {
+		__extends(CraftNoodleSkin$Skin4, _super);
+		function CraftNoodleSkin$Skin4() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = CraftNoodleSkin$Skin4.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			t.percentHeight = 100;
+			t.source = "ui_craft_backbutton_up";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return CraftNoodleSkin$Skin4;
+	})(eui.Skin);
+
 	function CraftNoodleSkin() {
 		_super.call(this);
-		this.skinParts = ["Img_BKG","Img_Stick","Group_GameLayer","Group_PhotoHead","Group_PlaceTool","Group_Box","Button_PrevPage","Button_NextPage","Group_IngBox","Img_Step0","Img_Step1","Img_Step2","Img_Step3","Img_Step4","Group_Step","Label_HintText","Group_Hint","Mask_UserPortrait","Img_UserPortrait","Label_UserName","Group_PhotoMask","Rect_PhotoTaker","Button_CraftDone","Button_ShareNoodle","Group_PhotoButtons","Button_NextStep","Button_Prev","Button_TareList","Button_Handbook","Group_UILayer","Img_BottomBorder"];
+		this.skinParts = ["Img_BKG","Img_Stick","Group_GameLayer","Group_PhotoHead","Group_PlaceTool","Group_Box","Button_PrevPage","Button_NextPage","Group_IngBox","Img_Step0","Img_Step1","Img_Step2","Img_Step3","Img_Step4","Group_Step","Label_HintText","Group_Hint","Mask_UserPortrait","Img_UserPortrait","Label_UserName","Group_PhotoMask","Rect_PhotoTaker","Button_CraftDone","Button_ShareNoodle","Group_PhotoButtons","Button_NextStep","Button_Prev","Button_TareList","Button_Handbook","Group_QuestItemList","Button_CloseQuestList","Group_QuestList","Group_UILayer","Img_BottomBorder"];
 		
 		this.height = 1334;
 		this.width = 750;
-		this.elementsContent = [this.Img_BKG_i(),this.Img_Stick_i(),this.Group_GameLayer_i(),this.Group_UILayer_i(),this._Image5_i(),this.Img_BottomBorder_i()];
+		this.elementsContent = [this.Img_BKG_i(),this.Img_Stick_i(),this.Group_GameLayer_i(),this.Group_UILayer_i(),this._Image7_i(),this.Img_BottomBorder_i()];
 	}
 	var _proto = CraftNoodleSkin.prototype;
 
@@ -800,7 +840,7 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.percentWidth = 100;
 		t.x = 10;
 		t.y = 10;
-		t.elementsContent = [this.Group_PhotoHead_i(),this.Group_PlaceTool_i(),this.Group_IngBox_i(),this.Group_Step_i(),this.Group_Hint_i(),this.Group_PhotoMask_i(),this.Rect_PhotoTaker_i(),this.Group_PhotoButtons_i(),this.Button_NextStep_i(),this.Button_Prev_i(),this.Button_TareList_i(),this.Button_Handbook_i()];
+		t.elementsContent = [this.Group_PhotoHead_i(),this.Group_PlaceTool_i(),this.Group_IngBox_i(),this.Group_Step_i(),this.Group_Hint_i(),this.Group_PhotoMask_i(),this.Rect_PhotoTaker_i(),this.Group_PhotoButtons_i(),this.Button_NextStep_i(),this.Button_Prev_i(),this.Button_TareList_i(),this.Button_Handbook_i(),this.Group_QuestList_i()];
 		return t;
 	};
 	_proto.Group_PhotoHead_i = function () {
@@ -897,6 +937,7 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.anchorOffsetX = 40;
 		t.anchorOffsetY = 40;
 		t.source = "ui_craft_tab1";
+		t.visible = false;
 		t.x = 140;
 		t.y = 0;
 		return t;
@@ -907,8 +948,8 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.anchorOffsetX = 40;
 		t.anchorOffsetY = 40;
 		t.source = "ui_craft_tab2";
-		t.x = 240;
-		t.y = 0;
+		t.x = 139;
+		t.y = -2.5;
 		return t;
 	};
 	_proto.Img_Step3_i = function () {
@@ -917,8 +958,8 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.anchorOffsetX = 40;
 		t.anchorOffsetY = 40;
 		t.source = "ui_craft_tab3";
-		t.x = 340;
-		t.y = 0;
+		t.x = 239;
+		t.y = -2.5;
 		return t;
 	};
 	_proto.Img_Step4_i = function () {
@@ -927,8 +968,8 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.anchorOffsetX = 40;
 		t.anchorOffsetY = 40;
 		t.source = "ui_craft_tab4";
-		t.x = 440;
-		t.y = 0;
+		t.x = 339;
+		t.y = -2.5;
 		return t;
 	};
 	_proto.Group_Hint_i = function () {
@@ -1100,14 +1141,76 @@ var egret = window.egret;window.skins=window.skins||{};
 	_proto.Button_Handbook_i = function () {
 		var t = new eui.Button();
 		this.Button_Handbook = t;
+		t.anchorOffsetX = 0;
 		t.anchorOffsetY = 121;
 		t.label = "Button";
 		t.skinName = "CraftHandBookButton";
-		t.x = 19;
-		t.y = 751;
+		t.x = 20;
+		t.y = 750;
+		return t;
+	};
+	_proto.Group_QuestList_i = function () {
+		var t = new eui.Group();
+		this.Group_QuestList = t;
+		t.anchorOffsetY = 380;
+		t.scaleX = 0;
+		t.scaleY = 0;
+		t.x = 20;
+		t.y = 750;
+		t.elementsContent = [this._Image5_i(),this._Image6_i(),this.Group_QuestItemList_i(),this.Button_CloseQuestList_i()];
 		return t;
 	};
 	_proto._Image5_i = function () {
+		var t = new eui.Image();
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.height = 380;
+		t.scale9Grid = new egret.Rectangle(26,30,51,45);
+		t.source = "ui_dialog_back";
+		t.width = 360;
+		t.x = 0;
+		t.y = 0;
+		return t;
+	};
+	_proto._Image6_i = function () {
+		var t = new eui.Image();
+		t.height = 280;
+		t.horizontalCenter = 0;
+		t.scale9Grid = new egret.Rectangle(24,25,41,36);
+		t.source = "ui_dialog_text_back";
+		t.width = 320;
+		t.y = 25;
+		return t;
+	};
+	_proto.Group_QuestItemList_i = function () {
+		var t = new eui.Group();
+		this.Group_QuestItemList = t;
+		t.height = 270;
+		t.width = 300;
+		t.x = 30;
+		t.y = 30;
+		t.layout = this._VerticalLayout1_i();
+		return t;
+	};
+	_proto._VerticalLayout1_i = function () {
+		var t = new eui.VerticalLayout();
+		t.gap = 5;
+		t.horizontalAlign = "left";
+		t.verticalAlign = "top";
+		return t;
+	};
+	_proto.Button_CloseQuestList_i = function () {
+		var t = new eui.Button();
+		this.Button_CloseQuestList = t;
+		t.label = "";
+		t.scaleX = 1;
+		t.scaleY = 0.5;
+		t.x = 24.5;
+		t.y = 316.5;
+		t.skinName = CraftNoodleSkin$Skin4;
+		return t;
+	};
+	_proto._Image7_i = function () {
 		var t = new eui.Image();
 		t.fillMode = "repeat";
 		t.horizontalCenter = 0;
@@ -1129,18 +1232,188 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return CraftNoodleSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/FoodCourt_EatingState.exml'] = window.FoodCourt_EatingStateSkin = (function (_super) {
+	__extends(FoodCourt_EatingStateSkin, _super);
+	function FoodCourt_EatingStateSkin() {
+		_super.call(this);
+		this.skinParts = ["Group_IngExp"];
+		
+		this.height = 600;
+		this.width = 750;
+		this.elementsContent = [this._Image1_i(),this._Label1_i(),this._Image2_i(),this.Group_IngExp_i()];
+	}
+	var _proto = FoodCourt_EatingStateSkin.prototype;
+
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		t.percentHeight = 100;
+		t.horizontalCenter = 0;
+		t.scale9Grid = new egret.Rectangle(38,40,24,25);
+		t.source = "ui_dialog_back";
+		t.verticalCenter = 0;
+		t.percentWidth = 100;
+		return t;
+	};
+	_proto._Label1_i = function () {
+		var t = new eui.Label();
+		t.horizontalCenter = 0;
+		t.stroke = 2;
+		t.strokeColor = 0x000000;
+		t.text = "食材经验";
+		t.top = 30;
+		return t;
+	};
+	_proto._Image2_i = function () {
+		var t = new eui.Image();
+		t.bottom = 30;
+		t.left = 30;
+		t.right = 30;
+		t.scale9Grid = new egret.Rectangle(39,37,6,8);
+		t.source = "ui_dialog_text_back";
+		t.top = 90;
+		return t;
+	};
+	_proto.Group_IngExp_i = function () {
+		var t = new eui.Group();
+		this.Group_IngExp = t;
+		t.bottom = 30;
+		t.left = 30;
+		t.right = 30;
+		t.top = 90;
+		t.layout = this._TileLayout1_i();
+		return t;
+	};
+	_proto._TileLayout1_i = function () {
+		var t = new eui.TileLayout();
+		t.columnWidth = 200;
+		t.horizontalGap = 15;
+		t.requestedColumnCount = 3;
+		t.rowHeight = 60;
+		t.verticalGap = 10;
+		return t;
+	};
+	return FoodCourt_EatingStateSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/FoodCourt_NormalMenu.exml'] = window.FoodCourt_NormalMenuSkin = (function (_super) {
 	__extends(FoodCourt_NormalMenuSkin, _super);
 	function FoodCourt_NormalMenuSkin() {
 		_super.call(this);
-		this.skinParts = [];
+		this.skinParts = ["Button_Go","Group_IngExp"];
 		
-		this.height = 300;
-		this.width = 400;
+		this.height = 600;
+		this.width = 750;
+		this.elementsContent = [this._Image1_i(),this._Label1_i(),this.Button_Go_i(),this._Image2_i(),this.Group_IngExp_i()];
 	}
 	var _proto = FoodCourt_NormalMenuSkin.prototype;
 
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		t.percentHeight = 100;
+		t.horizontalCenter = 0;
+		t.scale9Grid = new egret.Rectangle(43,39,17,19);
+		t.source = "ui_dialog_back";
+		t.verticalCenter = 0;
+		t.percentWidth = 100;
+		return t;
+	};
+	_proto._Label1_i = function () {
+		var t = new eui.Label();
+		t.left = 30;
+		t.stroke = 2;
+		t.strokeColor = 0x000000;
+		t.text = "食材经验";
+		t.top = 100;
+		return t;
+	};
+	_proto.Button_Go_i = function () {
+		var t = new eui.Button();
+		this.Button_Go = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.height = 100;
+		t.label = "前进";
+		t.right = 30;
+		t.skinName = "GameButtonYellow";
+		t.top = 30;
+		t.width = 350;
+		return t;
+	};
+	_proto._Image2_i = function () {
+		var t = new eui.Image();
+		t.bottom = 40;
+		t.left = 30;
+		t.right = 30;
+		t.scale9Grid = new egret.Rectangle(39,37,6,8);
+		t.source = "ui_dialog_text_back";
+		t.top = 160;
+		return t;
+	};
+	_proto.Group_IngExp_i = function () {
+		var t = new eui.Group();
+		this.Group_IngExp = t;
+		t.bottom = 40;
+		t.left = 30;
+		t.right = 30;
+		t.top = 160;
+		t.layout = this._TileLayout1_i();
+		return t;
+	};
+	_proto._TileLayout1_i = function () {
+		var t = new eui.TileLayout();
+		t.columnWidth = 200;
+		t.horizontalGap = 15;
+		t.requestedColumnCount = 3;
+		t.rowHeight = 60;
+		t.verticalGap = 10;
+		return t;
+	};
 	return FoodCourt_NormalMenuSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/FoodCourt_QuestListItem.exml'] = window.FoodCourt_QuestListItemSkin = (function (_super) {
+	__extends(FoodCourt_QuestListItemSkin, _super);
+	function FoodCourt_QuestListItemSkin() {
+		_super.call(this);
+		this.skinParts = ["Img_Icon","Group_Broth","Label_Desc"];
+		
+		this.height = 60;
+		this.width = 440;
+		this.elementsContent = [this.Img_Icon_i(),this.Group_Broth_i(),this.Label_Desc_i()];
+	}
+	var _proto = FoodCourt_QuestListItemSkin.prototype;
+
+	_proto.Img_Icon_i = function () {
+		var t = new eui.Image();
+		this.Img_Icon = t;
+		t.height = 60;
+		t.left = 0;
+		t.verticalCenter = 0;
+		t.width = 60;
+		return t;
+	};
+	_proto.Group_Broth_i = function () {
+		var t = new eui.Group();
+		this.Group_Broth = t;
+		t.height = 2;
+		t.left = 29;
+		t.verticalCenter = 0;
+		t.width = 2;
+		return t;
+	};
+	_proto.Label_Desc_i = function () {
+		var t = new eui.Label();
+		this.Label_Desc = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.percentHeight = 100;
+		t.left = 60;
+		t.right = 0;
+		t.size = 30;
+		t.stroke = 2;
+		t.text = "Label";
+		t.textAlign = "right";
+		t.verticalAlign = "middle";
+		t.verticalCenter = 0;
+		return t;
+	};
+	return FoodCourt_QuestListItemSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/FoodCourt_SelectBuddyList.exml'] = window.FoodCourt_SelectBuddyListSkin = (function (_super) {
 	__extends(FoodCourt_SelectBuddyListSkin, _super);
 	function FoodCourt_SelectBuddyListSkin() {
@@ -1149,16 +1422,28 @@ var egret = window.egret;window.skins=window.skins||{};
 		
 		this.height = 500;
 		this.width = 750;
-		this.elementsContent = [this.Label_BuddyCount_i(),this.Button_Done_i(),this._Scroller1_i()];
+		this.elementsContent = [this._Image1_i(),this.Label_BuddyCount_i(),this.Button_Done_i(),this._Scroller1_i()];
 	}
 	var _proto = FoodCourt_SelectBuddyListSkin.prototype;
 
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		t.percentHeight = 100;
+		t.horizontalCenter = 0;
+		t.scale9Grid = new egret.Rectangle(30,33,42,40);
+		t.source = "ui_dialog_back";
+		t.verticalCenter = 0;
+		t.percentWidth = 100;
+		return t;
+	};
 	_proto.Label_BuddyCount_i = function () {
 		var t = new eui.Label();
 		this.Label_BuddyCount = t;
 		t.horizontalCenter = 0;
+		t.stroke = 2;
+		t.strokeColor = 0x000000;
 		t.text = "Label";
-		t.top = 15;
+		t.top = 20;
 		return t;
 	};
 	_proto.Button_Done_i = function () {
@@ -1208,16 +1493,35 @@ var egret = window.egret;window.skins=window.skins||{};
 		
 		this.height = 600;
 		this.width = 750;
-		this.elementsContent = [this.Group_DishMenu_i()];
+		this.elementsContent = [this._Image1_i(),this._Label1_i(),this.Group_DishMenu_i()];
 	}
 	var _proto = FoodCourt_StoreMenuSkin.prototype;
 
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		t.percentHeight = 100;
+		t.horizontalCenter = 0;
+		t.scale9Grid = new egret.Rectangle(42,39,19,17);
+		t.source = "ui_dialog_back";
+		t.verticalCenter = 0;
+		t.percentWidth = 100;
+		return t;
+	};
+	_proto._Label1_i = function () {
+		var t = new eui.Label();
+		t.horizontalCenter = 0;
+		t.stroke = 2;
+		t.strokeColor = 0x000000;
+		t.text = "要尝一尝哪一种美食呢？";
+		t.top = 20;
+		return t;
+	};
 	_proto.Group_DishMenu_i = function () {
 		var t = new eui.Group();
 		this.Group_DishMenu = t;
 		t.height = 600;
 		t.horizontalCenter = 0;
-		t.top = 0;
+		t.top = 60;
 		t.percentWidth = 100;
 		t.layout = this._HorizontalLayout1_i();
 		return t;
@@ -1937,6 +2241,128 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return HorizontalFoodCourt_DishButtonSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/HorizontalFoodCourt_EndToChallenge.exml'] = window.HorizontalFoodCourt_EndToChallengeSkin = (function (_super) {
+	__extends(HorizontalFoodCourt_EndToChallengeSkin, _super);
+	function HorizontalFoodCourt_EndToChallengeSkin() {
+		_super.call(this);
+		this.skinParts = ["Group_IngExp","Group_Quest","Button_Start"];
+		
+		this.height = 1334;
+		this.width = 750;
+		this.elementsContent = [this._Rect1_i(),this._Group1_i()];
+	}
+	var _proto = HorizontalFoodCourt_EndToChallengeSkin.prototype;
+
+	_proto._Rect1_i = function () {
+		var t = new eui.Rect();
+		t.fillAlpha = 0.5;
+		t.percentHeight = 100;
+		t.horizontalCenter = 0;
+		t.verticalCenter = 0;
+		t.percentWidth = 100;
+		return t;
+	};
+	_proto._Group1_i = function () {
+		var t = new eui.Group();
+		t.anchorOffsetX = 0;
+		t.horizontalCenter = 0;
+		t.top = 250;
+		t.width = 500;
+		t.elementsContent = [this._Image1_i(),this._Image2_i(),this.Group_IngExp_i(),this._Image3_i(),this.Group_Quest_i(),this._Label1_i(),this._Label2_i(),this.Button_Start_i()];
+		return t;
+	};
+	_proto._Image1_i = function () {
+		var t = new eui.Image();
+		t.height = 910;
+		t.scale9Grid = new egret.Rectangle(45,47,11,12);
+		t.source = "ui_dialog_back";
+		t.width = 500;
+		t.x = 0;
+		t.y = 0;
+		return t;
+	};
+	_proto._Image2_i = function () {
+		var t = new eui.Image();
+		t.height = 260;
+		t.left = 30;
+		t.right = 30;
+		t.scale9Grid = new egret.Rectangle(32,39,19,16);
+		t.source = "ui_dialog_text_back";
+		t.top = 80;
+		return t;
+	};
+	_proto.Group_IngExp_i = function () {
+		var t = new eui.Group();
+		this.Group_IngExp = t;
+		t.height = 260;
+		t.left = 30;
+		t.right = 30;
+		t.top = 80;
+		t.width = 420;
+		t.layout = this._TileLayout1_i();
+		return t;
+	};
+	_proto._TileLayout1_i = function () {
+		var t = new eui.TileLayout();
+		t.columnWidth = 135;
+		t.horizontalGap = 5;
+		t.requestedColumnCount = 3;
+		t.rowHeight = 60;
+		t.verticalGap = 5;
+		return t;
+	};
+	_proto._Image3_i = function () {
+		var t = new eui.Image();
+		t.height = 360;
+		t.left = 30;
+		t.right = 30;
+		t.scale9Grid = new egret.Rectangle(32,39,19,16);
+		t.source = "ui_dialog_text_back";
+		t.top = 420;
+		return t;
+	};
+	_proto.Group_Quest_i = function () {
+		var t = new eui.Group();
+		this.Group_Quest = t;
+		t.left = 30;
+		t.right = 30;
+		t.top = 420;
+		t.layout = this._VerticalLayout1_i();
+		return t;
+	};
+	_proto._VerticalLayout1_i = function () {
+		var t = new eui.VerticalLayout();
+		t.gap = 0;
+		return t;
+	};
+	_proto._Label1_i = function () {
+		var t = new eui.Label();
+		t.horizontalCenter = 0;
+		t.stroke = 2;
+		t.text = "探索结束";
+		t.y = 30;
+		return t;
+	};
+	_proto._Label2_i = function () {
+		var t = new eui.Label();
+		t.horizontalCenter = 0;
+		t.stroke = 2;
+		t.text = "拉面挑战";
+		t.top = 360;
+		return t;
+	};
+	_proto.Button_Start_i = function () {
+		var t = new eui.Button();
+		this.Button_Start = t;
+		t.bottom = 30;
+		t.height = 80;
+		t.label = "开始拉面挑战";
+		t.left = 30;
+		t.right = 30;
+		t.skinName = "GameButtonYellow";
+		return t;
+	};
+	return HorizontalFoodCourt_EndToChallengeSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/HorizontalFoodCourt_IngredientExp.exml'] = window.HorizontalFoodCourt_IngredientExpSkin = (function (_super) {
 	__extends(HorizontalFoodCourt_IngredientExpSkin, _super);
 	function HorizontalFoodCourt_IngredientExpSkin() {
@@ -2056,31 +2482,14 @@ var egret = window.egret;window.skins=window.skins||{};
 	__extends(HorizontalFoodCourtSkin, _super);
 	function HorizontalFoodCourtSkin() {
 		_super.call(this);
-		this.skinParts = ["Label_Hungry","Group_Street","Button_Go","Rect_HungerBack","Rect_HungerNow","Rect_HungerMinus","Group_Ing"];
+		this.skinParts = ["Group_Street","Button_Go","Rect_HungerBack","Rect_HungerNow","Rect_HungerMinus","Label_Hungry","Group_Ing","Scroller_IngLearn","Group_Test"];
 		
 		this.height = 1334;
 		this.width = 750;
-		this.elementsContent = [this._Rect1_i(),this.Label_Hungry_i(),this.Group_Street_i(),this.Button_Go_i(),this._Group2_i(),this._Scroller1_i()];
+		this.elementsContent = [this.Group_Street_i(),this.Button_Go_i(),this._Group2_i(),this.Scroller_IngLearn_i(),this.Group_Test_i()];
 	}
 	var _proto = HorizontalFoodCourtSkin.prototype;
 
-	_proto._Rect1_i = function () {
-		var t = new eui.Rect();
-		t.percentHeight = 100;
-		t.horizontalCenter = 0;
-		t.verticalCenter = 0;
-		t.percentWidth = 100;
-		return t;
-	};
-	_proto.Label_Hungry_i = function () {
-		var t = new eui.Label();
-		this.Label_Hungry = t;
-		t.size = 40;
-		t.text = "Label";
-		t.x = 25;
-		t.y = 697;
-		return t;
-	};
 	_proto.Group_Street_i = function () {
 		var t = new eui.Group();
 		this.Group_Street = t;
@@ -2096,6 +2505,7 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.height = 100;
 		t.label = "前进";
 		t.skinName = "GameButtonYellow";
+		t.visible = false;
 		t.width = 220;
 		t.x = 500;
 		t.y = 450;
@@ -2121,7 +2531,7 @@ var egret = window.egret;window.skins=window.skins||{};
 		var t = new eui.Group();
 		t.x = 55;
 		t.y = 0;
-		t.elementsContent = [this.Rect_HungerBack_i(),this.Rect_HungerNow_i(),this.Rect_HungerMinus_i()];
+		t.elementsContent = [this.Rect_HungerBack_i(),this.Rect_HungerNow_i(),this.Rect_HungerMinus_i(),this.Label_Hungry_i()];
 		return t;
 	};
 	_proto.Rect_HungerBack_i = function () {
@@ -2129,6 +2539,7 @@ var egret = window.egret;window.skins=window.skins||{};
 		this.Rect_HungerBack = t;
 		t.anchorOffsetX = 0;
 		t.anchorOffsetY = 0;
+		t.fillAlpha = 0;
 		t.height = 40;
 		t.strokeAlpha = 1;
 		t.strokeColor = 0xffffff;
@@ -2143,7 +2554,7 @@ var egret = window.egret;window.skins=window.skins||{};
 		this.Rect_HungerNow = t;
 		t.anchorOffsetX = 0;
 		t.anchorOffsetY = 0;
-		t.fillColor = 0x48ff00;
+		t.fillColor = 0x80f907;
 		t.height = 36;
 		t.strokeAlpha = 0;
 		t.strokeColor = 0xFFFFFF;
@@ -2167,12 +2578,23 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.y = 2;
 		return t;
 	};
-	_proto._Scroller1_i = function () {
+	_proto.Label_Hungry_i = function () {
+		var t = new eui.Label();
+		this.Label_Hungry = t;
+		t.size = 30;
+		t.text = "Label";
+		t.visible = false;
+		t.x = 6;
+		t.y = 5;
+		return t;
+	};
+	_proto.Scroller_IngLearn_i = function () {
 		var t = new eui.Scroller();
-		t.bottom = 0;
+		this.Scroller_IngLearn = t;
 		t.height = 200;
-		t.horizontalCenter = 0;
-		t.width = 470;
+		t.percentWidth = 100;
+		t.x = 0;
+		t.y = 1134;
 		t.viewport = this.Group_Ing_i();
 		return t;
 	};
@@ -2188,6 +2610,16 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.orientation = "rows";
 		t.requestedColumnCount = 3;
 		t.verticalGap = 10;
+		return t;
+	};
+	_proto.Group_Test_i = function () {
+		var t = new eui.Group();
+		this.Group_Test = t;
+		t.height = 200;
+		t.visible = false;
+		t.width = 200;
+		t.x = 248;
+		t.y = 878;
 		return t;
 	};
 	return HorizontalFoodCourtSkin;
@@ -2714,6 +3146,62 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return RadioButtonSkin;
+})(eui.Skin);generateEUI.paths['resource/eui_skins/RamenQuest_RequirementListItem.exml'] = window.RamenQuest_RequirementListItemSkin = (function (_super) {
+	__extends(RamenQuest_RequirementListItemSkin, _super);
+	function RamenQuest_RequirementListItemSkin() {
+		_super.call(this);
+		this.skinParts = ["Img_Icon","Img_DoneSign","Group_Broth","Label_Desc"];
+		
+		this.height = 40;
+		this.width = 300;
+		this.elementsContent = [this.Img_Icon_i(),this.Img_DoneSign_i(),this.Group_Broth_i(),this.Label_Desc_i()];
+	}
+	var _proto = RamenQuest_RequirementListItemSkin.prototype;
+
+	_proto.Img_Icon_i = function () {
+		var t = new eui.Image();
+		this.Img_Icon = t;
+		t.height = 40;
+		t.left = 0;
+		t.verticalCenter = 0;
+		t.width = 40;
+		return t;
+	};
+	_proto.Img_DoneSign_i = function () {
+		var t = new eui.Image();
+		this.Img_DoneSign = t;
+		t.height = 40;
+		t.right = 0;
+		t.source = "ui_craft_selected";
+		t.verticalCenter = 0;
+		t.width = 40;
+		return t;
+	};
+	_proto.Group_Broth_i = function () {
+		var t = new eui.Group();
+		this.Group_Broth = t;
+		t.height = 2;
+		t.left = 19;
+		t.verticalCenter = 0;
+		t.width = 2;
+		return t;
+	};
+	_proto.Label_Desc_i = function () {
+		var t = new eui.Label();
+		this.Label_Desc = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.height = 40;
+		t.horizontalCenter = 0;
+		t.size = 20;
+		t.stroke = 1;
+		t.text = "Label";
+		t.verticalAlign = "middle";
+		t.width = 220;
+		t.y = 0;
+		return t;
+	};
+	return RamenQuest_RequirementListItemSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/ScrollerSkin.exml'] = window.skins.ScrollerSkin = (function (_super) {
 	__extends(ScrollerSkin, _super);
 	function ScrollerSkin() {
@@ -2741,82 +3229,6 @@ var egret = window.egret;window.skins=window.skins||{};
 		return t;
 	};
 	return ScrollerSkin;
-})(eui.Skin);generateEUI.paths['resource/eui_skins/Street.exml'] = window.StreetSkin = (function (_super) {
-	__extends(StreetSkin, _super);
-	function StreetSkin() {
-		_super.call(this);
-		this.skinParts = ["gameLayer"];
-		
-		this.height = 1334;
-		this.width = 750;
-		this.elementsContent = [this.gameLayer_i()];
-	}
-	var _proto = StreetSkin.prototype;
-
-	_proto.gameLayer_i = function () {
-		var t = new eui.Group();
-		this.gameLayer = t;
-		t.percentHeight = 100;
-		t.percentWidth = 100;
-		t.x = 0;
-		t.y = 0;
-		return t;
-	};
-	return StreetSkin;
-})(eui.Skin);generateEUI.paths['resource/eui_skins/StreetGround.exml'] = window.StreetGroundSkin = (function (_super) {
-	__extends(StreetGroundSkin, _super);
-	function StreetGroundSkin() {
-		_super.call(this);
-		this.skinParts = ["bkg","ground","road","streetside","street"];
-		
-		this.height = 1334;
-		this.width = 750;
-		this.elementsContent = [this.bkg_i(),this.ground_i(),this.road_i(),this.streetside_i(),this.street_i()];
-	}
-	var _proto = StreetGroundSkin.prototype;
-
-	_proto.bkg_i = function () {
-		var t = new eui.Image();
-		this.bkg = t;
-		t.source = "wooden_chair";
-		t.x = 0;
-		t.y = 0;
-		return t;
-	};
-	_proto.ground_i = function () {
-		var t = new eui.Image();
-		this.ground = t;
-		t.fillMode = "repeat";
-		t.source = "wooden_chair";
-		t.x = 0;
-		t.y = 75;
-		return t;
-	};
-	_proto.road_i = function () {
-		var t = new eui.Image();
-		this.road = t;
-		t.source = "wooden_chair";
-		t.x = 0;
-		t.y = 150;
-		return t;
-	};
-	_proto.streetside_i = function () {
-		var t = new eui.Image();
-		this.streetside = t;
-		t.source = "wooden_chair";
-		t.x = 0;
-		t.y = 225;
-		return t;
-	};
-	_proto.street_i = function () {
-		var t = new eui.Image();
-		this.street = t;
-		t.source = "wooden_chair";
-		t.x = 0;
-		t.y = 300;
-		return t;
-	};
-	return StreetGroundSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/TareListItem.exml'] = window.TareListItemSkin = (function (_super) {
 	__extends(TareListItemSkin, _super);
 	function TareListItemSkin() {
@@ -2866,11 +3278,11 @@ var egret = window.egret;window.skins=window.skins||{};
 	__extends(TestSceneSkin, _super);
 	function TestSceneSkin() {
 		_super.call(this);
-		this.skinParts = ["gameLayer","HSilder_Size","Label_Size","Button_Start"];
+		this.skinParts = ["gameLayer","HSilder_Size","Label_Size","Button_Start","Button_Back"];
 		
 		this.height = 1334;
 		this.width = 750;
-		this.elementsContent = [this._Rect1_i(),this.gameLayer_i(),this.HSilder_Size_i(),this._Label1_i(),this.Label_Size_i(),this.Button_Start_i()];
+		this.elementsContent = [this._Rect1_i(),this.gameLayer_i(),this.HSilder_Size_i(),this._Label1_i(),this.Label_Size_i(),this.Button_Start_i(),this.Button_Back_i()];
 	}
 	var _proto = TestSceneSkin.prototype;
 
@@ -2929,7 +3341,19 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.height = 75.76;
 		t.label = "开吃";
 		t.width = 240.91;
-		t.x = 163.61;
+		t.x = 116.61;
+		t.y = 1000;
+		return t;
+	};
+	_proto.Button_Back_i = function () {
+		var t = new eui.Button();
+		this.Button_Back = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.height = 75.76;
+		t.label = "返回";
+		t.width = 240.91;
+		t.x = 392.28;
 		t.y = 1000;
 		return t;
 	};
@@ -3171,7 +3595,7 @@ var egret = window.egret;window.skins=window.skins||{};
 		
 		this.height = 1334;
 		this.width = 750;
-		this.elementsContent = [this._Rect1_i(),this.Button_Ramen_i(),this.Button_Street_i(),this.Button_Test_i()];
+		this.elementsContent = [this._Rect1_i(),this._Rect2_i(),this.Button_Ramen_i(),this.Button_Street_i(),this.Button_Test_i(),this._Label1_i()];
 	}
 	var _proto = WelcomeSceneSkin.prototype;
 
@@ -3183,16 +3607,29 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.percentWidth = 100;
 		return t;
 	};
+	_proto._Rect2_i = function () {
+		var t = new eui.Rect();
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.fillAlpha = 0;
+		t.height = 151;
+		t.strokeColor = 0x0050ff;
+		t.strokeWeight = 2;
+		t.width = 209;
+		t.x = 12.5;
+		t.y = 101.5;
+		return t;
+	};
 	_proto.Button_Ramen_i = function () {
 		var t = new eui.Button();
 		this.Button_Ramen = t;
 		t.anchorOffsetX = 0;
 		t.anchorOffsetY = 0;
-		t.height = 108;
+		t.height = 46;
 		t.label = "Ramen";
 		t.width = 174;
-		t.x = 28;
-		t.y = 58;
+		t.x = 30;
+		t.y = 131;
 		return t;
 	};
 	_proto.Button_Street_i = function () {
@@ -3201,10 +3638,10 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.anchorOffsetX = 0;
 		t.anchorOffsetY = 0;
 		t.height = 114;
-		t.label = "Food Court";
-		t.width = 171;
-		t.x = 31;
-		t.y = 201;
+		t.label = "开始游戏";
+		t.width = 467;
+		t.x = 141.5;
+		t.y = 647;
 		return t;
 	};
 	_proto.Button_Test_i = function () {
@@ -3213,8 +3650,15 @@ var egret = window.egret;window.skins=window.skins||{};
 		t.anchorOffsetX = 0;
 		t.label = "Test";
 		t.width = 176;
-		t.x = 31;
-		t.y = 356;
+		t.x = 28;
+		t.y = 192;
+		return t;
+	};
+	_proto._Label1_i = function () {
+		var t = new eui.Label();
+		t.text = "测试区";
+		t.x = 72;
+		t.y = 86.5;
 		return t;
 	};
 	return WelcomeSceneSkin;

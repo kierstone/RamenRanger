@@ -61,46 +61,131 @@ var SpriteGroup = (function (_super) {
         return this.y < compareGroup.y;
     };
     SpriteGroup.prototype.Update = function () { };
-    SpriteGroup.prototype.FixedUpdate = function () { };
-    ;
     return SpriteGroup;
 }(eui.Group));
 __reflect(SpriteGroup.prototype, "SpriteGroup");
-var ChairModel = (function () {
-    function ChairModel(downInfo, upInfo, leftInfo, rightInfo) {
-        if (upInfo === void 0) { upInfo = null; }
-        if (leftInfo === void 0) { leftInfo = null; }
-        if (rightInfo === void 0) { rightInfo = null; }
-        this.direction = [
-            null,
-            null,
-            null,
-            null
-        ];
-        if (downInfo)
-            this.direction[Direction.Down] = downInfo;
-        if (upInfo)
-            this.direction[Direction.Up] = upInfo;
-        if (leftInfo)
-            this.direction[Direction.Left] = leftInfo;
-        if (leftInfo)
-            this.direction[Direction.Right] = leftInfo;
+/**
+ * 做拉面完成任务的需求
+ */
+var RamenRequirement = (function () {
+    function RamenRequirement(desc, requireSubject, RequiredMutual, requireBroth) {
+        if (requireBroth === void 0) { requireBroth = null; }
+        this.desc = desc;
+        this.requireSubject = requireSubject ? requireSubject : new Array();
+        this.requireMutual = RequiredMutual ? RequiredMutual : new Array();
+        this.requireBroth = requireBroth;
     }
-    ChairModel.prototype.GetCurrentInfoByDirection = function (dir) {
-        return this.direction[dir];
+    /**
+     * 是否全部满足了条件了
+     * @param {RamenModel} ramen 要检查的拉面
+     * @returns {boolean} 是=全满足，否=没有
+     */
+    RamenRequirement.prototype.AllMeet = function (ramen) {
+        this.CheckRamenFit(ramen);
+        for (var i = 0; i < this.requireMutual.length; i++) {
+            if (this.requireMutual[i].meet == false)
+                return false;
+        }
+        if (this.requireBroth && this.requireBroth.meet == false)
+            return false;
+        for (var i = 0; i < this.requireSubject.length; i++) {
+            if (this.requireSubject[i].meet == false)
+                return false;
+        }
     };
-    return ChairModel;
+    /**
+     * 检查一下拉面是否符合了，仅仅刷新一下meet状态
+     * @param {RamenModel} ramen 要检查的拉面
+     */
+    RamenRequirement.prototype.CheckRamenFit = function (ramen) {
+        for (var i = 0; i < this.requireMutual.length; i++) {
+            this.requireMutual[i].meet = false;
+        }
+        if (this.requireBroth)
+            this.requireBroth.meet = false;
+        for (var i = 0; i < this.requireSubject.length; i++) {
+            this.requireSubject[i].meet = false;
+        }
+        if (!ramen)
+            return;
+        if (this.requireBroth) {
+            this.requireBroth.meet = (ramen.broth && this.requireBroth.brothId == ramen.broth.model.id);
+        }
+        for (var i = 0; i < ramen.topping.length; i++) {
+            var ri = ramen.topping[i];
+            for (var j = 0; j < this.requireSubject.length; j++) {
+                if (this.requireSubject[j].meet == true)
+                    continue;
+                if (this.requireSubject[j].subject.Fit(ri.model.subject) == true) {
+                    this.requireSubject[j].meet = true;
+                    break;
+                }
+            }
+        }
+        if (this.requireMutual && this.requireMutual.length > 0) {
+            var im = ramen.GetMutuals(null);
+            for (var i = 0; i < im.length; i++) {
+                var imKeys = im[i].effectKeys;
+                for (var m = 0; m < imKeys.length; m++) {
+                    for (var n = 0; n < this.requireMutual.length; n++) {
+                        if (this.requireMutual[n].meet == true)
+                            continue;
+                        if (this.requireMutual[n].effectKey == imKeys[m]) {
+                            this.requireMutual[n].meet = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    };
+    return RamenRequirement;
 }());
-__reflect(ChairModel.prototype, "ChairModel");
-var ChairDirImageInfo = (function () {
-    function ChairDirImageInfo(source, gridWidth, gridHeight) {
-        this.source = source;
-        this.gridWidth = gridWidth;
-        this.gridHeight = gridHeight;
+__reflect(RamenRequirement.prototype, "RamenRequirement");
+/**
+ * 食材类型的需求
+ */
+var RequiredSubject = (function () {
+    function RequiredSubject(subject, icon, desc) {
+        this.subject = subject;
+        this.icon = icon;
+        this.desc = desc;
+        this.meet = false;
     }
-    return ChairDirImageInfo;
+    return RequiredSubject;
 }());
-__reflect(ChairDirImageInfo.prototype, "ChairDirImageInfo");
+__reflect(RequiredSubject.prototype, "RequiredSubject");
+/**
+ * 汤底类型的要求
+ */
+var RequiredBroth = (function () {
+    function RequiredBroth(brothId, desc) {
+        this.brothId = brothId;
+        this.desc = desc;
+        this.meet = false;
+    }
+    return RequiredBroth;
+}());
+__reflect(RequiredBroth.prototype, "RequiredBroth");
+/**
+ * 组合的要求
+ */
+var RequiredMutual = (function () {
+    function RequiredMutual(effectKey, icon, desc) {
+        this.effectKey = effectKey;
+        this.icon = icon;
+        this.desc = desc;
+        this.meet = false;
+    }
+    return RequiredMutual;
+}());
+__reflect(RequiredMutual.prototype, "RequiredMutual");
+var RamenRequirmentType;
+(function (RamenRequirmentType) {
+    RamenRequirmentType[RamenRequirmentType["Subject"] = 0] = "Subject";
+    RamenRequirmentType[RamenRequirmentType["Broth"] = 1] = "Broth";
+    RamenRequirmentType[RamenRequirmentType["Mutual"] = 2] = "Mutual";
+})(RamenRequirmentType || (RamenRequirmentType = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -251,8 +336,8 @@ var Main = (function (_super) {
 __reflect(Main.prototype, "Main");
 var GameUserInfo; //游戏账号信息，来自各个平台的
 var playerInfo;
-var GameScene_FoodCourt;
-var GameScene_CraftNoodle;
+// var GameScene_FoodCourt:HorizontalFoodCourt;
+// var GameScene_CraftNoodle:CraftNoodle
 /**
  * 平台数据接口。
  * 由于每款游戏通常需要发布到多个平台上，所以提取出一个统一的接口用于开发者获取平台数据信息
@@ -437,6 +522,7 @@ var Utils = (function () {
         }
         return res;
     };
+    Utils.TickTime = 100; //每个tick 100毫秒
     return Utils;
 }());
 __reflect(Utils.prototype, "Utils");
@@ -487,7 +573,7 @@ var SpriteClipLayer;
 var CraftNoodleState;
 (function (CraftNoodleState) {
     CraftNoodleState[CraftNoodleState["ChooseBowl"] = 0] = "ChooseBowl";
-    CraftNoodleState[CraftNoodleState["PutTare"] = 1] = "PutTare";
+    //PutTare = 1,
     CraftNoodleState[CraftNoodleState["SoupToBroth"] = 2] = "SoupToBroth";
     CraftNoodleState[CraftNoodleState["Noodles"] = 3] = "Noodles";
     CraftNoodleState[CraftNoodleState["SelectTopping"] = 4] = "SelectTopping";
@@ -640,6 +726,8 @@ var GameData_Broth;
 var GameData_CharacterAction;
 //旅行模式的小吃们
 var GameData_FoodCourtDish;
+//食材的组合
+var GameData_IngredientMutual;
 //读取数据
 var LoadGameData = function () {
     var catalog = RES.getRes("catalog_json");
@@ -714,6 +802,14 @@ var LoadGameData = function () {
     if (jsFile && jsFile["data"]) {
         for (var i = 0; i < jsFile["data"].length; i++) {
             GameData_FoodCourtDish.push(new FoodCourtDishModel(jsFile["data"][i]));
+        }
+    }
+    //食材组合
+    GameData_IngredientMutual = new Array();
+    var ingMutualFile = RES.getRes("ingredient_mutual_json");
+    if (ingMutualFile && ingMutualFile["data"]) {
+        for (var i = 0; i < ingMutualFile["data"].length; i++) {
+            GameData_IngredientMutual.push(new IngredientMutual(ingMutualFile["data"][i]));
         }
     }
 };
@@ -817,11 +913,34 @@ var CharacterActionInfo = (function () {
         this.body_lower = 0;
         this.allActions = new Array();
     }
+    /**
+     * 获得某个方向某个动作的每一帧信息
+     * @param {Direction} direction 方向
+     * @param {CharacterAction} action 动作
+     * @returns {Array<CharacterFrameInfo>} 每一帧的数据，如果是null，代表没有这一动画。
+     */
     CharacterActionInfo.prototype.GetFrameInfoArray = function (direction, action) {
         if (this.allActions && this.allActions[action])
             return this.allActions[action][direction];
         return null;
     };
+    /**
+     * 获得某个方向的某个动作需要的帧数
+     * @param {Direction} direction 转向的方向
+     * @param {CharacterAction} action 角色动作
+     * @returns {number} 这个动作的帧数
+     */
+    CharacterActionInfo.prototype.GetActionFrameCount = function (direction, action) {
+        var toAction = this.GetFrameInfoArray(direction, action);
+        if (toAction != null) {
+            return toAction.length;
+        }
+        return 0;
+    };
+    /**
+     * 从Json数据生成
+     * @param {Object} data json文件中对应的一条数据
+     */
     CharacterActionInfo.prototype.FromJson = function (data) {
         this.key = data["key"];
         this.toPreloadHeadImage = new Array();
@@ -922,349 +1041,16 @@ var CharacterFrameInfo = (function () {
 }());
 __reflect(CharacterFrameInfo.prototype, "CharacterFrameInfo");
 var CharacterObj = (function () {
-    function CharacterObj(characterActionInfo, x, y, property) {
-        this.currentFrame = 0;
-        this.isSitting = false; //如果sitting了，那么就不会执行ai了
-        this.cInfo = characterActionInfo;
-        this.CreateSpriteClipByInfo();
-        this.SetPosition(x, y);
-        this.ingredientPoint = new egret.Point(0, 0);
-        this.hasIngredientPoint = false;
-        //this.playingActionInfo = this.cInfo.GetFrameInfoArray(CharacterDirection.Down, CharacterAction.Stand);
-        this.ChangeAction(Direction.Down, CharacterAction.Stand);
-        this.property = property;
-        this.ai = new CharacterAI(this);
+    function CharacterObj(characterKey, buddyInfo) {
+        this.characterKey = characterKey;
+        this.buddyInfo = buddyInfo;
     }
-    CharacterObj.prototype.CreateSpriteClipByInfo = function () {
-        this.body = new SpriteClip();
-        this.head = new SpriteClip();
-        //TODO 回头可以优化这个，从一个pool里面拿
-        var bodyObj = {};
-        for (var i = 0; i < this.cInfo.toPreloadBodyImage.length; i++) {
-            var k = this.cInfo.toPreloadBodyImage[i];
-            bodyObj[k] = RES.getRes(k);
-        }
-        this.body.SetPreloadTexturesFromObject(bodyObj);
-        var headObj = {};
-        for (var i = 0; i < this.cInfo.toPreloadHeadImage.length; i++) {
-            var k = this.cInfo.toPreloadHeadImage[i];
-            headObj[k] = RES.getRes(k);
-        }
-        this.head.SetPreloadTexturesFromObject(headObj);
-    };
-    /**
-     * 设置逻辑坐标
-     */
-    CharacterObj.prototype.SetPosition = function (x, y) {
-        if (!this.position)
-            this.position = new egret.Point(x, y);
-        this.position.x = x;
-        this.position.y = y;
-        // if (this.head){
-        // 	this.head.x = 0;
-        // 	this.head.y = 0;	
-        // }
-        // if (this.body){
-        // 	this.body.x = 0;
-        // 	this.body.y = 0;
-        // }
-    };
-    //设置图形到对应帧，以及改变他们的offset属性
-    CharacterObj.prototype.SetImageFrame = function (frameIndex) {
-        if (frameIndex === void 0) { frameIndex = this.currentFrame; }
-        this.currentFrame = frameIndex;
-        var upperY = 0;
-        if (!this.playingActionInfo || !this.position)
-            return;
-        if (this.body) {
-            this.body.ChangeToPreloadTexture(this.playingActionInfo[frameIndex].body);
-            this.body.anchorOffsetX = Math.floor(this.body.width / 2);
-            this.body.anchorOffsetY = this.body.height - this.cInfo.body_lower;
-            this.body.scaleX = this.direction == Direction.Right ? -1 : 1;
-            upperY = this.body.height - this.cInfo.body_upper - this.cInfo.body_lower;
-        }
-        if (this.head) {
-            this.head.ChangeToPreloadTexture(this.playingActionInfo[frameIndex].head);
-            this.head.anchorOffsetX = Math.floor(this.head.width / 2);
-            this.head.anchorOffsetY = this.head.height + upperY - this.cInfo.head_lower;
-            this.head.scaleX = this.direction == Direction.Right ? -1 : 1;
-        }
-        if (this.doingAction == CharacterAction.Eat && this.currentFrame < this.cInfo.eatIngredientPos.length && this.head) {
-            this.hasIngredientPoint = true;
-            this.ingredientPoint.x = -this.head.anchorOffsetX + this.cInfo.eatIngredientPos[this.currentFrame].x;
-            this.ingredientPoint.y = -this.head.anchorOffsetY + this.cInfo.eatIngredientPos[this.currentFrame].y;
-        }
-        else {
-            this.hasIngredientPoint = false;
-        }
-        this.SetPosition(this.position.x, this.position.y);
-    };
-    /**
-     * 更换动作和方向
-     */
-    CharacterObj.prototype.ChangeAction = function (direction, action, forceChange) {
-        if (forceChange === void 0) { forceChange = false; }
-        var dontChange = (direction == this.direction && action == this.doingAction && forceChange == false);
-        var toAction = this.cInfo.GetFrameInfoArray(direction, action);
-        if (toAction != null) {
-            this.doingAction = action;
-            this.direction = direction;
-            this.playingActionInfo = toAction;
-            if (dontChange == false)
-                this.currentFrame = 0;
-            this.SetImageFrame();
-        }
-    };
-    /**
-     * 获得某个方向的某个动作需要的帧数
-     */
-    CharacterObj.prototype.GetActionFrameCount = function (direction, action) {
-        var toAction = this.cInfo.GetFrameInfoArray(direction, action);
-        if (toAction != null) {
-            return toAction.length * RenderUpdateEveryLogicTick; //动作长度其实依赖于渲染
-        }
-        return 0;
-    };
-    //返回是否达成一个loop了
-    CharacterObj.prototype.Draw = function (incFrame) {
-        if (incFrame === void 0) { incFrame = true; }
-        this.SetImageFrame();
-        if (incFrame == true) {
-            this.currentFrame = (this.currentFrame + 1) % this.playingActionInfo.length;
-            return this.currentFrame == 0;
-        }
-        else {
-            return false;
-        }
-    };
-    /**
-     * 获得逻辑坐标{x:0,y:0}
-     */
-    CharacterObj.prototype.GetPos = function () {
-        return this.position;
-    };
-    //TODO 特殊处理眨眼和站立，我曹
-    CharacterObj.prototype.IsSameAction = function (a1, a2) {
-        if ((a1 == CharacterAction.Stand && a2 == CharacterAction.StandTrick) ||
-            (a1 == CharacterAction.StandTrick && a2 == CharacterAction.Stand))
-            return true;
-        return a1 == a2;
-    };
-    /**
-     * 逻辑update。返回是否需要立即渲染一下
-     */
-    CharacterObj.prototype.FixedUpdate = function () {
-        var requireInstantDraw = false;
-        //没坐着就得执行ai
-        // if (this.isSitting == false){
-        // 	let todo:CharacterAIScript = this.ai.WhatToDo();
-        // 	if (todo){
-        // 		//处理移动
-        // 		if (todo.doMove == true){
-        // 			this.SetPosition(todo.moveToX, todo.moveToY);
-        // 		}
-        // 		//动作和方向改变，引起改变
-        // 		let cD:boolean = todo.changeDirection;
-        // 		let cA:boolean = this.IsSameAction(todo.doAction, this.doingAction) == false;
-        // 		if (cD == true || cA == true){
-        // 			this.ChangeAction(
-        // 				cD == true ? todo.directionTo : this.direction,
-        // 				cA == true ? todo.doAction : this.doingAction
-        // 			);
-        // 			requireInstantDraw = true;
-        // 		}
-        // 	}
-        // }
-        return requireInstantDraw;
-    };
-    /**
-     * 判断角色是否在做某个动作
-     * @param {CharacterAction} action 要判断的动作
-     * @returns {boolean} 是否是正在做的
-     */
-    CharacterObj.prototype.IsDoingAction = function (action) {
-        return action == this.doingAction;
-    };
-    /**
-     * 渲染update
-     */
-    CharacterObj.prototype.Update = function () {
-        //特殊处理站立的下一个动作
-        if (this.Draw() == true && this.IsSameAction(this.doingAction, CharacterAction.Stand) == true) {
-            this.ChangeAction(this.direction, (Math.random() < 0.2 ? CharacterAction.StandTrick : CharacterAction.Stand), true);
-        }
+    CharacterObj.prototype.GetCharacterActionInfo = function () {
+        return GetCharacterActionInfoByKey(this.characterKey);
     };
     return CharacterObj;
 }());
 __reflect(CharacterObj.prototype, "CharacterObj");
-var CharacterProperty = (function () {
-    function CharacterProperty(buddy) {
-        this.speed = 3; //每帧移动速度不同，年轻人肯定快一点
-        this.buddyInfo = buddy;
-    }
-    return CharacterProperty;
-}());
-__reflect(CharacterProperty.prototype, "CharacterProperty");
-//所有的AI脚本函数放在这里
-var AIScripts;
-(function (AIScripts) {
-    //测试用的， 4方向走路
-    AIScripts.DebugWalkForDirection = function (cha) {
-        var res = new Array();
-        var chaPos = cha.GetPos();
-        var sX = chaPos.x;
-        var sY = chaPos.y;
-        var rX = sX + 6 * GridWidth;
-        var rY = sY + 3 * GridWidth;
-        res.push(new CharacterAIScript(true, rX, sY, true, Direction.Right, CharacterAction.Walk, 1));
-        res.push(new CharacterAIScript(true, rX, rY, true, Direction.Down, CharacterAction.Walk, 1));
-        res.push(new CharacterAIScript(true, sX, rY, true, Direction.Left, CharacterAction.Walk, 1));
-        res.push(new CharacterAIScript(true, sX, sY, true, Direction.Up, CharacterAction.Walk, 1));
-        return res;
-    };
-    AIScripts.DebugDoAllAction = function (cha) {
-        var res = new Array();
-        //先转头
-        res.push(new CharacterAIScript(false, 0, 0, true, Direction.Down, CharacterAction.Stand, cha.GetActionFrameCount(Direction.Down, CharacterAction.Stand)));
-        for (var i = 3; i < 16; i++) {
-            res.push(new CharacterAIScript(false, 0, 0, false, Direction.Down, i, cha.GetActionFrameCount(Direction.Down, i)));
-        }
-        return res;
-    };
-    AIScripts.DebugStandTrickForDirection = function (cha) {
-        var res = new Array();
-        res.push(new CharacterAIScript(false, 0, 0, true, Direction.Right, CharacterAction.StandTrick, 160));
-        res.push(new CharacterAIScript(false, 0, 0, true, Direction.Up, CharacterAction.StandTrick, 160));
-        res.push(new CharacterAIScript(false, 0, 0, true, Direction.Left, CharacterAction.StandTrick, 160));
-        res.push(new CharacterAIScript(false, 0, 0, true, Direction.Down, CharacterAction.StandTrick, 160));
-        res.push(new CharacterAIScript(false, 0, 0, true, Direction.Right, CharacterAction.Stand, 160));
-        res.push(new CharacterAIScript(false, 0, 0, true, Direction.Up, CharacterAction.Stand, 160));
-        res.push(new CharacterAIScript(false, 0, 0, true, Direction.Left, CharacterAction.Stand, 160));
-        res.push(new CharacterAIScript(false, 0, 0, true, Direction.Down, CharacterAction.Stand, 160));
-        return res;
-    };
-    //仅仅只是从左向右或者右向左路过一下
-    AIScripts.JustPassThroughFromRoad = function (cha, x) {
-        var res = new Array();
-        var chaPos = cha.GetPos();
-        res.push(new CharacterAIScript(true, x, chaPos.y, true, (x <= chaPos.x ? Direction.Left : Direction.Right), CharacterAction.Walk, 1));
-        return res;
-    };
-    AIScripts.JustPassThroughFromTrafficLight = function (street, cha) {
-        var res = new Array();
-        var toGreen = street.GetTrafficLightState()["toGreen"] + Math.round(Math.random() * 10);
-        var cornerX = Math.floor(Math.random() * 2) + 1;
-        var cornerY = Math.floor(Math.random() * 3) + GameMapHeight + 2;
-        var cPos = street.GetPixelPosByGridPos(cornerX, cornerY, true);
-        var cX = cPos["x"] + Math.floor(Math.random() * GridWidth - GridWidth / 2);
-        var cY = cPos["y"] - Math.floor(Math.random() * GridHeight / 2);
-        var chaPos = cha.GetPos();
-        res.push(new CharacterAIScript(false, chaPos.x, chaPos.y, true, cha.direction, CharacterAction.Stand, toGreen));
-        res.push(new CharacterAIScript(true, cX, cY, true, Direction.Up, CharacterAction.Walk, 1));
-        res.push(new CharacterAIScript(true, (GameMapWidth + 3) * GridWidth, cY, true, Direction.Right, CharacterAction.Walk, 1));
-        return res;
-    };
-})(AIScripts || (AIScripts = {}));
-var CharacterAI = (function () {
-    function CharacterAI(master) {
-        this.master = master;
-        this.plan = new Array();
-        this.totalTicked = 0;
-        this.ticked = 0;
-    }
-    CharacterAI.prototype.AddScripts = function (scripts) {
-        for (var i = 0; i < scripts.length; i++) {
-            this.plan.push(scripts[i].Clone());
-        }
-    };
-    CharacterAI.prototype.SetScripts = function (scripts) {
-        if (scripts === void 0) { scripts = []; }
-        this.plan = new Array();
-        for (var i = 0; i < scripts.length; i++) {
-            this.plan.push(scripts[i].Clone());
-        }
-    };
-    //获得这一帧应该干啥
-    CharacterAI.prototype.WhatToDo = function (tickInc) {
-        if (tickInc === void 0) { tickInc = true; }
-        if (!this.plan || this.plan.length <= 0 || !this.master)
-            return new CharacterAIScript(false, 0, 0, false, Direction.Down, CharacterAction.Stand, 1);
-        var thisPlan = this.plan[0];
-        var cPos = this.master.GetPos();
-        var toX = cPos["x"];
-        var toY = cPos["y"];
-        var moveDone = thisPlan.doMove == false;
-        var needMove = thisPlan.doMove;
-        if (thisPlan.doMove == true) {
-            var ms = this.master.property.speed;
-            var cX = cPos["x"];
-            var cY = cPos["y"];
-            var tX = thisPlan.moveToX;
-            var tY = thisPlan.moveToY;
-            var xDone = false;
-            var yDone = false;
-            //x,y等速移动，所以产生AI的时候应该注意……
-            if (Math.abs(tX - cX) <= ms) {
-                xDone = true;
-                toX = tX;
-            }
-            else {
-                toX = (tX < cX) ? (cX - ms) : (cX + ms);
-            }
-            if (Math.abs(tY - cY) <= ms) {
-                yDone = true;
-                toY = tY;
-            }
-            else {
-                toY = (tY < cY) ? (cY - ms) : (cY + ms);
-            }
-            if (xDone == true && yDone == true) {
-                moveDone = true;
-            }
-        }
-        var needDir = this.ticked <= 0 && thisPlan.changeDirection == true;
-        var toDir = needDir == true ? thisPlan.directionTo : this.master.direction;
-        var doAction = thisPlan.doAction;
-        if (tickInc == true) {
-            this.ticked += 1;
-            this.totalTicked += 1;
-            if (this.ticked >= thisPlan.inTick && moveDone == true) {
-                this.ticked = 0;
-                this.plan.shift();
-            }
-        }
-        return new CharacterAIScript(needMove, toX, toY, needDir, toDir, doAction, 1);
-    };
-    return CharacterAI;
-}());
-__reflect(CharacterAI.prototype, "CharacterAI");
-//AI脚本的每一条信息
-var CharacterAIScript = (function () {
-    function CharacterAIScript(doMove, moveToX, moveToY, changeDirection, directionTo, doAction, inTick) {
-        this.doMove = false; //加个锁，doMove是false就不移动
-        this.changeDirection = false; //是否要转换面向，在第0个tick就会转换
-        this.doAction = CharacterAction.Stand; //在这个阶段用什么样的动作
-        this.doMove = doMove;
-        this.moveToX = moveToX;
-        this.moveToY = moveToY;
-        this.changeDirection = changeDirection;
-        this.directionTo = directionTo;
-        this.doAction = doAction;
-        this.inTick = inTick;
-    }
-    CharacterAIScript.prototype.SetMoveTarget = function (moveToX, moveToY, inTick) {
-        if (inTick === void 0) { inTick = 0; }
-        this.moveToX = moveToX;
-        this.moveToY = moveToY;
-        this.doMove = true;
-        this.inTick = inTick;
-    };
-    CharacterAIScript.prototype.Clone = function () {
-        return new CharacterAIScript(this.doMove, this.moveToX, this.moveToY, this.changeDirection, this.directionTo, this.doAction, this.inTick);
-    };
-    return CharacterAIScript;
-}());
-__reflect(CharacterAIScript.prototype, "CharacterAIScript");
 var DiningTableModel = (function () {
     function DiningTableModel(tableSource, seats, tableWidth, tableScale9) {
         this.tableSource = tableSource;
@@ -1306,46 +1092,22 @@ var EatingRamen = (function () {
     /**
      * @param {CharacterObj} cha 谁吃面
      * @param {RamenObj} ramen 吃的什么面
+     * @param {FoodCourtDishObj} dishInfo 要吃的食物，可以是null，毕竟只有小吃街才有
      * @param {boolean} favour 是否喜欢，如果是美食街，应该有喜欢不喜欢，否则根据算出来的计算
      */
-    function EatingRamen(cha, ramen, favour) {
-        if (favour === void 0) { favour = false; }
+    function EatingRamen(cha, ramen, dishInfo, gameType) {
         //相关数据
         this.hungry = 100; //吃面的人的饥饿度，这个未来可以有算法，现在先100开始，到0就吃饱吃撑了
         this.heart = 0; //吃面开始到现在已经获得了多少爱心了
-        this.runningTurnIndex = 0;
-        this.runningActionIndex = 0;
-        this.eatting = false;
+        this.finalAction = CharacterAction.Stand; //TODO 吃完以后要做的动作，先写死
         this.cha = cha;
+        this.buddyInfo = cha.buddyInfo;
         this.ramen = ramen;
-        this.eatting = false;
-        this.favour = favour;
+        this.gameType = gameType;
+        this.learnedIngredientInfo = new Array();
+        this.dishInfo = dishInfo;
         this.RunThisGame();
     }
-    /**
-     * 执行一个回合的逻辑思维，这个只有在回合开始一瞬间执行了
-     * 当然是在EatRamenGameState.Eat才会运行
-     */
-    // private RunATurn(){
-    // 	 //回合数先提高
-    // 	 this.turnId += 1;
-    // 	 //先看看你吃饱了就结束了
-    // 	 if (this.hungry <= 0){
-    // 		 this.gameState = EatRamenGameState.ReadyToLeave;
-    // 		 this.cha.ChangeAction(this.cha.direction, CharacterAction.Stand);
-    // 		 return; //TODO 没东西吃了，应该去后续状态
-    // 	 }
-    // 	 //选择要吃啥
-    // 	 let eatIng = this.ThisTurnEat();
-    // 	 if (eatIng == null){
-    // 		 this.gameState = EatRamenGameState.ReadyToLeave;
-    // 		 this.cha.ChangeAction(this.cha.direction, CharacterAction.Stand);
-    // 		 return;	//TODO 没东西吃了，应该去后续状态
-    // 	 }
-    // 	 //根据吃的东西改变属性
-    // 	 //根据吃的东西生成EatTurnAction和EatingAction
-    // 	 this.ThisTurnModify(eatIng["ingredient"], eatIng["isNoodle"]);
-    // }
     /**
      * 从头到尾模拟吃掉一碗面
      */
@@ -1355,14 +1117,15 @@ var EatingRamen = (function () {
         var turnId = 0;
         while (this.hungry > 0 && this.toEatRamen.HasFinished() == false) {
             //选择要吃啥
-            var eatIng = this.ThisTurnEat(turnId++);
+            var eatIng = this.ThisTurnEat(turnId);
             if (eatIng == null) {
                 break; //TODO 没东西吃了，应该去后续状态
             }
             //根据吃的东西改变属性
             //根据吃的东西生成EatTurnAction和EatingAction
             var toEatIng = this.ramen.GetToppingByUniqueId(eatIng["ingredient"]);
-            this.ThisTurnModify(toEatIng, eatIng["isNoodle"], eatIng["noodleReduce"]);
+            this.ThisTurnModify(turnId, toEatIng, eatIng["isNoodle"] == true, eatIng["noodleReduce"]);
+            turnId += 1;
         }
     };
     /**
@@ -1415,8 +1178,67 @@ var EatingRamen = (function () {
         return null;
     };
     //根据吃的东西改变属性，并且获得行为列表 TODO 都是临时写死的
-    EatingRamen.prototype.ThisTurnModify = function (eatIng, isNoodle, noodleReducePercent) {
+    EatingRamen.prototype.ThisTurnModify = function (turnId, eatIng, isNoodle, noodleReducePercent) {
         this.hungry -= 1;
+        switch (this.gameType) {
+            case EatGameType.FoodCourt:
+                {
+                    this.turnResult.push(this.ThisTurnEatActionInFoodCourt(eatIng, isNoodle, noodleReducePercent));
+                    this.ThisTurnIngGatherInFoodCourt(turnId, eatIng, isNoodle);
+                }
+                break;
+            case EatGameType.EatNoodle:
+                {
+                    this.turnResult.push(this.ThisTurnInNormalEat(eatIng, isNoodle, noodleReducePercent));
+                }
+                break;
+        }
+    };
+    //如果是在小吃街模式
+    EatingRamen.prototype.ThisTurnEatActionInFoodCourt = function (eatIng, isNoodle, noodleReducePercent) {
+        var satisify = this.buddyInfo.isPlayer == true ? 100 :
+            ((this.dishInfo && this.buddyInfo.favourType == this.dishInfo.model.type) ?
+                this.buddyInfo.favourLevel * 10 : 0);
+        var badTaste = BadTaste.None;
+        return new EatTurnAction(this.cha, eatIng, 0, isNoodle, noodleReducePercent, badTaste);
+    };
+    EatingRamen.prototype.ThisTurnIngGatherInFoodCourt = function (turnId, eatIng, isNoodle) {
+        var favPlus = Utils.RandomInt(5, 10);
+        var learnedChance = (this.dishInfo && this.buddyInfo.favourType == this.dishInfo.model.type) ?
+            (this.buddyInfo.favourLevel * favPlus + 50) : 50; //基础习得率50%，喜欢吃就提高概率
+        //if (Utils.RandomInt(0, 100) + learnedChance < 100) return; //概率不够学会	//TODO 必定学会
+        if (isNoodle == true) {
+            //有可能学到汤底或者面条
+            var mayLearn = new Array();
+            //如果有可能学到汤
+            var bro = this.dishInfo.BrothInReward();
+            if (bro)
+                mayLearn.push(bro);
+            //如果有可能学到面条
+            var nod = this.dishInfo.IngredientInReward(eatIng.model.id);
+            if (nod)
+                mayLearn.push(nod);
+            //随机获得
+            if (mayLearn.length <= 0)
+                return;
+            var ingInfo = mayLearn[Utils.GetRandomIndexFromArray(mayLearn.length, 1)[0]];
+            ingInfo.exp =
+                (this.dishInfo && this.buddyInfo.favourType == this.dishInfo.model.type) ?
+                    (this.buddyInfo.favourLevel + 5) : 3;
+            this.learnedIngredientInfo.push(new EatGameIngredientGatherInfo(turnId, ingInfo));
+        }
+        else {
+            var ingInfo = this.dishInfo.IngredientInReward(eatIng.model.id);
+            if (ingInfo) {
+                ingInfo.exp =
+                    (this.dishInfo && this.buddyInfo.favourType == this.dishInfo.model.type) ?
+                        (this.buddyInfo.favourLevel + 5) : 3;
+                this.learnedIngredientInfo.push(new EatGameIngredientGatherInfo(turnId, ingInfo));
+            }
+        }
+    };
+    //正常吃面模式
+    EatingRamen.prototype.ThisTurnInNormalEat = function (eatIng, isNoodle, noodleReducePercent) {
         var satisify = Math.round(Math.random() * 200 - 100);
         var badTaste = BadTaste.None;
         var ranRes = Math.random();
@@ -1432,109 +1254,28 @@ var EatingRamen = (function () {
         else if (ranRes >= 0.8) {
             badTaste = BadTaste.TooHeavy;
         }
-        var turnRes = new EatTurnAction(this.cha, eatIng, satisify, isNoodle, noodleReducePercent, badTaste);
-        this.turnResult.push(turnRes);
-        //this.__turnActions = this.__turnResult.GatherActionList(this.cha);
-    };
-    //返回是否立即重新绘制RamenSprite等内容
-    EatingRamen.prototype.FixedUpdate = function () {
-        var requireUpdate = false;
-        if (this.eatting == true) {
-            if (this.turnResult && this.runningTurnIndex < this.turnResult.length) {
-                if (this.runningTurnIndex >= 0 &&
-                    this.runningTurnIndex < this.turnResult.length &&
-                    this.turnResult[this.runningTurnIndex].actions &&
-                    this.runningActionIndex < this.turnResult[this.runningTurnIndex].actions.length) {
-                    //老的回合做动作
-                    var doingOne = this.turnResult[this.runningTurnIndex].actions[this.runningActionIndex];
-                    if (doingOne.tick > 0) {
-                        // this.cha.ChangeAction(this.cha.direction, doingOne.changeToAction);
-                        doingOne.tick -= 1;
-                    }
-                    if (doingOne.tick <= 0) {
-                        this.runningActionIndex += 1;
-                        if (this.runningActionIndex < this.turnResult[this.runningTurnIndex].actions.length) {
-                            this.cha.ChangeAction(this.cha.direction, this.turnResult[this.runningTurnIndex].actions[this.runningActionIndex].changeToAction);
-                        }
-                    }
-                }
-                else {
-                    //新的动作改变拉面
-                    this.runningTurnIndex += 1;
-                    this.runningActionIndex = 0;
-                    requireUpdate = true;
-                    if (this.runningTurnIndex < this.turnResult.length) {
-                        var tAct = this.turnResult[this.runningTurnIndex];
-                        if (tAct.isEatingNoodles == true) {
-                            //吃面条
-                            this.ramen.noodlePercentage -= tAct.noodleReducePercentage;
-                        }
-                        else {
-                            //吃盖浇
-                            var ingIdx = this.ramen.topping.indexOf(tAct.eatIngredient);
-                            if (ingIdx >= 0) {
-                                this.ramen.topping.splice(ingIdx, 1);
-                            }
-                        }
-                        var doingOne = this.turnResult[this.runningTurnIndex].actions[this.runningActionIndex];
-                        this.cha.ChangeAction(this.cha.direction, doingOne.changeToAction);
-                    }
-                }
-            }
-            else {
-                //吃完以后
-                this.cha.ChangeAction(this.cha.direction, this.favour == false ? CharacterAction.Stand : CharacterAction.Smile);
-            }
-        }
-        // switch(this.gameState){
-        // 	case EatRamenGameState.Eat:{
-        // 		if (this.__turnActions && this.__turnActions.length > 0){
-        // 			let doingOne = this.__turnActions[0];
-        // 			if (doingOne.tick > 0){
-        // 				this.cha.ChangeAction(this.cha.direction, doingOne.changeToAction);
-        // 				doingOne.tick -= 1;
-        // 			}
-        // 			if (doingOne.tick <= 0){
-        // 				this.__turnActions.shift();
-        // 			}
-        // 		}else{
-        // 			this.RunATurn();
-        // 			requireUpdate = true;
-        // 		}
-        // 	}break;
-        // }
-        return requireUpdate;
-    };
-    /**
-     * 获得当前运行中的turnResult
-     */
-    EatingRamen.prototype.CurrentTurnResult = function () {
-        if (this.IsFinished() == true)
-            return null;
-        return this.turnResult[this.runningTurnIndex];
-    };
-    /**
-     * 是否已经吃光了
-     */
-    EatingRamen.prototype.IsFinished = function () {
-        if (!this.turnResult)
-            return true;
-        return this.runningTurnIndex >= this.turnResult.length;
-    };
-    /**
-     * 临时的开吃
-     */
-    EatingRamen.prototype.StartEat = function () {
-        this.eatting = false;
-        if (this.ramen.HasFinished() == true)
-            return;
-        this.eatting = true;
-        this.runningTurnIndex = -1; //为了第一口问题
-        this.runningActionIndex = 0;
+        return new EatTurnAction(this.cha, eatIng, satisify, isNoodle, noodleReducePercent, badTaste);
     };
     return EatingRamen;
 }());
 __reflect(EatingRamen.prototype, "EatingRamen");
+//吃东西玩法的类型
+var EatGameType;
+(function (EatGameType) {
+    EatGameType[EatGameType["EatNoodle"] = 0] = "EatNoodle";
+    EatGameType[EatGameType["FoodCourt"] = 1] = "FoodCourt";
+})(EatGameType || (EatGameType = {}));
+/**
+ * 吃面玩法中，获得食材的提示
+ */
+var EatGameIngredientGatherInfo = (function () {
+    function EatGameIngredientGatherInfo(atTurn, learnedIngredient) {
+        this.atTurn = atTurn;
+        this.learnedIngredient = learnedIngredient;
+    }
+    return EatGameIngredientGatherInfo;
+}());
+__reflect(EatGameIngredientGatherInfo.prototype, "EatGameIngredientGatherInfo");
 /**
  * 首先我们把吃面的过程作为一个小游戏玩法，这样以后要扩展操作也简单
  * 只是吃面这个迷你游戏的每个回合要做些什么事情的数据结构
@@ -1547,26 +1288,26 @@ var EatTurnAction = (function () {
         this.isEatingNoodles = foodIsNoodle;
         this.noodleReducePercentage = noodleReducePercentage;
         this.cha = cha;
-        this.GatherActionList(cha);
+        this.cInfo = cha.GetCharacterActionInfo();
+        this.GatherActionList();
     }
     /**
      * 根据这个回合的结果，算出需要做的动作序列
-     * @param {CharacterObj} cha 针对这个角色而算出的列表，因为要依赖动作长度
      */
-    EatTurnAction.prototype.GatherActionList = function (cha) {
+    EatTurnAction.prototype.GatherActionList = function () {
         this.actions = new Array();
         //吃的动作
         var eatTimes = this.isEatingNoodles == true ? 3 : 1; //如果是面条则吃3下
         for (var i = 0; i < eatTimes; i++) {
-            this.actions.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Eat), CharacterAction.Eat));
+            this.actions.push(new EatingAction(this.cInfo.GetActionFrameCount(Direction.Down, CharacterAction.Eat), CharacterAction.Eat));
         }
         //咀嚼2口
         for (var i = 0; i < 2; i++) {
-            this.actions.push(new EatingAction(cha.GetActionFrameCount(cha.direction, CharacterAction.Chew), CharacterAction.Chew));
+            this.actions.push(new EatingAction(this.cInfo.GetActionFrameCount(Direction.Down, CharacterAction.Chew), CharacterAction.Chew));
         }
         //如果恶心了，那么就做恶心的动作，否则就是根据高兴程度来
         var resAction = this.GetEatActionBySatisfy();
-        this.actions.push(new EatingAction(cha.GetActionFrameCount(cha.direction, resAction), resAction));
+        this.actions.push(new EatingAction(this.cInfo.GetActionFrameCount(Direction.Down, resAction), resAction));
         return this.actions;
     };
     //根据高兴程度获得吃这口面的结果
@@ -1613,7 +1354,10 @@ var EatingAction = (function () {
 }());
 __reflect(EatingAction.prototype, "EatingAction");
 var FoodCourtBuddy = (function () {
-    function FoodCourtBuddy() {
+    function FoodCourtBuddy(isPlayer) {
+        if (isPlayer === void 0) { isPlayer = false; }
+        this.isPlayer = false;
+        this.isPlayer = isPlayer;
         this.RandomOne();
     }
     FoodCourtBuddy.prototype.RandomOne = function () {
@@ -1725,6 +1469,32 @@ var FoodCourtDishObj = (function () {
         }
         this.dish = new RamenObj(rm);
     };
+    /**
+     * 某个食材是否可能拿到经验
+     * 着味会被当做ingredient使用，比如排骨年糕有酱料
+     * @param {string} ingredientId 食材的model.id
+     * @returns {FoodCourtIngredient} 如果不是Null就说明有可以习得的信息
+     */
+    FoodCourtDishObj.prototype.IngredientInReward = function (ingredientId) {
+        for (var i = 0; i < this.model.reward.length; i++) {
+            if (this.model.reward[i].ingredientId == ingredientId) {
+                return this.model.reward[i].Clone();
+            }
+        }
+        return null;
+    };
+    /**
+     * 汤底是否可以被学习，如果在吃面，则可能有机会学习到汤底（着味会被当做ingredient使用）
+     * @returns {FoodCourtIngredient} 如果不是Null就说明有可以习得的信息
+     */
+    FoodCourtDishObj.prototype.BrothInReward = function () {
+        for (var i = 0; i < this.model.reward.length; i++) {
+            if (this.model.reward[i].broth == true) {
+                return this.model.reward[i].Clone();
+            }
+        }
+        return null;
+    };
     return FoodCourtDishObj;
 }());
 __reflect(FoodCourtDishObj.prototype, "FoodCourtDishObj");
@@ -1736,6 +1506,9 @@ var FoodCourtIngredient = (function () {
         this.exp = exp;
         this.broth = broth;
     }
+    FoodCourtIngredient.prototype.Clone = function () {
+        return new FoodCourtIngredient(this.ingredientId, this.exp, this.broth);
+    };
     return FoodCourtIngredient;
 }());
 __reflect(FoodCourtIngredient.prototype, "FoodCourtIngredient");
@@ -1938,10 +1711,63 @@ __reflect(LearntBroth.prototype, "LearntBroth");
 var BrothObj = (function () {
     function BrothObj(model) {
         this.model = model;
+        this.tare = new Array();
     }
     return BrothObj;
 }());
 __reflect(BrothObj.prototype, "BrothObj");
+var IngredientMutual = (function () {
+    function IngredientMutual(data) {
+        if (data)
+            this.FromJson(data);
+    }
+    /**
+     * 从json的Object获取到数据
+     * @param {Object} json 存盘的json文件，参看“数据结构/食材的结构”文档。
+     * @returns {boolean} 是否成功，如果id有异常则不会成功
+     */
+    IngredientMutual.prototype.FromJson = function (json) {
+        if (!json) {
+            return false;
+        }
+        this.ingText1 = json["ing_text1"] ? json["ing_text1"] : "";
+        this.ingIcon1 = json["ing_icon1"] ? json["ing_icon1"] : "";
+        var iType1 = json["ing_type1"] ? json["ing_type1"] : "";
+        var iClass1 = json["ing_class1"] ? json["ing_class1"] : "";
+        var iCatagory1 = json["ing_catagory1"] ? json["ing_catagory1"] : "";
+        this.ingSubject1 = new IngredientSubject(iType1, iClass1, iCatagory1);
+        this.ingText2 = json["ing_text2"] ? json["ing_text2"] : "";
+        this.ingIcon2 = json["ing_icon2"] ? json["ing_icon2"] : "";
+        var iType2 = json["ing_type2"] ? json["ing_type2"] : "";
+        var iClass2 = json["ing_class2"] ? json["ing_class2"] : "";
+        var iCatagory2 = json["ing_catagory2"] ? json["ing_catagory2"] : "";
+        this.ingSubject2 = new IngredientSubject(iType2, iClass2, iCatagory2);
+        this.isHarmful = json["harmful"] ? json["harmful"] : false;
+        this.score = json["score"] ? json["score"] : 0;
+        this.desc = json["desc"] ? json["desc"] : "";
+        this.effectKeys = new Array();
+        if (json["tag"]) {
+            var jt = json["effect_keys"];
+            for (var i = 0; i < jt.length; i++) {
+                this.effectKeys.push(jt[i]);
+            }
+        }
+        return true;
+    };
+    /**
+     * 是否符合当前这条组合
+     * @param {IngredientModel} ing1 食材1
+     * @param {IngredientModel} ing2 食材2
+     * @returns {boolean} 返回食材1和食材2是否符合这条组合
+     */
+    IngredientMutual.prototype.FitThisMutual = function (ing1, ing2) {
+        //要么1根1符合的同时2根2符合，要么1根2符合的同时2根1符合
+        return ((this.ingSubject1.Fit(ing1.subject) == true && this.ingSubject2.Fit(ing2.subject) == true) ||
+            (this.ingSubject1.Fit(ing2.subject) == true && this.ingSubject2.Fit(ing1.subject) == true));
+    };
+    return IngredientMutual;
+}());
+__reflect(IngredientMutual.prototype, "IngredientMutual");
 //从json读取的ingredient数据
 var IngredientModel = (function () {
     function IngredientModel(data) {
@@ -1966,8 +1792,12 @@ var IngredientModel = (function () {
         this.canBeUsed = json["using"] ? json["using"] : 0;
         this.liquid = json["liquid"] ? json["liquid"] : false;
         this.eat = json["eat"] ? json["eat"] : false;
-        this.rare = json["rare"] ? json["rare"] : 0;
-        this.cost = json["cost"] ? json["cost"] : 0;
+        this.tasty = json["tasty"] ? json["tasty"] : 0;
+        this.affect = json["affect"] ? json["affect"] : 0;
+        var iType = json["type"] ? json["type"] : "";
+        var iClass = json["class"] ? json["class"] : "";
+        var iCatagory = json["catagory"] ? json["catagory"] : "";
+        this.subject = new IngredientSubject(iType, iClass, iCatagory);
         this.pungency = json["pungency"] ? json["pungency"] : 0;
         this.sweet = json["sweet"] ? json["sweet"] : 0;
         this.salty = json["salty"] ? json["salty"] : 0;
@@ -2134,6 +1964,36 @@ var LearntIngredient = (function () {
     return LearntIngredient;
 }());
 __reflect(LearntIngredient.prototype, "LearntIngredient");
+/**
+ * 一个食材所属的大类、细类、品类
+ */
+var IngredientSubject = (function () {
+    function IngredientSubject(ingType, ingClass, ingCatagory) {
+        if (ingClass === void 0) { ingClass = ""; }
+        if (ingCatagory === void 0) { ingCatagory = ""; }
+        this.ingType = ingType;
+        this.ingClass = ingClass;
+        this.ingCatagory = ingCatagory;
+    }
+    /**
+     * 判断是否和传进来的类型是同类的东西
+     * @param {IngredientSubject} ingSubject 要判断的是否与自己一样的类型
+     * @returns {boolean} 是否一样
+     */
+    IngredientSubject.prototype.Fit = function (ingSubject) {
+        //如果大类不确定，或者大类不相同，就肯定不是同类
+        if (this.ingType == "" || ingSubject.ingType == "" || this.ingType != ingSubject.ingType)
+            return false;
+        //到这里，如果细类一样，才有可能比下去，哪怕两者的品类都是空（无要求），所以延伸到品类了，那么细类也必须填写
+        if (this.ingClass == ingSubject.ingClass) {
+            //如果品类都一样，哪怕都是空的，也代表都是一样的货色，或者其中有一个品类要求是空的
+            return (this.ingCatagory == "" || ingSubject.ingCatagory == "" || this.ingCatagory == ingSubject.ingCatagory);
+        }
+        return false; //都对不上，只有false了
+    };
+    return IngredientSubject;
+}());
+__reflect(IngredientSubject.prototype, "IngredientSubject");
 //素材用途
 var IngredientUseType;
 (function (IngredientUseType) {
@@ -2152,7 +2012,7 @@ __reflect(PlacedIngredient.prototype, "PlacedIngredient");
 //虽然叫model，但并不来自表，这个model是玩家制作的时候调整出来的，生成RamenObj用的
 var RamenModel = (function () {
     function RamenModel() {
-        this.tare = new Array();
+        //this.tare = new Array<IngredientObj>();
         this.topping = new Array();
         this.reciptId = "";
     }
@@ -2221,42 +2081,34 @@ var RamenModel = (function () {
      * @param {boolean} removeTouchOne 是否从tare里面移除掉这个
      * @returns {IngredientObj} 点中的那个，null代表没有
      */
-    RamenModel.prototype.TouchedTare = function (x, y, thisX, thisY, removeTouchOne) {
-        if (!this.tare || this.tare.length <= 0)
-            return null;
-        //越后面的在越上面，越容易被点到
-        for (var i = this.tare.length - 1; i >= 0; i--) {
-            var tp = this.tare[i];
-            if (tp.TouchOnMe(x, y, thisX, thisY) == true) {
-                if (removeTouchOne == true) {
-                    return this.tare.splice(i, 1)[0];
-                }
-                else {
-                    return tp;
-                }
-            }
-        }
-        return null;
-    };
+    // public TouchedTare(x:number, y:number, thisX:number, thisY:number, removeTouchOne:boolean):IngredientObj{
+    // 	if (!this.tare || this.tare.length <= 0) return null;
+    // 	//越后面的在越上面，越容易被点到
+    // 	for (let i = this.tare.length - 1; i >= 0; i--){
+    // 		let tp = this.tare[i];
+    // 		if (tp.TouchOnMe(x, y, thisX, thisY) == true){
+    // 			if (removeTouchOne == true){
+    // 				return this.tare.splice(i, 1)[0];
+    // 			}else{
+    // 				return tp;
+    // 			}
+    // 		}
+    // 	}
+    // 	return null;
+    // }
     /**
      * 随机创建一碗“拉面”
      * @param {BowlModel} bowl 用的碗的model，这个必须有
      * @param {BrothModel} broth 用的汤底，可以是null
-     * @param {Array<IngredientModel>} tare 着味，可以是null
      * @param {IngredientModel} noodles 用的面条，可以是null
      * @param {Array<IngredientModel>} toppings 盖浇，当然也可以是null
      */
-    RamenModel.prototype.RandomRamen = function (bowl, broth, tare, noodles, toppings) {
+    RamenModel.prototype.RandomRamen = function (bowl, broth, noodles, toppings) {
         if (!bowl)
             return;
         this.bowl = new BowlObj(bowl);
         if (broth) {
             this.broth = new BrothObj(broth);
-        }
-        if (tare) {
-            for (var i = 0; i < tare.length; i++) {
-                this.tare.push(new IngredientObj(tare[i]));
-            }
         }
         if (noodles) {
             this.noodles = new IngredientObj(noodles);
@@ -2278,6 +2130,61 @@ var RamenModel = (function () {
                 }
             });
         }
+    };
+    /**
+     * 返回满足类型的食材的个数，包含汤底里的
+     * @param {IngredientSubject} ingSubject 需要找的类型
+     * @returns {number} 符合的个数
+     */
+    RamenModel.prototype.GetIngredientCountBySubject = function (ingSubject) {
+        var res = 0;
+        if (this.broth && this.broth.tare) {
+            for (var i = 0; i < this.broth.tare.length; i++) {
+                if (this.broth.tare[i].model.subject.Fit(ingSubject) == true) {
+                    res += 1;
+                }
+            }
+        }
+        for (var i = 0; i < this.topping.length; i++) {
+            if (this.topping[i].model.subject.Fit(ingSubject) == true) {
+                res += 1;
+            }
+        }
+        return res;
+    };
+    /**
+     * 获得这碗拉面解锁的组合的索引
+     * @param {IngredientModel} withIng 可以是null，如果有这个食材的话，满足的组合有哪些。
+     * @returns {Array<IngredientMutual>} 符合的组合索引数组
+     */
+    RamenModel.prototype.GetMutuals = function (withIng) {
+        var res = new Array();
+        if (!GameData_IngredientMutual)
+            return res;
+        var checkIng = new Array();
+        if (this.broth && this.broth.tare) {
+            for (var i = 0; i < this.broth.tare.length; i++) {
+                checkIng.push(this.broth.tare[i].model);
+            }
+        }
+        for (var i = 0; i < this.topping.length; i++) {
+            checkIng.push(this.topping[i].model);
+        }
+        if (withIng) {
+            checkIng.push(withIng);
+        }
+        for (var i = 0; i < checkIng.length - 1; i++) {
+            for (var j = i + 1; j < checkIng.length; j++) {
+                for (var n = 0; n < GameData_IngredientMutual.length; n++) {
+                    if (res.indexOf(GameData_IngredientMutual[n]) < 0) {
+                        if (GameData_IngredientMutual[n].FitThisMutual(checkIng[i], checkIng[j]) == true) {
+                            res.push(GameData_IngredientMutual[n]);
+                        }
+                    }
+                }
+            }
+        }
+        return res;
     };
     return RamenModel;
 }());
@@ -2427,132 +2334,6 @@ var LoadingUI = (function (_super) {
     return LoadingUI;
 }(egret.Sprite));
 __reflect(LoadingUI.prototype, "LoadingUI", ["RES.PromiseTaskReporter"]);
-var ChairObj = (function () {
-    //TODO现在椅子都只有一格子宽度，今后扩展了再说
-    //public canSitGrid:Array<GridPosition>;	//可以坐的格子
-    function ChairObj(img, x, y, direction) {
-        if (direction === void 0) { direction = Direction.Down; }
-        this.position = new egret.Point(x, y);
-        this.enteranceOffset = new egret.Point(75, 0); //TODO 写死了坐进去的地方，但实际上应该读表
-        this.direction = direction;
-        this.img = img;
-        this.sittingCha = null;
-        this.Redraw();
-    }
-    /**
-     * 椅子需要被重绘的频率非常低
-     */
-    ChairObj.prototype.Redraw = function () {
-        if (!this.image)
-            this.image = new SpriteClip();
-        this.image.texture = RES.getRes(this.img);
-        this.image.anchorOffsetX = Math.round(this.image.width / 2);
-        this.image.anchorOffsetY = this.image.height;
-        this.SetPos(this.position.x, this.position.y);
-        //TODO人坐进去以后的位移
-    };
-    ChairObj.prototype.SetPos = function (x, y) {
-        if (!this.image) {
-            this.Redraw();
-        }
-        if (!this.position) {
-            this.position = new egret.Point(x, y);
-        }
-        this.position.x = this.image.x = x;
-        this.position.y = this.image.y = y;
-        if (!this.enterance) {
-            this.enterance = new egret.Point(0, 0);
-        }
-        this.enterance.x = this.position.x + this.enteranceOffset.x;
-        this.enterance.y = this.position.y + this.enteranceOffset.y;
-    };
-    return ChairObj;
-}());
-__reflect(ChairObj.prototype, "ChairObj");
-//当前的某个桌子栏位的状态
-var DiningTableSeatInfo = (function () {
-    function DiningTableSeatInfo(seatSlot) {
-        this.seatSlot = seatSlot;
-    }
-    return DiningTableSeatInfo;
-}());
-__reflect(DiningTableSeatInfo.prototype, "DiningTableSeatInfo");
-//桌子上的位置信息
-var DiningTableSeatSlot = (function () {
-    function DiningTableSeatSlot(tableX, tableY, ramenX, ramenY, seatOffsetX, seatOffsetY, seatDirection, maidOffsetX, maidOffsetY, maidDirection) {
-        this.tableX = tableX;
-        this.tableY = tableY;
-        this.ramenOffsetX = ramenX;
-        this.ramenOffsetY = ramenY;
-        this.seatOffsetX = seatOffsetX;
-        this.seatOffsetY = seatOffsetY;
-        this.seatDirection = seatDirection;
-        this.maidOffsetX = maidOffsetX;
-        this.maidOffsetY = maidOffsetY;
-        this.maidDirection = maidDirection;
-    }
-    DiningTableSeatSlot.prototype.Clone = function () {
-        var res = new DiningTableSeatSlot(this.tableX, this.tableY, this.ramenOffsetX, this.ramenOffsetY, this.seatOffsetX, this.seatOffsetY, this.seatDirection, this.maidOffsetX, this.maidOffsetY, this.maidDirection);
-        return res;
-    };
-    return DiningTableSeatSlot;
-}());
-__reflect(DiningTableSeatSlot.prototype, "DiningTableSeatSlot");
-var TrafficLight = (function () {
-    function TrafficLight() {
-        this.ticked = 0;
-        this.init();
-    }
-    TrafficLight.prototype.init = function () {
-        this.seat = new SpriteClip();
-        this.seat.texture = RES.getRes("trafficlight");
-        this.red = new SpriteClip();
-        this.red.texture = RES.getRes("trafficlight_red");
-        this.yellow = new SpriteClip();
-        this.yellow.texture = RES.getRes("trafficlight_yellow");
-        this.green = new SpriteClip();
-        this.green.texture = RES.getRes("trafficlight_green");
-        this.red.anchorOffsetX =
-            this.green.anchorOffsetX =
-                this.yellow.anchorOffsetX =
-                    this.seat.anchorOffsetX = Math.floor(this.seat.width / 2);
-        this.red.anchorOffsetY = this.seat.height + 3;
-        this.green.anchorOffsetY = this.seat.height + 1;
-        this.yellow.anchorOffsetY = this.seat.height + 2;
-        this.seat.anchorOffsetY = this.seat.height;
-        var x = 0;
-        var y = 0;
-        this.red.x =
-            this.green.x =
-                this.yellow.x =
-                    this.seat.x = x;
-        this.red.y = y + 3;
-        this.green.y = y + 1;
-        this.yellow.y = y + 2;
-        this.seat.y = y;
-    };
-    TrafficLight.prototype.LightOn = function (state) {
-        if (state == this.state)
-            return;
-        this.state = state;
-        this.ticked == 0;
-    };
-    TrafficLight.prototype.Draw = function (incFrame) {
-        if (incFrame === void 0) { incFrame = true; }
-        var darkAlpha = 0.3;
-        this.red.alpha = this.state == TrafficLightState.Red ? 1 : darkAlpha;
-        this.yellow.alpha = this.state == TrafficLightState.Yellow ? 1 : darkAlpha;
-        var cTick = Math.floor(this.ticked / 2);
-        this.green.alpha =
-            (this.state == TrafficLightState.Green ||
-                (this.state == TrafficLightState.GreenShine && (cTick % 2 == 0))) ?
-                1 : darkAlpha;
-        if (incFrame == true)
-            this.ticked += 1;
-    };
-    return TrafficLight;
-}());
-__reflect(TrafficLight.prototype, "TrafficLight");
 var GridPosition = (function () {
     function GridPosition(x, y) {
         this.x = x;
@@ -2563,9 +2344,22 @@ var GridPosition = (function () {
 __reflect(GridPosition.prototype, "GridPosition");
 var CharacterSprite = (function (_super) {
     __extends(CharacterSprite, _super);
-    function CharacterSprite(chaObj) {
+    /**
+     * 创建的时候需要一个characterObj，当把角色的部件拿出来放到别的舞台，比如餐桌上，就需要设置offPos为了确保位置了
+     * @param {CharacterObj} chaObj 生存的角色是谁的
+     * @param {number} offPosX 当把角色的部件拿出来放到别的舞台，比如餐桌上，就需要设置offPos为了确保位置了
+     * @param {number} offPosY 当把角色的部件拿出来放到别的舞台，比如餐桌上，就需要设置offPos为了确保位置了
+     */
+    function CharacterSprite(chaObj, offPosX, offPosY) {
+        if (offPosX === void 0) { offPosX = 0; }
+        if (offPosY === void 0) { offPosY = 0; }
         var _this = _super.call(this) || this;
+        _this.currentFrame = 0; //当前动画帧
         _this.character = chaObj;
+        _this.cInfo = _this.character.GetCharacterActionInfo();
+        _this.ingredientPoint = new egret.Point(0, 0);
+        _this.offPosX = offPosX;
+        _this.offPosY = offPosY;
         return _this;
     }
     CharacterSprite.prototype.childrenCreated = function () {
@@ -2573,10 +2367,118 @@ var CharacterSprite = (function (_super) {
         this.init();
     };
     CharacterSprite.prototype.init = function () {
-        this.head = this.character.head;
-        this.body = this.character.body;
-        this.emote = this.character.emote;
-        //this._character.SetPosition(0, 0);
+        this.CreateSpriteClipByInfo();
+        this.ChangeAction(Direction.Down, CharacterAction.Stand);
+        this.ResetSprites();
+        this.SetImageFrame();
+    };
+    //创建每个部件
+    CharacterSprite.prototype.CreateSpriteClipByInfo = function () {
+        this.body = new SpriteClip();
+        this.head = new SpriteClip();
+        //TODO 回头可以优化这个，从一个pool里面拿
+        var bodyObj = {};
+        for (var i = 0; i < this.cInfo.toPreloadBodyImage.length; i++) {
+            var k = this.cInfo.toPreloadBodyImage[i];
+            bodyObj[k] = RES.getRes(k);
+        }
+        this.body.SetPreloadTexturesFromObject(bodyObj);
+        var headObj = {};
+        for (var i = 0; i < this.cInfo.toPreloadHeadImage.length; i++) {
+            var k = this.cInfo.toPreloadHeadImage[i];
+            headObj[k] = RES.getRes(k);
+        }
+        this.head.SetPreloadTexturesFromObject(headObj);
+    };
+    //设置图形到对应帧，以及改变他们的offset属性
+    CharacterSprite.prototype.SetImageFrame = function (frameIndex) {
+        if (frameIndex === void 0) { frameIndex = this.currentFrame; }
+        this.currentFrame = frameIndex;
+        var upperY = 0;
+        if (!this.playingActionInfo)
+            return;
+        if (this.body) {
+            this.body.x = this.offPosX;
+            this.body.y = this.offPosY;
+            this.body.ChangeToPreloadTexture(this.playingActionInfo[frameIndex].body);
+            this.body.anchorOffsetX = Math.floor(this.body.width / 2);
+            this.body.anchorOffsetY = this.body.height - this.cInfo.body_lower;
+            this.body.scaleX = this.direction == Direction.Right ? -1 : 1;
+            upperY = this.body.height - this.cInfo.body_upper - this.cInfo.body_lower;
+        }
+        if (this.head) {
+            this.head.x = this.offPosX;
+            this.head.y = this.offPosY;
+            this.head.ChangeToPreloadTexture(this.playingActionInfo[frameIndex].head);
+            this.head.anchorOffsetX = Math.floor(this.head.width / 2);
+            this.head.anchorOffsetY = this.head.height + upperY - this.cInfo.head_lower;
+            this.head.scaleX = this.direction == Direction.Right ? -1 : 1;
+        }
+        if (this.doingAction == CharacterAction.Eat && this.currentFrame < this.cInfo.eatIngredientPos.length && this.head) {
+            this.hasIngredientPoint = true;
+            this.ingredientPoint.x = -this.head.anchorOffsetX + this.cInfo.eatIngredientPos[this.currentFrame].x;
+            this.ingredientPoint.y = -this.head.anchorOffsetY + this.cInfo.eatIngredientPos[this.currentFrame].y;
+        }
+        else {
+            this.hasIngredientPoint = false;
+        }
+    };
+    //返回是否达成一个loop了
+    CharacterSprite.prototype.IncFrame = function () {
+        this.currentFrame = (this.currentFrame + 1) % this.playingActionInfo.length;
+        return this.currentFrame == 0;
+    };
+    /**
+     * 更换动作和方向
+     * @param {Direction} direction 转向的方向
+     * @param {CharacterAction} action 角色动作
+     * @param {boolean} forceChange 是否强制转换动作
+     */
+    CharacterSprite.prototype.ChangeAction = function (direction, action, forceChange) {
+        if (forceChange === void 0) { forceChange = false; }
+        var dontChange = (direction == this.direction && action == this.doingAction && forceChange == false);
+        var toAction = this.cInfo.GetFrameInfoArray(direction, action);
+        if (toAction != null) {
+            this.doingAction = action;
+            this.direction = direction;
+            this.playingActionInfo = toAction;
+            if (dontChange == false)
+                this.currentFrame = 0;
+            this.SetImageFrame();
+        }
+    };
+    /**
+     * 获得某个方向的某个动作需要的帧数
+     * @param {Direction} direction 转向的方向
+     * @param {CharacterAction} action 角色动作
+     * @returns {number} 这个动作的帧数
+     */
+    CharacterSprite.prototype.GetActionFrameCount = function (direction, action) {
+        var toAction = this.cInfo.GetFrameInfoArray(direction, action);
+        if (toAction != null) {
+            return toAction.length * RenderUpdateEveryLogicTick; //动作长度其实依赖于渲染
+        }
+        return 0;
+    };
+    //TODO 特殊处理眨眼和站立，我曹
+    CharacterSprite.prototype.IsSameAction = function (a1, a2) {
+        if ((a1 == CharacterAction.Stand && a2 == CharacterAction.StandTrick) ||
+            (a1 == CharacterAction.StandTrick && a2 == CharacterAction.Stand))
+            return true;
+        return a1 == a2;
+    };
+    /**
+     * 判断角色是否在做某个动作
+     * @param {CharacterAction} action 要判断的动作
+     * @returns {boolean} 是否是正在做的
+     */
+    CharacterSprite.prototype.IsDoingAction = function (action) {
+        return action == this.doingAction;
+    };
+    /**
+     * 把head\body等精灵加回到这里。
+     */
+    CharacterSprite.prototype.ResetSprites = function () {
         //注意加入顺序
         if (this.body)
             this.addChild(this.body);
@@ -2584,23 +2486,17 @@ var CharacterSprite = (function (_super) {
             this.addChild(this.head);
         if (this.emote)
             this.addChild(this.emote);
-        var pos = this.character.GetPos();
-        this.x = pos.x;
-        this.y = pos.y;
     };
     CharacterSprite.prototype.IsCharacter = function (cha) {
         return this.character == cha;
     };
     CharacterSprite.prototype.Update = function () {
-        this.character.Update();
-    };
-    CharacterSprite.prototype.FixedUpdate = function () {
-        if (this.character.FixedUpdate() == true) {
-            this.character.Update();
+        this.SetImageFrame(); //绘制这一帧
+        //推进一帧
+        if (this.IncFrame() == true && this.IsSameAction(this.doingAction, CharacterAction.Stand) == true) {
+            //特殊处理站立的下一个站立的动作
+            this.ChangeAction(this.direction, (Math.random() < 0.2 ? CharacterAction.StandTrick : CharacterAction.Stand), true);
         }
-        var pos = this.character.GetPos();
-        this.x = pos.x;
-        this.y = pos.y;
     };
     return CharacterSprite;
 }(SpriteGroup));
@@ -2608,9 +2504,15 @@ __reflect(CharacterSprite.prototype, "CharacterSprite");
 var DiningTableSprite = (function (_super) {
     __extends(DiningTableSprite, _super);
     //TODO桌子信息等
-    function DiningTableSprite(dt) {
+    function DiningTableSprite(dt, gameType) {
         var _this = _super.call(this) || this;
         _this.dtObj = dt;
+        _this.gameType = gameType;
+        _this.heads = new Array();
+        _this.bodies = new Array();
+        _this.emotes = new Array();
+        _this.ramens = new Array();
+        _this.eatIngs = new Array();
         return _this;
     }
     DiningTableSprite.prototype.childrenCreated = function () {
@@ -2631,12 +2533,8 @@ var DiningTableSprite = (function (_super) {
             se.x = this.dtObj.x + this.dtObj.model.seats[i].x;
             se.y = this.dtObj.y + this.dtObj.model.seats[i].y - 10; //TODO 写死椅子的位置
             this.chair.push(se);
-            this.eatingCha.push(new EatingCharacterInfo(this));
+            this.eatingCha.push(new EatingCharacterSpr(this, sInfo, this.gameType));
         }
-        // this.addChild(this.chair);
-        // this.chair.anchorOffsetX = this.chair.width / 2;
-        // this.chair.anchorOffsetY = this.chair.height + 50;
-        // this.chair.visible = false;
         this.table = new eui.Image(); //RES.getRes("wooden_single_table")
         this.table.texture = RES.getRes(this.dtObj.model.tableSource);
         this.addChild(this.table);
@@ -2649,54 +2547,41 @@ var DiningTableSprite = (function (_super) {
         }
     };
     DiningTableSprite.prototype.ResetZOrder = function () {
-        var idxPlues = this.eatingCha.length;
-        var bodies = new Array();
-        var heads = new Array();
-        var emotes = new Array();
-        var ramens = new Array();
-        var eatings = new Array();
-        for (var i = 0; i < this.eatingCha.length; i++) {
-            if (this.eatingCha[i].cha) {
-                if (this.eatingCha[i].cha.body)
-                    bodies.push(this.eatingCha[i].cha.body);
-                if (this.eatingCha[i].cha.head)
-                    heads.push(this.eatingCha[i].cha.head);
-                if (this.eatingCha[i].cha.emote)
-                    emotes.push(this.eatingCha[i].cha.emote);
-            }
-            if (this.eatingCha[i].ramenSpr)
-                ramens.push(this.eatingCha[i].ramenSpr);
-            if (this.eatingCha[i].eatingIngImg)
-                eatings.push(this.eatingCha[i].eatingIngImg);
-        }
+        var idxPlues = this.eatingCha.length + 10;
         if (this.chair) {
             for (var i = 0; i < this.chair.length; i++)
                 this.chair[i].zIndex = 0 + i;
         }
-        if (bodies) {
-            for (var i = 0; i < bodies.length; i++)
-                if (bodies[i])
-                    bodies[i].zIndex = idxPlues * 2 + i;
+        if (this.bodies) {
+            for (var i = 0; i < this.bodies.length; i++)
+                if (this.bodies[i])
+                    this.bodies[i].zIndex = idxPlues * 2 + i;
         }
         if (this.table) {
             this.table.zIndex = idxPlues * 3;
         }
-        if (ramens) {
-            for (var i = 0; i < ramens.length; i++) {
-                if (ramens[i])
-                    ramens[i].zIndex = idxPlues * 4 + i;
+        if (this.ramens) {
+            for (var i = 0; i < this.ramens.length; i++) {
+                if (this.ramens[i])
+                    this.ramens[i].zIndex = idxPlues * 4 + i;
             }
         }
-        if (heads) {
-            for (var i = 0; i < heads.length; i++) {
-                if (heads[i])
-                    heads[i].zIndex = idxPlues * 5 + i;
+        if (this.heads) {
+            for (var i = 0; i < this.heads.length; i++) {
+                if (this.heads[i])
+                    this.heads[i].zIndex = idxPlues * 5 + i;
             }
         }
-        if (eatings) {
-            for (var i = 0; i < eatings.length; i++) {
-                if (eatings[i])
-                    eatings[i].zIndex = idxPlues * 6 + i;
+        if (this.emotes) {
+            for (var i = 0; i < this.emotes.length; i++) {
+                if (this.heads[i])
+                    this.emotes[i].zIndex = idxPlues * 6 + i;
+            }
+        }
+        if (this.eatIngs) {
+            for (var i = 0; i < this.eatIngs.length; i++) {
+                if (this.eatIngs[i])
+                    this.eatIngs[i].zIndex = idxPlues * 7 + i;
             }
         }
         this.sortChildren();
@@ -2706,85 +2591,32 @@ var DiningTableSprite = (function (_super) {
      */
     DiningTableSprite.prototype.StartEat = function () {
         for (var i = 0; i < this.eatingCha.length; i++) {
-            this.eatingCha[i].eatGame.StartEat();
+            if (this.eatingCha[i].eatGame)
+                this.eatingCha[i].StartEat();
         }
     };
     /**
      * 现在的角色从椅子上挪走
      */
-    DiningTableSprite.prototype.RemoveCharacter = function (cha) {
-        for (var i = 0; i < this.eatingCha.length; i++) {
-            if (this.eatingCha[i].cha == cha) {
-                this.eatingCha[i].RemoveMe();
-                return;
-            }
-        }
-        // if (this.body){
-        // 	if (this.body.parent) this.body.parent.removeChild(this.body);
-        // 	this.body = null;
-        // }
-        // if (this.head){
-        // 	if (this.head.parent) this.head.parent.removeChild(this.head);
-        // 	this.head = null;
-        // }
-        // if (this.emote){
-        // 	if (this.emote.parent) this.emote.parent.removeChild(this.emote);
-        // 	this.emote = null;
-        // }
-        // this.chair.visible = false;
-        // if (this._cha){
-        // 	this._cha.isSitting = false;
-        // }
-        // this._cha = null;
-        // this.eatGame = null;
+    DiningTableSprite.prototype.RemoveCharacter = function (seatIndex) {
+        this.eatingCha[seatIndex].RemoveCharacter();
     };
     /**
      * 让角色做到凳子上，TODO，现在凳子数据写死
      */
-    DiningTableSprite.prototype.SetCharacterToSeat = function (seatIndex, cha, foodCourtFavour) {
-        if (foodCourtFavour === void 0) { foodCourtFavour = false; }
-        this.RemoveCharacter(cha);
-        if (seatIndex < 0 || seatIndex >= this.eatingCha.length)
-            return;
-        var eCha = this.eatingCha[seatIndex];
-        //this.chair.visible = true;
+    DiningTableSprite.prototype.SetCharacterToSeat = function (seatIndex, cha, gameType) {
         if (!cha)
             return;
-        var chaX = this.dtObj.model.seats[seatIndex].x;
-        var chaY = this.dtObj.model.seats[seatIndex].y; //-50
-        eCha.SetCharacter(cha, chaX, chaY, foodCourtFavour);
-        // if (this._cha.body){
-        // 	this.body = this._cha.body;
-        // 	this.body.x = chaX;
-        // 	this.body.y = chaY;
-        // 	this.addChild(this.body);
-        // }
-        // if (this._cha.head){
-        // 	this.head = this._cha.head;
-        // 	this.head.x = chaX;
-        // 	this.head.y = chaY;
-        // 	this.addChild(this.head);
-        // }
-        // if (this._cha.emote){
-        // 	this.emote = this._cha.emote;
-        // 	this.emote.x = chaX;
-        // 	this.emote.y = chaY;
-        // 	this.addChild(this.emote);
-        // }
-        // this._cha.isSitting = true;
-        // if (this._cha && this._ramen)
-        // 	this.eatGame = new EatingRamen(this._cha, this._ramen);
+        this.RemoveCharacter(seatIndex);
+        if (seatIndex < 0 || seatIndex >= this.eatingCha.length)
+            return;
+        this.eatingCha[seatIndex].SetCharacter(cha);
         this.ResetZOrder();
     };
     /**
      * 删除拉面
      */
     DiningTableSprite.prototype.RemoveRamen = function (seatIndex) {
-        // if (this.ramen){
-        // 	if (this.ramen.parent) this.ramen.parent.removeChild(this.ramen);
-        // 	this.ramen = null;
-        // 	this._ramen = null;
-        // }
         if (seatIndex < 0 || seatIndex >= this.eatingCha.length || !this.eatingCha[seatIndex])
             return;
         this.eatingCha[seatIndex].RemoveRamen();
@@ -2796,46 +2628,7 @@ var DiningTableSprite = (function (_super) {
         this.RemoveRamen(seatIndex);
         if (!ramen || seatIndex < 0 || seatIndex >= this.eatingCha.length)
             return;
-        this.eatingCha[seatIndex].SetRamen(ramen, this.dtObj.model.seats[seatIndex].ramenX, this.dtObj.model.seats[seatIndex].ramenY);
-        // this._ramen = ramen;
-        // this.ramen = new RamenSprite(this._ramen);
-        // this.ramen.y = -24;	//TODO 写死
-        // this.addChild(this.ramen);
-        // if (this._cha && this._ramen)
-        // 	this.eatGame = new EatingRamen(this._cha, this._ramen);
-        this.ResetZOrder();
-    };
-    /**
-     * 根据eatGame状态重绘一些图形
-     */
-    DiningTableSprite.prototype.RefreshByEatGame = function () {
-        // this.ramen.UpdateRamen();
-        // if (this.eatingIngImg && this.eatingIngImg.parent){
-        // 	this.eatingIngImg.parent.removeChild(this.eatingIngImg);
-        // }
-        // let turnRes = this.eatGame.CurrentTurnResult();
-        // if (turnRes != null){
-        // 	this.eatingNoodle = turnRes.isEatingNoodles;
-        // 	if (this.eatingNoodle == true){
-        // 		//如果吃的是面条
-        // 		this.eatingIngImg = new eui.Image();
-        // 		this.eatingIngImg.source = RES.getRes("eating_noodle");
-        // 		this.addChild(this.eatingIngImg);
-        // 		this.eatingIngImg.anchorOffsetX = this.eatingIngImg.width /2;
-        // 		this.eatingIngImg.anchorOffsetY = this.eatingIngImg.height;
-        // 		this.eatingIngImg.x = this.ramen.x;
-        // 		this.eatingIngImg.y = this.ramen.BrothOffsetY() + this.ramen.y;
-        // 		this.eatingIngImg.scaleY = 0;
-        // 		this.noodlePos.y = Number.MAX_VALUE;	//重置面条的位置
-        // 	}else{
-        // 		//如果吃的是Toppings
-        // 		this.eatingIngImg = turnRes.eatIngredient.GatherSceneImage(
-        // 			this, 0, 0
-        // 		);
-        // 		this.eatingIngImg.scaleY = 1;
-        // 	}
-        // 	this.eatingIngImg.visible = false;
-        // }
+        this.eatingCha[seatIndex].SetRamen(ramen);
         this.ResetZOrder();
     };
     /**
@@ -2847,9 +2640,9 @@ var DiningTableSprite = (function (_super) {
         return this.dtObj.model.seats[index];
     };
     /**
-     * 给所有坐了人的位置，上一份指定拉面
+     * 给所有坐了人的位置，上一份指定的美食
      */
-    DiningTableSprite.prototype.PlaceRamenToAllCharacter = function (ramen) {
+    DiningTableSprite.prototype.PlaceDishToAllCharacter = function (dish) {
         for (var i = 0; i < this.eatingCha.length; i++) {
             this.eatingCha[i].RemoveRamen();
             var rX = 0;
@@ -2858,209 +2651,346 @@ var DiningTableSprite = (function (_super) {
                 rX = this.dtObj.model.seats[i].ramenX;
                 rY = this.dtObj.model.seats[i].ramenY;
             }
-            if (this.eatingCha[i].cha) {
-                this.eatingCha[i].SetRamen(ramen, rX, rY);
+            if (this.eatingCha[i].hasCha == true) {
+                this.eatingCha[i].SetDish(dish);
             }
         }
+    };
+    /**
+     * 移除所有食物和人
+     */
+    DiningTableSprite.prototype.RemoveAllEatings = function () {
+        for (var i = 0; i < this.eatingCha.length; i++) {
+            this.eatingCha[i].RemoveMe();
+        }
+    };
+    /**
+     * 是否所有角色都吃完了
+     */
+    DiningTableSprite.prototype.AllFinished = function () {
+        for (var i = 0; i < this.eatingCha.length; i++) {
+            if (this.eatingCha[i].hasRamen && this.eatingCha[i].IsFinished() == false) {
+                return false;
+            }
+        }
+        return true;
     };
     DiningTableSprite.prototype.Update = function () {
         for (var i = 0; i < this.eatingCha.length; i++) {
             this.eatingCha[i].Update();
         }
-        // if (this._cha){
-        // 	this._cha.Update();
-        // 	if (this.eatingIngImg){
-        // 		let ingVisible = 	//吃的东西本帧是否可见？
-        // 			this.eatingNoodle == true ? //吃的是面条和不是面条还不同
-        // 			(this._cha.IsDoingAction(CharacterAction.Eat) && (this.eatingIngImg.visible == true || this._cha.hasIngredientPoint == true)):	//如果是面条，则看动作是否是吃、并且面条已经被绘制了
-        // 			(this._cha.hasIngredientPoint == true)  //否则看的是有没有数据点
-        // 		if (ingVisible == true){
-        // 			let chaPos = this._cha.GetPos();
-        // 			if (this.eatingNoodle == false){
-        // 				//Topping跟着手的位置走
-        // 				this.eatingIngImg.x = this._cha.ingredientPoint.x + chaPos.x;
-        // 				this.eatingIngImg.y = this._cha.ingredientPoint.y + chaPos.y;		
-        // 			}else{
-        // 				//Noodle就拉伸
-        // 				let noodleFlip = true; //是否要旋转面条
-        // 				if (this._cha.hasIngredientPoint == true){
-        // 					this.noodlePos.x = this._cha.ingredientPoint.x + chaPos.x;	//x坐标绝对信任
-        // 					let noodlePosY = this._cha.ingredientPoint.y + chaPos.y;
-        // 					if (noodlePosY <  this.noodlePos.y){
-        // 						this.noodlePos.y = noodlePosY; //y取小的保持高度
-        // 						noodleFlip = false;	//还在拉伸，所以不要抽搐
-        // 					}
-        // 				}
-        // 				this.eatingIngImg.x = this.noodlePos.x;
-        // 				let noodleScaleY = (this.eatingIngImg.y - this.noodlePos.y)/this.eatingIngImg.height;
-        // 				this.eatingIngImg.scaleY = this.eatingIngImg.height > 0 ? noodleScaleY : 0;
-        // 				if (noodleFlip == true) this.eatingIngImg.scaleX *= -1;
-        // 			}
-        // 		}
-        // 		this.eatingIngImg.visible = ingVisible;
-        // 	}
-        // }
-    };
-    DiningTableSprite.prototype.FixedUpdate = function () {
-        for (var i = 0; i < this.eatingCha.length; i++) {
-            this.eatingCha[i].FixedUpdate();
-        }
-        // if (this._cha){
-        // 	if  (this._cha.FixedUpdate() == true){
-        // 		this._cha.Update();
-        // 	}
-        // }
-        // if (this.eatGame){
-        // 	if (this.eatGame.FixedUpdate() == true){
-        // 		this.RefreshByEatGame();
-        // 	}
-        // }
-        this.ResetZOrder();
+        this.ResetZOrder(); //TODO 开销大的话，有必要换位置
     };
     return DiningTableSprite;
 }(SpriteGroup));
 __reflect(DiningTableSprite.prototype, "DiningTableSprite");
-var EatingCharacterInfo = (function () {
-    function EatingCharacterInfo(p) {
+/**
+ * 每一个正在吃东西的角色，自动生成一个RamenSpr和一个CharacterSpr供上层使用
+ */
+var EatingCharacterSpr = (function () {
+    function EatingCharacterSpr(p, seat, eatGameType) {
+        this.eatting = false;
+        this.runningTurnIndex = 0;
+        this.runningActionIndex = 0;
+        this.runningTick = 0;
+        this.hasCha = false;
+        this.hasRamen = false;
         this.noodlePos = new egret.Point(0, 0);
+        this.seatInfo = seat;
+        this.eatGameType = eatGameType;
         this._p = p;
     }
-    EatingCharacterInfo.prototype.SetCharacter = function (cha, x, y, isFoodCourtFavour) {
-        if (isFoodCourtFavour === void 0) { isFoodCourtFavour = false; }
-        this.isFoodCourtFavour = isFoodCourtFavour;
+    /**
+     * 当前座位上的角色是否喜欢座位上的美食
+     * 注意：如果端上来的是拉面而不是美食，则不会喜欢
+     */
+    EatingCharacterSpr.prototype.CharacterFavourDish = function () {
+        if (!this.cha || !this.dishInfo)
+            return false;
+        return this.cha.buddyInfo.isPlayer == true ? false : (this.cha.buddyInfo.favourType == this.dishInfo.model.type);
+    };
+    /**
+     * 角色坐到这个座位上
+     * @param {CharacterObj} cha 要坐上来的角色
+     */
+    EatingCharacterSpr.prototype.SetCharacter = function (cha) {
+        if (!cha)
+            return;
         this.cha = cha;
-        this.cha.SetPosition(x, y);
-        // this.head = cha.head;
-        // this.body = cha.body;
-        // this.emote = cha.emote;
-        if (cha.head) {
-            this._p.addChild(cha.head);
-            cha.head.x = x;
-            cha.head.y = y;
+        this.hasCha = true;
+        this.chaSpr = new CharacterSprite(this.cha, this.seatInfo.x, this.seatInfo.y);
+        this._p.addChild(this.chaSpr);
+        if (this.chaSpr.head) {
+            this._p.addChild(this.chaSpr.head);
+            this._p.heads.push(this.chaSpr.head);
         }
-        if (cha.body) {
-            this._p.addChild(cha.body);
-            cha.body.x = x;
-            cha.body.y = y;
+        if (this.chaSpr.body) {
+            this._p.addChild(this.chaSpr.body);
+            this._p.bodies.push(this.chaSpr.body);
         }
-        if (cha.emote) {
-            this._p.addChild(cha.emote);
-            cha.emote.x = x;
-            cha.emote.y = y;
+        if (this.chaSpr.emote) {
+            this._p.addChild(this.chaSpr.emote);
+            this._p.emotes.push(this.chaSpr.emote);
         }
-        cha.isSitting = true;
         this.GatherEatingGame();
     };
-    EatingCharacterInfo.prototype.SetRamen = function (ramen, atTableX, atTableY) {
-        this.ramenObj = ramen;
+    /**
+     * 移除掉这个座位上的角色
+     */
+    EatingCharacterSpr.prototype.RemoveCharacter = function () {
+        if (this.hasCha == false)
+            return;
+        this.hasCha = false;
+        if (this.chaSpr.head) {
+            var idx = this._p.heads.indexOf(this.chaSpr.head);
+            if (idx >= 0)
+                this._p.heads.splice(idx, 1);
+            if (this.chaSpr.head.parent)
+                this.chaSpr.head.parent.removeChild(this.chaSpr.head);
+        }
+        if (this.chaSpr.body) {
+            var idx = this._p.bodies.indexOf(this.chaSpr.body);
+            if (idx >= 0)
+                this._p.bodies.splice(idx, 1);
+            if (this.chaSpr.body.parent)
+                this.chaSpr.body.parent.removeChild(this.chaSpr.body);
+        }
+        if (this.chaSpr.emote) {
+            var idx = this._p.emotes.indexOf(this.chaSpr.emote);
+            if (idx >= 0)
+                this._p.emotes.splice(idx, 1);
+            if (this.chaSpr.emote.parent)
+                this.chaSpr.emote.parent.removeChild(this.chaSpr.emote);
+        }
+        if (this.chaSpr.parent)
+            this.chaSpr.parent.removeChild(this.chaSpr);
+        this.chaSpr = null;
+        this.cha = null;
+        this.eatGame = null;
+    };
+    /**
+     * 根据RamenObj来设置EatGame的食物对象
+     */
+    EatingCharacterSpr.prototype.SetRamen = function (ramen) {
+        if (!ramen)
+            return;
+        this.hasRamen = true;
+        var atTableX = this.seatInfo.ramenX;
+        var atTableY = this.seatInfo.ramenY;
+        this.ramenObj = ramen.Clone(false);
         this.ramenSpr = new RamenSprite(this.ramenObj);
         if (this.ramenSpr) {
             this._p.addChild(this.ramenSpr);
+            this._p.ramens.push(this.ramenSpr);
             this.ramenSpr.x = atTableX;
             this.ramenSpr.y = atTableY;
         }
         this.GatherEatingGame();
     };
-    EatingCharacterInfo.prototype.SetEatingIngredient = function () {
-        if (this.eatingIngImg)
-            this._p.addChild(this.eatingIngImg);
+    /**
+     * 根据FoodCourtDish来设置EatGame食物对象
+     */
+    EatingCharacterSpr.prototype.SetDish = function (dish) {
+        if (!dish || !dish.dish)
+            return;
+        this.dishInfo = dish;
+        this.hasRamen = true;
+        var atTableX = this.seatInfo.ramenX;
+        var atTableY = this.seatInfo.ramenY;
+        this.ramenObj = dish.dish.Clone(false);
+        this.ramenSpr = new RamenSprite(this.ramenObj);
+        if (this.ramenSpr) {
+            this._p.addChild(this.ramenSpr);
+            this._p.ramens.push(this.ramenSpr);
+            this.ramenSpr.x = atTableX;
+            this.ramenSpr.y = atTableY;
+        }
+        this.GatherEatingGame(dish);
     };
-    EatingCharacterInfo.prototype.GatherEatingGame = function () {
+    EatingCharacterSpr.prototype.GatherEatingGame = function (dishObj) {
+        if (dishObj === void 0) { dishObj = null; }
         if (this.cha && this.ramenObj) {
-            this.eatGame = new EatingRamen(this.cha, this.ramenObj, this.isFoodCourtFavour);
+            this.eatGame = new EatingRamen(this.cha, this.ramenObj, dishObj, this.eatGameType);
         }
     };
-    EatingCharacterInfo.prototype.RemoveMe = function () {
-        if (this.cha.head && this.cha.head.parent)
-            this.cha.head.parent.removeChild(this.cha.head);
-        if (this.cha.body && this.cha.body.parent)
-            this.cha.body.parent.removeChild(this.cha.body);
-        if (this.cha.emote && this.cha.emote.parent)
-            this.cha.emote.parent.removeChild(this.cha.emote);
-        if (this.ramenSpr && this.ramenSpr.parent)
-            this.ramenSpr.parent.removeChild(this.ramenSpr);
-        if (this.eatingIngImg && this.eatingIngImg.parent)
-            this.eatingIngImg.parent.removeChild(this.eatingIngImg);
-        this.eatGame = null;
+    /**
+     * 顾客和面条全部移除掉
+     */
+    EatingCharacterSpr.prototype.RemoveMe = function () {
+        this.RemoveCharacter();
+        this.RemoveRamen();
     };
-    EatingCharacterInfo.prototype.RemoveRamen = function () {
+    /**
+     * 拿走面条
+     */
+    EatingCharacterSpr.prototype.RemoveRamen = function () {
         if (this.ramenSpr && this.ramenSpr.parent) {
+            var idx = this._p.ramens.indexOf(this.ramenSpr);
+            if (idx >= 0)
+                this._p.ramens.splice(idx, 1);
             this.ramenSpr.parent.removeChild(this.ramenSpr);
+            this.ramenSpr = null;
         }
-        if (this.ramenObj)
-            this.ramenObj = null;
+        this.dishInfo = null; //dishInfo会被一起清空
+        this.ramenObj = null;
+        this.hasRamen = false;
     };
-    EatingCharacterInfo.prototype.Update = function () {
-        if (this.cha) {
-            this.cha.Update();
-            if (this.eatingIngImg) {
-                var ingVisible = this.eatingNoodle == true ?
-                    (this.cha.IsDoingAction(CharacterAction.Eat) && (this.eatingIngImg.visible == true || this.cha.hasIngredientPoint == true)) :
-                    (this.cha.hasIngredientPoint == true); //否则看的是有没有数据点
-                if (ingVisible == true) {
-                    var chaPos = this.cha.GetPos();
-                    if (this.eatingNoodle == false) {
-                        //Topping跟着手的位置走
-                        this.eatingIngImg.x = this.cha.ingredientPoint.x + chaPos.x;
-                        this.eatingIngImg.y = this.cha.ingredientPoint.y + chaPos.y;
-                    }
-                    else {
-                        //Noodle就拉伸
-                        var noodleFlip = true; //是否要旋转面条
-                        if (this.cha.hasIngredientPoint == true) {
-                            this.noodlePos.x = this.cha.ingredientPoint.x + chaPos.x; //x坐标绝对信任
-                            var noodlePosY = this.cha.ingredientPoint.y + chaPos.y;
-                            if (noodlePosY < this.noodlePos.y) {
-                                this.noodlePos.y = noodlePosY; //y取小的保持高度
-                                noodleFlip = false; //还在拉伸，所以不要抽搐
+    /**
+     * 是否已经吃光了
+     */
+    EatingCharacterSpr.prototype.IsFinished = function () {
+        if (!this.eatGame || !this.eatGame.turnResult)
+            return true;
+        return this.runningTurnIndex >= this.eatGame.turnResult.length;
+    };
+    /**
+     * 本回合将要学到的食材信息
+     */
+    EatingCharacterSpr.prototype.CurrentTurnGatherIngredient = function () {
+        if (!this.eatGame ||
+            !this.eatGame.learnedIngredientInfo ||
+            this.eatGame.learnedIngredientInfo.length <= 0 ||
+            this.runningActionIndex > 0 ||
+            this.runningTick > 0)
+            return null;
+        for (var i = 0; i < this.eatGame.learnedIngredientInfo.length; i++) {
+            if (i == this.runningTurnIndex) {
+                return this.eatGame.learnedIngredientInfo[i].learnedIngredient;
+            }
+        }
+        return null;
+    };
+    EatingCharacterSpr.prototype.Update = function () {
+        if (this.eatting == true) {
+            if (this.chaSpr && this.ramenSpr) {
+                var tTurn = this.eatGame.turnResult[this.runningTurnIndex]; //当前的回合
+                var tAction = tTurn.actions[this.runningActionIndex]; //当前在做的动作
+                if (this.runningTick <= 0) {
+                    if (this.runningActionIndex <= 0) {
+                        //进入新的回合的第一个动作的第一帧，弄一下吃掉的东西
+                        //正在吃的东西变化
+                        this.eatingNoodle = tTurn.isEatingNoodles;
+                        if (this.eatingNoodle == true) {
+                            //如果吃的是面条
+                            if (!this.eatingIngImg) {
+                                this.eatingIngImg = new eui.Image();
+                                this._p.addChild(this.eatingIngImg);
+                                this._p.eatIngs.push(this.eatingIngImg);
+                            }
+                            this.eatingIngImg.source = RES.getRes("eating_noodle");
+                            this.eatingIngImg.anchorOffsetX = this.eatingIngImg.width / 2;
+                            this.eatingIngImg.anchorOffsetY = this.eatingIngImg.height;
+                            this.eatingIngImg.x = this.ramenSpr.x;
+                            this.eatingIngImg.y = this.ramenSpr.BrothOffsetY() + this.ramenSpr.y;
+                            this.eatingIngImg.scaleY = 0;
+                            this.noodlePos.y = Number.MAX_VALUE; //重置面条的位置
+                        }
+                        else {
+                            //如果吃的是Toppings
+                            if (this.eatingIngImg) {
+                                var idx = this._p.eatIngs.indexOf(this.eatingIngImg);
+                                if (idx >= 0)
+                                    this._p.eatIngs.splice(idx, 1);
+                                if (this.eatingIngImg.parent) {
+                                    this.eatingIngImg.parent.removeChild(this.eatingIngImg);
+                                }
+                            }
+                            this.eatingIngImg = tTurn.eatIngredient.GatherSceneImage(this._p, this.ramenSpr.x + tTurn.eatIngredient.x, this.ramenSpr.BrothOffsetY() + tTurn.eatIngredient.y);
+                            this._p.eatIngs.push(this.eatingIngImg);
+                        }
+                        this.eatingIngImg.visible = false;
+                        //碗里面的变化
+                        if (tTurn.isEatingNoodles == true) {
+                            this.ramenObj.noodlePercentage -= tTurn.noodleReducePercentage; //吃面条
+                        }
+                        else {
+                            var ingIdx = this.ramenObj.topping.indexOf(tTurn.eatIngredient);
+                            if (ingIdx >= 0) {
+                                this.ramenObj.topping.splice(ingIdx, 1);
                             }
                         }
-                        this.eatingIngImg.x = this.noodlePos.x;
-                        var noodleScaleY = (this.eatingIngImg.y - this.noodlePos.y) / this.eatingIngImg.height;
-                        this.eatingIngImg.scaleY = this.eatingIngImg.height > 0 ? noodleScaleY : 0;
-                        if (noodleFlip == true)
-                            this.eatingIngImg.scaleX *= -1;
+                        this.ramenSpr.UpdateRamen();
+                    }
+                    //每回合的每一个action都要做的，而不是只在第一个action做的
+                    //角色的动作也变化了
+                    this.chaSpr.ChangeAction(this.chaSpr.direction, tAction.changeToAction);
+                }
+                //帧内需要做的事情
+                //吃的东西
+                if (this.eatingIngImg) {
+                    var ingVisible = this.eatingNoodle == true ?
+                        (
+                        //如果是面条，则看动作是否是吃、并且面条已经被绘制了
+                        this.chaSpr.IsDoingAction(CharacterAction.Eat) &&
+                            (this.eatingIngImg.visible == true || this.chaSpr.hasIngredientPoint == true)) :
+                        (
+                        //吃的是toppings的话看的是有没有数据点
+                        this.chaSpr.hasIngredientPoint == true);
+                    if (ingVisible == true) {
+                        var cX = this.seatInfo.x;
+                        var cY = this.seatInfo.y;
+                        if (this.eatingNoodle == false) {
+                            //Topping跟着手的位置走
+                            this.eatingIngImg.x = this.chaSpr.ingredientPoint.x + cX;
+                            this.eatingIngImg.y = this.chaSpr.ingredientPoint.y + cY;
+                        }
+                        else {
+                            //Noodle就拉伸
+                            var noodleFlip = true; //是否要旋转面条
+                            if (this.chaSpr.hasIngredientPoint == true) {
+                                this.noodlePos.x = this.chaSpr.ingredientPoint.x + cX; //x坐标绝对信任
+                                var noodlePosY = this.chaSpr.ingredientPoint.y + cY;
+                                if (noodlePosY < this.noodlePos.y) {
+                                    this.noodlePos.y = noodlePosY; //y取小的保持高度
+                                    noodleFlip = false; //还在拉伸，所以不要抽搐
+                                }
+                            }
+                            this.eatingIngImg.x = this.noodlePos.x;
+                            var noodleScaleY = (this.eatingIngImg.y - this.noodlePos.y) / this.eatingIngImg.height;
+                            this.eatingIngImg.scaleY = this.eatingIngImg.height > 0 ? noodleScaleY : 0;
+                            if (noodleFlip == true)
+                                this.eatingIngImg.scaleX *= -1;
+                        }
+                    }
+                    this.eatingIngImg.visible = ingVisible;
+                }
+                //帧数提高
+                this.runningTick += 1;
+                if (this.runningTick >= tAction.tick) {
+                    this.runningTick = 0;
+                    this.runningActionIndex += 1;
+                    if (this.runningActionIndex >= tTurn.actions.length) {
+                        this.runningActionIndex = 0;
+                        this.runningTurnIndex += 1;
+                        if (this.runningTurnIndex >= this.eatGame.turnResult.length) {
+                            //该结束了这个人的吃的过程了
+                            this.eatting = false;
+                            this.chaSpr.ChangeAction(this.chaSpr.direction, CharacterAction.Stand //吃完以后站立动作
+                            );
+                        }
                     }
                 }
-                this.eatingIngImg.visible = ingVisible;
             }
         }
-    };
-    EatingCharacterInfo.prototype.FixedUpdate = function () {
-        if (this.eatGame && this.eatGame.FixedUpdate() == true) {
-            this.ramenSpr.UpdateRamen();
-            if (this.eatingIngImg && this.eatingIngImg.parent) {
-                this.eatingIngImg.parent.removeChild(this.eatingIngImg);
-            }
-            var turnRes = this.eatGame.CurrentTurnResult();
-            if (turnRes != null) {
-                this.eatingNoodle = turnRes.isEatingNoodles;
-                if (this.eatingNoodle == true) {
-                    //如果吃的是面条
-                    this.eatingIngImg = new eui.Image();
-                    this.eatingIngImg.source = RES.getRes("eating_noodle");
-                    this._p.addChild(this.eatingIngImg);
-                    this.eatingIngImg.anchorOffsetX = this.eatingIngImg.width / 2;
-                    this.eatingIngImg.anchorOffsetY = this.eatingIngImg.height;
-                    this.eatingIngImg.x = this.ramenSpr.x;
-                    this.eatingIngImg.y = this.ramenSpr.BrothOffsetY() + this.ramenSpr.y;
-                    this.eatingIngImg.scaleY = 0;
-                    this.noodlePos.y = Number.MAX_VALUE; //重置面条的位置
-                }
-                else {
-                    //如果吃的是Toppings
-                    this.eatingIngImg = turnRes.eatIngredient.GatherSceneImage(this._p, 0, 0);
-                    this.eatingIngImg.scaleY = 1;
-                }
-                this.eatingIngImg.visible = false;
-            }
+        //只要有角色就要变化
+        if (this.chaSpr) {
+            this.chaSpr.Update(); //角色动作变化
         }
-        if (this.cha && this.cha.FixedUpdate() == true)
-            this.cha.Update();
     };
-    return EatingCharacterInfo;
+    /**
+     * 开始吃
+     */
+    EatingCharacterSpr.prototype.StartEat = function () {
+        if (!this.eatGame)
+            return;
+        this.runningTick = 0;
+        this.runningActionIndex = 0;
+        this.runningTurnIndex = 0;
+        this.eatting = true;
+    };
+    return EatingCharacterSpr;
 }());
-__reflect(EatingCharacterInfo.prototype, "EatingCharacterInfo");
+__reflect(EatingCharacterSpr.prototype, "EatingCharacterSpr");
 var IngredientBox = (function (_super) {
     __extends(IngredientBox, _super);
     function IngredientBox(items) {
@@ -3098,7 +3028,7 @@ var IngredientBox = (function (_super) {
 __reflect(IngredientBox.prototype, "IngredientBox", ["eui.UIComponent", "egret.DisplayObject"]);
 var IngredientIconInBox = (function (_super) {
     __extends(IngredientIconInBox, _super);
-    function IngredientIconInBox(id, ingredient, icon, caller, func, broth) {
+    function IngredientIconInBox(id, ingredient, icon, defaultSelected, caller, func, broth) {
         if (broth === void 0) { broth = null; }
         var _this = _super.call(this) || this;
         _this.selected = false;
@@ -3108,6 +3038,7 @@ var IngredientIconInBox = (function (_super) {
         _this.eveFunc = func;
         _this.icon = icon;
         _this.bModel = broth;
+        _this.selected = defaultSelected;
         return _this;
     }
     IngredientIconInBox.prototype.partAdded = function (partName, instance) {
@@ -3376,120 +3307,6 @@ var AssetAdapter = (function () {
     return AssetAdapter;
 }());
 __reflect(AssetAdapter.prototype, "AssetAdapter", ["eui.IAssetAdapter"]);
-var StreetGround = (function (_super) {
-    __extends(StreetGround, _super);
-    function StreetGround(jsonFile) {
-        var _this = _super.call(this) || this;
-        _this.jsonFile = "";
-        _this.jsonFile = jsonFile;
-        return _this;
-    }
-    StreetGround.prototype.partAdded = function (partName, instance) {
-        _super.prototype.partAdded.call(this, partName, instance);
-    };
-    StreetGround.prototype.childrenCreated = function () {
-        _super.prototype.childrenCreated.call(this);
-        this.init();
-    };
-    StreetGround.prototype.init = function () {
-        this.LoadFromJson();
-    };
-    StreetGround.prototype.LoadFromJson = function () {
-        var streetInfo = this.jsonFile;
-        if (streetInfo == null) {
-            console.error("No json found:", this.jsonFile);
-            return;
-        }
-        var cY = 0;
-        if (streetInfo["background"]) {
-            var tf = streetInfo["background"]["img"];
-            this.bkg.texture = RES.getRes(tf);
-            this.bkg.x = 0;
-            this.bkg.y = 0;
-            cY += this.bkg.height;
-            this.groundTop = cY;
-        }
-        if (streetInfo["restrant"]) {
-            var fillT = streetInfo["restrant"]["fill"];
-            var mW = GameMapWidth * GridWidth;
-            var mH = GameMapHeight * GridHeight;
-            this.ground.texture = RES.getRes(fillT);
-            this.ground.x = 0;
-            this.ground.y = cY;
-            this.ground.width = mW;
-            this.ground.height = mH;
-            this.ground.fillMode = egret.BitmapFillMode.REPEAT;
-            cY += mH;
-            this.roadTop = cY;
-        }
-        if (streetInfo["road"]) {
-            var fillT = streetInfo["road"]["fill"];
-            var mW = GameMapWidth * GridWidth;
-            this.roadHeightInGrid = streetInfo["road"]["height"];
-            var mH = this.roadHeightInGrid * GridHeight;
-            this.road.texture = RES.getRes(fillT);
-            this.road.x = 0;
-            this.road.y = cY;
-            this.road.width = mW;
-            this.road.height = mH;
-            this.road.fillMode = egret.BitmapFillMode.REPEAT;
-            cY += mH;
-            this.streetTop = cY;
-        }
-        if (streetInfo["street"]) {
-            var sideT = streetInfo["street"]["side"];
-            var fillT = streetInfo["street"]["fill"];
-            var mW = GameMapWidth * GridWidth;
-            var sideH = 1 * GridHeight;
-            var fillH = Math.max(this.stage.stageHeight - cY, (StreetHeight - 1) * GridHeight);
-            this.streetside.texture = RES.getRes(sideT);
-            this.streetside.x = 0;
-            this.streetside.y = cY;
-            this.streetside.width = mW;
-            this.streetside.height = sideH;
-            this.streetside.fillMode = egret.BitmapFillMode.REPEAT;
-            cY += sideH;
-            this.street.texture = RES.getRes(fillT);
-            this.street.x = 0;
-            this.street.y = cY;
-            this.street.width = mW;
-            this.street.height = fillH;
-            this.street.fillMode = egret.BitmapFillMode.REPEAT;
-            cY += sideH;
-        }
-    };
-    return StreetGround;
-}(eui.Component));
-__reflect(StreetGround.prototype, "StreetGround", ["eui.UIComponent", "egret.DisplayObject"]);
-var TrafficLightSprite = (function (_super) {
-    __extends(TrafficLightSprite, _super);
-    function TrafficLightSprite(trafficLight) {
-        var _this = _super.call(this) || this;
-        _this.trafficLight = trafficLight;
-        return _this;
-    }
-    TrafficLightSprite.prototype.childrenCreated = function () {
-        _super.prototype.childrenCreated.call(this);
-        this.init();
-    };
-    TrafficLightSprite.prototype.init = function () {
-        if (this.trafficLight.seat)
-            this.addChild(this.trafficLight.seat);
-        if (this.trafficLight.green)
-            this.addChild(this.trafficLight.green);
-        if (this.trafficLight.yellow)
-            this.addChild(this.trafficLight.yellow);
-        if (this.trafficLight.red)
-            this.addChild(this.trafficLight.red);
-    };
-    TrafficLightSprite.prototype.Update = function () {
-        this.trafficLight.Draw();
-    };
-    TrafficLightSprite.prototype.FixedUpdate = function () {
-    };
-    return TrafficLightSprite;
-}(SpriteGroup));
-__reflect(TrafficLightSprite.prototype, "TrafficLightSprite");
 var PlacingToolBox = (function (_super) {
     __extends(PlacingToolBox, _super);
     function PlacingToolBox(p) {
@@ -3787,20 +3604,242 @@ var TareListItem = (function (_super) {
     return TareListItem;
 }(eui.Component));
 __reflect(TareListItem.prototype, "TareListItem", ["eui.UIComponent", "egret.DisplayObject"]);
+var RamenQuest_RequirementListItem = (function (_super) {
+    __extends(RamenQuest_RequirementListItem, _super);
+    function RamenQuest_RequirementListItem(requirement, requirementType) {
+        var _this = _super.call(this) || this;
+        _this.requirement = requirement;
+        _this.requirementType = requirementType;
+        return _this;
+    }
+    RamenQuest_RequirementListItem.prototype.partAdded = function (partName, instance) {
+        _super.prototype.partAdded.call(this, partName, instance);
+    };
+    RamenQuest_RequirementListItem.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        this.init();
+    };
+    RamenQuest_RequirementListItem.prototype.init = function () {
+        switch (this.requirementType) {
+            case RamenRequirmentType.Broth:
+                {
+                    var bInfo = this.requirement;
+                    this.Group_Broth.visible = true;
+                    this.Img_Icon.source = "bowl_normal";
+                    this.FillBroth(GetBrothModelById(bInfo.brothId));
+                    this.Label_Desc.text = bInfo.desc;
+                    this.Img_DoneSign.visible = bInfo.meet;
+                }
+                break;
+            case RamenRequirmentType.Mutual:
+                {
+                    var mInfo = this.requirement;
+                    this.Img_Icon.source = mInfo.icon;
+                    this.Group_Broth.visible = false;
+                    this.Label_Desc.text = mInfo.desc;
+                    this.Img_DoneSign.visible = mInfo.meet;
+                }
+                break;
+            case RamenRequirmentType.Subject:
+                {
+                    var sInfo = this.requirement;
+                    this.Img_Icon.source = sInfo.icon;
+                    this.Group_Broth.visible = false;
+                    this.Label_Desc.text = sInfo.desc;
+                    this.Img_DoneSign.visible = sInfo.meet;
+                }
+                break;
+        }
+    };
+    RamenQuest_RequirementListItem.prototype.RefreshDoneState = function () {
+        switch (this.requirementType) {
+            case RamenRequirmentType.Broth:
+                {
+                    var bInfo = this.requirement;
+                    this.Img_DoneSign.visible = bInfo.meet;
+                }
+                break;
+            case RamenRequirmentType.Mutual:
+                {
+                    var mInfo = this.requirement;
+                    this.Img_DoneSign.visible = mInfo.meet;
+                }
+                break;
+            case RamenRequirmentType.Subject:
+                {
+                    var sInfo = this.requirement;
+                    this.Img_DoneSign.visible = sInfo.meet;
+                }
+                break;
+        }
+    };
+    /**
+     * 因为汤比较特殊，所以得额外fill进来
+     * @param {BrothModel} broth 汤的model
+     * @param {number} centerX 要绘制的位置x，为空时为图标中心
+     * @param {number} centerY 要绘制的位置y，为空时为图标中心
+     * @param {number} radius 要绘制的汤的半径，为空时为图标的40%
+     */
+    RamenQuest_RequirementListItem.prototype.FillBroth = function (broth, centerX, centerY, radius) {
+        if (centerX === void 0) { centerX = null; }
+        if (centerY === void 0) { centerY = null; }
+        if (radius === void 0) { radius = null; }
+        if (!this.Img_Icon)
+            return;
+        if (centerX == null)
+            centerX = 0;
+        if (centerY == null)
+            centerY = 0;
+        if (radius == null)
+            radius = this.Img_Icon.width * 0.4;
+        var shp = broth.ImageShape(centerX, // + this.Img_Icon.x,
+        centerY + this.Img_Icon.y, radius);
+        this.Group_Broth.addChild(shp);
+        var brothHL = new eui.Image(RES.getRes(ResName_Broth_Highlight));
+        this.Group_Broth.addChild(brothHL);
+        brothHL.width = brothHL.height = radius * 2;
+        brothHL.anchorOffsetX = brothHL.width / 2;
+        brothHL.anchorOffsetY = brothHL.height / 2;
+        brothHL.x = shp.x;
+        brothHL.y = shp.y;
+    };
+    return RamenQuest_RequirementListItem;
+}(eui.Component));
+__reflect(RamenQuest_RequirementListItem.prototype, "RamenQuest_RequirementListItem", ["eui.UIComponent", "egret.DisplayObject"]);
+var FoodCourt_EatingState = (function (_super) {
+    __extends(FoodCourt_EatingState, _super);
+    function FoodCourt_EatingState(caller) {
+        var _this = _super.call(this) || this;
+        _this.caller = caller;
+        return _this;
+    }
+    FoodCourt_EatingState.prototype.partAdded = function (partName, instance) {
+        _super.prototype.partAdded.call(this, partName, instance);
+    };
+    FoodCourt_EatingState.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        this.init();
+    };
+    FoodCourt_EatingState.prototype.init = function () {
+    };
+    FoodCourt_EatingState.prototype.ShowIngredientExp = function (ingExp) {
+        this.Group_IngExp.removeChildren();
+        for (var i = 0; i < ingExp.length; i++) {
+            this.Group_IngExp.addChild(ingExp[i]);
+        }
+    };
+    FoodCourt_EatingState.prototype.AddIngredientExp = function (ingExp) {
+        this.Group_IngExp.addChild(ingExp);
+    };
+    return FoodCourt_EatingState;
+}(eui.Component));
+__reflect(FoodCourt_EatingState.prototype, "FoodCourt_EatingState", ["eui.UIComponent", "egret.DisplayObject"]);
 var FoodCourt_NormalMenu = (function (_super) {
     __extends(FoodCourt_NormalMenu, _super);
-    function FoodCourt_NormalMenu() {
-        return _super.call(this) || this;
+    function FoodCourt_NormalMenu(caller) {
+        var _this = _super.call(this) || this;
+        _this.caller = caller;
+        return _this;
     }
     FoodCourt_NormalMenu.prototype.partAdded = function (partName, instance) {
         _super.prototype.partAdded.call(this, partName, instance);
     };
     FoodCourt_NormalMenu.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
+        this.init();
+    };
+    FoodCourt_NormalMenu.prototype.init = function () {
+        var _this = this;
+        this.Button_Go.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            _this.caller.ButtonGoEvent();
+        }, this);
+    };
+    FoodCourt_NormalMenu.prototype.ShowIngredientExp = function (ingExp) {
+        this.Group_IngExp.removeChildren();
+        for (var i = 0; i < ingExp.length; i++) {
+            this.Group_IngExp.addChild(ingExp[i]);
+        }
     };
     return FoodCourt_NormalMenu;
 }(eui.Component));
 __reflect(FoodCourt_NormalMenu.prototype, "FoodCourt_NormalMenu", ["eui.UIComponent", "egret.DisplayObject"]);
+var FoodCourt_QuestListItem = (function (_super) {
+    __extends(FoodCourt_QuestListItem, _super);
+    function FoodCourt_QuestListItem(requirement, requirementType) {
+        var _this = _super.call(this) || this;
+        _this.requirement = requirement;
+        _this.requirementType = requirementType;
+        return _this;
+    }
+    FoodCourt_QuestListItem.prototype.partAdded = function (partName, instance) {
+        _super.prototype.partAdded.call(this, partName, instance);
+    };
+    FoodCourt_QuestListItem.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        this.init();
+    };
+    FoodCourt_QuestListItem.prototype.init = function () {
+        switch (this.requirementType) {
+            case RamenRequirmentType.Broth:
+                {
+                    var bInfo = this.requirement;
+                    this.Group_Broth.visible = true;
+                    this.Img_Icon.source = "bowl_normal";
+                    this.FillBroth(GetBrothModelById(bInfo.brothId));
+                    this.Label_Desc.text = bInfo.desc;
+                }
+                break;
+            case RamenRequirmentType.Mutual:
+                {
+                    var mInfo = this.requirement;
+                    this.Img_Icon.source = mInfo.icon;
+                    this.Group_Broth.visible = false;
+                    this.Label_Desc.text = mInfo.desc;
+                }
+                break;
+            case RamenRequirmentType.Subject:
+                {
+                    var sInfo = this.requirement;
+                    this.Img_Icon.source = sInfo.icon;
+                    this.Group_Broth.visible = false;
+                    this.Label_Desc.text = sInfo.desc;
+                }
+                break;
+        }
+    };
+    /**
+     * 因为汤比较特殊，所以得额外fill进来
+     * @param {BrothModel} broth 汤的model
+     * @param {number} centerX 要绘制的位置x，为空时为图标中心
+     * @param {number} centerY 要绘制的位置y，为空时为图标中心
+     * @param {number} radius 要绘制的汤的半径，为空时为图标的40%
+     */
+    FoodCourt_QuestListItem.prototype.FillBroth = function (broth, centerX, centerY, radius) {
+        if (centerX === void 0) { centerX = null; }
+        if (centerY === void 0) { centerY = null; }
+        if (radius === void 0) { radius = null; }
+        if (!this.Img_Icon)
+            return;
+        if (centerX == null)
+            centerX = 0;
+        if (centerY == null)
+            centerY = 0;
+        if (radius == null)
+            radius = this.Img_Icon.width * 0.4;
+        var shp = broth.ImageShape(centerX, // + this.Img_Icon.x,
+        centerY + this.Img_Icon.y, radius);
+        this.Group_Broth.addChild(shp);
+        var brothHL = new eui.Image(RES.getRes(ResName_Broth_Highlight));
+        this.Group_Broth.addChild(brothHL);
+        brothHL.width = brothHL.height = radius * 2;
+        brothHL.anchorOffsetX = brothHL.width / 2;
+        brothHL.anchorOffsetY = brothHL.height / 2;
+        brothHL.x = shp.x;
+        brothHL.y = shp.y;
+    };
+    return FoodCourt_QuestListItem;
+}(eui.Component));
+__reflect(FoodCourt_QuestListItem.prototype, "FoodCourt_QuestListItem", ["eui.UIComponent", "egret.DisplayObject"]);
 var FoodCourt_SelectBuddyList = (function (_super) {
     __extends(FoodCourt_SelectBuddyList, _super);
     function FoodCourt_SelectBuddyList(caller, buddies, maxGuy, buddyBehaveFunc, doneButtonEve) {
@@ -3921,6 +3960,7 @@ var CraftNoodle = (function (_super) {
     __extends(CraftNoodle, _super);
     function CraftNoodle() {
         var _this = _super.call(this) || this;
+        _this.showingQuestList = false;
         _this.steamFrameIndex = 0;
         _this.canControl = false;
         _this.stepId = 0; //0=着味，1=配汤，2=选面，3=浇头
@@ -3940,25 +3980,7 @@ var CraftNoodle = (function (_super) {
     };
     CraftNoodle.prototype.init = function () {
         var _this = this;
-        this.ramenCenterX = this.stage.stageWidth / 2;
-        this.ramenCenterY = this.stage.stageHeight * 0.38;
-        this.Rect_PhotoTaker.x = this.ramenCenterX;
-        this.Rect_PhotoTaker.y = this.ramenCenterY;
-        this.Img_Stick.y = this.ramenCenterY - 35;
-        this.Button_TareList.y =
-            this.Button_NextStep.y =
-                this.Button_Handbook.y = this.stage.stageHeight - 550;
-        this.Img_BKG.width = this.stage.stageWidth;
-        this.Img_BKG.height = this.stage.stageHeight;
-        this.Img_BottomBorder.y = this.stage.stageHeight;
-        this.Group_IngBox.y = this.stage.stageHeight;
-        //先写死就是这个饭碗的数据
-        this.craftingRamen = new RamenModel();
-        //this.craftingRamen.broth = new BrothObj(playerInfo.getLearnedBroth("broth0"));
-        this.ChangeToState(CraftNoodleState.ChooseBowl);
-        this.UpdateRamen();
-        //照片界面内容初始化
-        this.InitUserInfoToPhotoMask();
+        this.NewGame();
         //尺寸工具盒子初始化
         this.placingTool = new PlacingToolBox(this);
         this.Group_PlaceTool.addChild(this.placingTool);
@@ -3982,9 +4004,20 @@ var CraftNoodle = (function (_super) {
             _this.ChangeIngredientBoxPage(_this.ingredientIndex > 0 ?
                 (_this.ingredientIndex - 1) : 0);
         }, this);
-        this.Button_TareList.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            ShowCraftNoodleTareList(_this, _this.craftingRamen.tare, _this.RemoveTareFromCraftingRamen);
+        //手册按钮
+        this.Button_Handbook.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.canControl == false)
+                return;
+            _this.ShowQuestList();
         }, this);
+        this.Button_CloseQuestList.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.canControl == false)
+                return;
+            _this.ShowHandBookButton();
+        }, this);
+        // this.Button_TareList.addEventListener(egret.TouchEvent.TOUCH_TAP, ()=>{
+        // 	ShowCraftNoodleTareList(this, this.craftingRamen.tare, this.RemoveTareFromCraftingRamen)
+        // },this);
         //下一步按钮
         this.Button_NextStep.addEventListener(egret.TouchEvent.TOUCH_TAP, this.OnNextButtonClick, this);
         //上一部
@@ -3995,19 +4028,156 @@ var CraftNoodle = (function (_super) {
         }, this);
         t.start();
     };
-    //删除某个tare
-    CraftNoodle.prototype.RemoveTareFromCraftingRamen = function (thisObj, tare) {
-        if (!thisObj.craftingRamen || !thisObj.craftingRamen.tare)
-            return;
-        for (var i = 0; i < thisObj.craftingRamen.tare.length; i++) {
-            if (tare == thisObj.craftingRamen.tare[i]) {
-                thisObj.craftingRamen.tare.splice(i, 1);
-                thisObj.UpdateRamen(false);
-                thisObj.TareListButtonTextSynchronize();
-                return;
-            }
+    CraftNoodle.prototype.NewGame = function () {
+        this.ramenCenterX = this.stage.stageWidth / 2;
+        this.ramenCenterY = this.stage.stageHeight * 0.38;
+        this.Rect_PhotoTaker.x = this.ramenCenterX;
+        this.Rect_PhotoTaker.y = this.ramenCenterY;
+        this.Img_Stick.y = this.ramenCenterY - 35;
+        this.Button_TareList.y =
+            this.Button_NextStep.y =
+                this.Button_Handbook.y = this.stage.stageHeight - 550;
+        this.Img_BKG.width = this.stage.stageWidth;
+        this.Img_BKG.height = this.stage.stageHeight;
+        this.Img_BottomBorder.y = this.stage.stageHeight;
+        this.Group_IngBox.y = this.stage.stageHeight;
+        //TODO 拉面的需求，现在写死
+        this.questRequire = new RamenRequirement("做一碗带上海味道的重庆小面吧", [
+            new RequiredSubject(new IngredientSubject("bean_product", "tofu", "venetian_pouch"), "ingredient_venetian_pouch", "上海味道就要百叶包"),
+            new RequiredSubject(new IngredientSubject("bean_product", "tofu", "venetian_pouch"), "ingredient_venetian_pouch", "既然是双档就再来个百叶包")
+        ], [], new RequiredBroth("broth1", "麻辣汤底是重庆小面的核心"));
+        //先写死就是这个饭碗的数据
+        this.craftingRamen = new RamenModel();
+        //this.craftingRamen.broth = new BrothObj(playerInfo.getLearnedBroth("broth0"));
+        this.ChangeToState(CraftNoodleState.ChooseBowl);
+        this.UpdateRamen();
+        //初始化需求列表
+        this.InitQuestListItems();
+        //照片界面内容初始化
+        this.InitUserInfoToPhotoMask();
+    };
+    //显示条件列表
+    CraftNoodle.prototype.ShowQuestList = function () {
+        var _this = this;
+        this.Group_QuestList.y = this.Button_Handbook.y;
+        if (this.showingQuestList == true) {
+            //已经显示了
+            this.Button_Handbook.visible = false;
+            this.Group_QuestList.scaleX =
+                this.Group_QuestList.scaleY = 1;
+            this.Group_QuestList.visible = true;
+        }
+        else {
+            this.showingQuestList = true;
+            egret.Tween.removeTweens(this.Button_Handbook);
+            egret.Tween.removeTweens(this.Group_QuestList);
+            this.canControl = false;
+            egret.Tween.get(this.Button_Handbook)
+                .to({ scaleX: 0, scaleY: 0 }, 100, egret.Ease.quadIn)
+                .call(function () {
+                _this.Button_Handbook.visible = false;
+                _this.Group_QuestList.scaleX =
+                    _this.Group_QuestList.scaleY = 0;
+                _this.Group_QuestList.visible = true;
+                egret.Tween.get(_this.Group_QuestList)
+                    .to({ scaleX: 1, scaleY: 1 }, 200, egret.Ease.quadOut)
+                    .call(function () {
+                    _this._ShowQuestListItems();
+                    _this.canControl = true;
+                });
+            });
         }
     };
+    CraftNoodle.prototype._ShowQuestListItems = function () {
+        this.Group_QuestItemList.visible = true;
+        this.questRequire.CheckRamenFit(this.craftingRamen);
+        for (var i = 0; i < this.questListItems.length; i++) {
+            this.questListItems[i].RefreshDoneState();
+        }
+    };
+    //初始化任务需求列表
+    CraftNoodle.prototype.InitQuestListItems = function () {
+        this.Group_QuestItemList.visible = false;
+        this.Group_QuestItemList.removeChildren();
+        this.questListItems = new Array();
+        if (this.questRequire == null)
+            return;
+        if (this.questRequire.requireBroth) {
+            var qr = new RamenQuest_RequirementListItem(this.questRequire.requireBroth, RamenRequirmentType.Broth);
+            this.Group_QuestItemList.addChild(qr);
+            this.questListItems.push(qr);
+        }
+        for (var i = 0; i < this.questRequire.requireSubject.length; i++) {
+            var qr = new RamenQuest_RequirementListItem(this.questRequire.requireSubject[i], RamenRequirmentType.Subject);
+            this.Group_QuestItemList.addChild(qr);
+            this.questListItems.push(qr);
+        }
+        for (var i = 0; i < this.questRequire.requireMutual.length; i++) {
+            var qr = new RamenQuest_RequirementListItem(this.questRequire.requireMutual[i], RamenRequirmentType.Mutual);
+            this.Group_QuestItemList.addChild(qr);
+            this.questListItems.push(qr);
+        }
+    };
+    //显示手册按钮
+    CraftNoodle.prototype.ShowHandBookButton = function () {
+        var _this = this;
+        if (this.showingQuestList == false) {
+            this.Button_Handbook.visible = true;
+            this.Button_Handbook.scaleX =
+                this.Button_Handbook.scaleY = 1;
+            this.Group_QuestList.visible =
+                this.Group_QuestItemList.visible = false;
+        }
+        else {
+            this.showingQuestList = false;
+            egret.Tween.removeTweens(this.Button_Handbook);
+            egret.Tween.removeTweens(this.Group_QuestList);
+            this.canControl = false;
+            egret.Tween.get(this.Group_QuestList)
+                .to({ scaleX: 0, scaleY: 0 }, 200, egret.Ease.quadIn)
+                .call(function () {
+                _this.Button_Handbook.scaleX =
+                    _this.Button_Handbook.scaleY = 0;
+                _this.Button_Handbook.visible = true;
+                egret.Tween.get(_this.Button_Handbook)
+                    .to({ scaleX: 1, scaleY: 1 }, 100, egret.Ease.quadOut)
+                    .call(function () {
+                    _this.Group_QuestList.visible =
+                        _this.Group_QuestItemList.visible = false;
+                    _this.canControl = true;
+                });
+            });
+        }
+    };
+    //根据当前showingQuestList情况自动判断应该显示什么
+    CraftNoodle.prototype.ShowQuestUIItems = function (forceHide) {
+        if (forceHide == true) {
+            this.Button_Handbook.visible =
+                this.Group_QuestList.visible = false;
+            return;
+        }
+        this.Button_Handbook.visible = !this.showingQuestList;
+        this.Button_Handbook.scaleX =
+            this.Button_Handbook.scaleY = this.showingQuestList == true ? 0 : 1;
+        this.Group_QuestList.visible =
+            this.Group_QuestItemList.visible = this.showingQuestList;
+        this.Group_QuestList.scaleX =
+            this.Group_QuestList.scaleY = this.showingQuestList == true ? 1 : 0;
+        if (this.showingQuestList == true)
+            this._ShowQuestListItems();
+    };
+    //删除某个tare
+    // private RemoveTareFromCraftingRamen(thisObj:CraftNoodle, tare:IngredientObj){
+    // 	if (! thisObj.craftingRamen || !thisObj.craftingRamen.tare) return;
+    // 	for (let i = 0; i < thisObj.craftingRamen.tare.length; i++){
+    // 		if (tare == thisObj.craftingRamen.tare[i]){
+    // 			thisObj.craftingRamen.tare.splice(i, 1);
+    // 			thisObj.UpdateRamen(false);
+    // 			thisObj.TareListButtonTextSynchronize();
+    // 			return;
+    // 		}
+    // 	}
+    // }
     //把用户信息写到photomask
     CraftNoodle.prototype.InitUserInfoToPhotoMask = function () {
         var _this = this;
@@ -4085,17 +4255,15 @@ var CraftNoodle = (function (_super) {
             case CraftNoodleState.ChooseBowl:
                 {
                     if (this.craftingRamen.bowl) {
-                        this.ChangeToState(CraftNoodleState.PutTare);
+                        this.ChangeToState(CraftNoodleState.SoupToBroth);
                         this.UpdateRamen();
                     }
                 }
                 break;
-            case CraftNoodleState.PutTare:
-                {
-                    this.ChangeToState(CraftNoodleState.SoupToBroth);
-                    this.UpdateRamen();
-                }
-                break;
+            // case CraftNoodleState.PutTare:{
+            // 	this.ChangeToState(CraftNoodleState.SoupToBroth);	
+            // 	this.UpdateRamen();
+            // }break;
             case CraftNoodleState.SoupToBroth:
                 {
                     if (this.craftingRamen.broth) {
@@ -4130,15 +4298,13 @@ var CraftNoodle = (function (_super) {
         if (this.canControl == false)
             return;
         switch (this.uiState) {
-            case CraftNoodleState.PutTare:
-                {
-                    this.ChangeToState(CraftNoodleState.ChooseBowl);
-                    //this.UpdateRamen(true, false, false);	
-                }
-                break;
+            // case CraftNoodleState.PutTare:{
+            // 	this.ChangeToState(CraftNoodleState.ChooseBowl);
+            // 	//this.UpdateRamen(true, false, false);	
+            // }break;
             case CraftNoodleState.SoupToBroth:
                 {
-                    this.ChangeToState(CraftNoodleState.PutTare);
+                    this.ChangeToState(CraftNoodleState.ChooseBowl);
                     //this.UpdateRamen(false, true, false);
                 }
                 break;
@@ -4181,12 +4347,14 @@ var CraftNoodle = (function (_super) {
     //手指Tap事件
     CraftNoodle.prototype.StagePointerTap = function (e) {
         switch (this.uiState) {
-            case CraftNoodleState.PutTare: {
-                var touchOne = this.craftingRamen.TouchedTare(e.stageX, e.stageY, this.ramenCenterX, this.ramenCenterY, true);
-                if (touchOne) {
-                    this.UpdateRamen();
-                }
-            }
+            // case CraftNoodleState.PutTare:{
+            // 	let touchOne = this.craftingRamen.TouchedTare(
+            // 		e.stageX, e.stageY, this.ramenCenterX, this.ramenCenterY, true
+            // 	);
+            // 	if (touchOne){
+            // 		this.UpdateRamen();
+            // 	}
+            // }break;
             case CraftNoodleState.SelectTopping:
                 {
                     var touchOne = this.craftingRamen.TouchedTopping(e.stageX, e.stageY, this.ramenCenterX, this.ramenCenterY, true);
@@ -4303,6 +4471,7 @@ var CraftNoodle = (function (_super) {
             this.PlaceIngredientToRamen();
         }
         this.ChangeToState(CraftNoodleState.SelectTopping);
+        this._ShowQuestListItems();
     };
     /**
      * 切换状态
@@ -4353,7 +4522,7 @@ var CraftNoodle = (function (_super) {
         }
         //根据状态设置图标
         this.Img_Step0.scaleX = this.Img_Step0.scaleY = (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2 : 1;
-        this.Img_Step1.scaleX = this.Img_Step1.scaleY = (this.uiState == CraftNoodleState.PutTare) ? 1.2 : 1;
+        this.Img_Step1.scaleX = this.Img_Step1.scaleY = 1; //TODO remove this fucker sooner or later //(this.uiState == CraftNoodleState.PutTare) ? 1.2:1;
         this.Img_Step2.scaleX = this.Img_Step2.scaleY = (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2 : 1;
         this.Img_Step3.scaleX = this.Img_Step3.scaleY = (this.uiState == CraftNoodleState.Noodles) ? 1.2 : 1;
         this.Img_Step4.scaleX = this.Img_Step4.scaleY =
@@ -4367,43 +4536,16 @@ var CraftNoodle = (function (_super) {
             this.Button_NextStep.visible = (toState == CraftNoodleState.ChooseBowl ||
                 toState == CraftNoodleState.Noodles ||
                 toState == CraftNoodleState.SoupToBroth ||
-                toState == CraftNoodleState.PutTare ||
                 toState == CraftNoodleState.SelectTopping);
-        this.Button_Handbook.visible =
-            this.Button_Handbook.enabled = (toState == CraftNoodleState.SelectTopping);
+        // this.Button_Handbook.visible = 
+        // this.Button_Handbook.enabled = (toState == CraftNoodleState.SelectTopping);
         this.Button_TareList.visible =
-            this.Button_TareList.enabled = (toState == CraftNoodleState.PutTare);
-        if (toState == CraftNoodleState.PutTare)
-            this.TareListButtonTextSynchronize();
+            this.Button_TareList.enabled = false; //TODO remove this fucker sooner or later
+        //if (toState == CraftNoodleState.PutTare) this.TareListButtonTextSynchronize();
         this.Group_Hint.visible = (toState != CraftNoodleState.ShowPhoto);
     };
     CraftNoodle.prototype._OnEnterState = function (toState) {
         var _this = this;
-        egret.Tween.get(this.Img_Step0)
-            .to({
-            scaleX: (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2 : 1,
-            scaleY: (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2 : 1
-        });
-        egret.Tween.get(this.Img_Step1)
-            .to({
-            scaleX: (this.uiState == CraftNoodleState.PutTare) ? 1.2 : 1,
-            scaleY: (this.uiState == CraftNoodleState.PutTare) ? 1.2 : 1
-        });
-        egret.Tween.get(this.Img_Step2)
-            .to({
-            scaleX: (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2 : 1,
-            scaleY: (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2 : 1
-        });
-        egret.Tween.get(this.Img_Step3)
-            .to({
-            scaleX: (this.uiState == CraftNoodleState.Noodles) ? 1.2 : 1,
-            scaleY: (this.uiState == CraftNoodleState.Noodles) ? 1.2 : 1
-        });
-        egret.Tween.get(this.Img_Step4)
-            .to({
-            scaleX: (this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2 : 1,
-            scaleY: (this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2 : 1
-        });
         //同时进入新的状态
         var animLen = 200;
         switch (toState) {
@@ -4413,31 +4555,29 @@ var CraftNoodle = (function (_super) {
                     egret.Tween.get(this.Group_IngBox)
                         .to({ y: this.stage.stageHeight }, animLen, egret.Ease.quadIn)
                         .call(function () {
-                        _this.uiState = toState;
+                        //this.uiState = toState;
                         _this.canControl = true;
                         _this.GenerateHintText();
                     }, this);
                 }
                 break;
-            case CraftNoodleState.PutTare:
-                {
-                    this.ResetIngredientBox(IngredientUseType.UseType_Tare);
-                    egret.Tween.get(this.Group_IngBox)
-                        .to({ y: this.stage.stageHeight }, animLen, egret.Ease.quadIn)
-                        .call(function () {
-                        _this.uiState = toState;
-                        _this.canControl = true;
-                        _this.GenerateHintText();
-                    }, this);
-                }
-                break;
+            // case CraftNoodleState.PutTare:{
+            // 	this.ResetIngredientBox(IngredientUseType.UseType_Tare);
+            // 	egret.Tween.get(this.Group_IngBox)
+            // 		.to({y:this.stage.stageHeight}, animLen, egret.Ease.quadIn)
+            // 		.call(()=>{
+            // 			this.uiState = toState;
+            // 			this.canControl = true;
+            // 			this.GenerateHintText();
+            // 		},this);
+            // }break;
             case CraftNoodleState.SoupToBroth:
                 {
                     this.ResetBrothBox();
                     egret.Tween.get(this.Group_IngBox)
                         .to({ y: this.stage.stageHeight }, animLen, egret.Ease.quadIn)
                         .call(function () {
-                        _this.uiState = toState;
+                        //this.uiState = toState;
                         _this.canControl = true;
                         _this.GenerateHintText();
                     }, this);
@@ -4445,11 +4585,11 @@ var CraftNoodle = (function (_super) {
                 break;
             case CraftNoodleState.Noodles:
                 {
-                    this.ResetIngredientBox(IngredientUseType.UseType_Noodle);
+                    this.ResetIngredientBox(IngredientUseType.UseType_Noodle, this.craftingRamen.noodles);
                     egret.Tween.get(this.Group_IngBox)
                         .to({ y: this.stage.stageHeight }, animLen, egret.Ease.quadIn)
                         .call(function () {
-                        _this.uiState = toState;
+                        //this.uiState = toState;
                         _this.canControl = true;
                         _this.GenerateHintText();
                     }, this);
@@ -4457,11 +4597,11 @@ var CraftNoodle = (function (_super) {
                 break;
             case CraftNoodleState.SelectTopping:
                 {
-                    this.ResetIngredientBox(IngredientUseType.UseType_Topping);
+                    this.ResetIngredientBox(IngredientUseType.UseType_Topping, null);
                     egret.Tween.get(this.Group_IngBox)
                         .to({ y: this.stage.stageHeight }, animLen, egret.Ease.quadIn)
                         .call(function () {
-                        _this.uiState = toState;
+                        //this.uiState = toState;
                         _this.canControl = true;
                         _this.GenerateHintText();
                     }, this);
@@ -4475,7 +4615,7 @@ var CraftNoodle = (function (_super) {
                     egret.Tween.get(this.Group_PlaceTool)
                         .to({ y: this.stage.stageHeight - 520 }, animLen, egret.Ease.quadOut)
                         .call(function () {
-                        _this.uiState = toState;
+                        //this.uiState = toState;
                         _this.canControl = true;
                         _this.GenerateHintText();
                     }, this);
@@ -4491,11 +4631,13 @@ var CraftNoodle = (function (_super) {
                 egret.Tween.get(this.Group_PhotoButtons)
                     .to({ y: this.Group_PhotoMask.y - this.Group_PhotoMask.anchorOffsetY + this.Group_PhotoMask.height + 80 }, animLen, egret.Ease.quadOut)
                     .call(function () {
-                    _this.uiState = toState;
+                    //this.uiState = toState;
                     _this.canControl = true;
                 }, this);
             }
         }
+        //改变状态
+        this.uiState = toState;
         //TODO 这里有未知bug，所以只能先这样凑个效果
         //bug:当进入placeTopping如果刷新，那么当前place的东西就会没了
         if (toState != CraftNoodleState.PlaceTopping) {
@@ -4503,6 +4645,34 @@ var CraftNoodle = (function (_super) {
         }
         else {
         }
+        //小手册与任务
+        this.ShowQuestUIItems(toState == CraftNoodleState.ShowPhoto);
+        //上方小按钮表现
+        egret.Tween.get(this.Img_Step0)
+            .to({
+            scaleX: (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2 : 1,
+            scaleY: (this.uiState == CraftNoodleState.ChooseBowl) ? 1.2 : 1
+        });
+        // egret.Tween.get(this.Img_Step1)
+        // 	.to({
+        // 		scaleX:1,//(this.uiState == CraftNoodleState.PutTare) ? 1.2:1,
+        // 		scaleY:1//(this.uiState == CraftNoodleState.PutTare) ? 1.2:1
+        // 	})
+        egret.Tween.get(this.Img_Step2)
+            .to({
+            scaleX: (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2 : 1,
+            scaleY: (this.uiState == CraftNoodleState.SoupToBroth) ? 1.2 : 1
+        });
+        egret.Tween.get(this.Img_Step3)
+            .to({
+            scaleX: (this.uiState == CraftNoodleState.Noodles) ? 1.2 : 1,
+            scaleY: (this.uiState == CraftNoodleState.Noodles) ? 1.2 : 1
+        });
+        egret.Tween.get(this.Img_Step4)
+            .to({
+            scaleX: (this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2 : 1,
+            scaleY: (this.uiState == CraftNoodleState.SelectTopping || this.uiState == CraftNoodleState.PlaceTopping) ? 1.2 : 1
+        });
     };
     //设置Hint文字 TODO文字应该根据拉面生成，目前是写死的。
     CraftNoodle.prototype.GenerateHintText = function () {
@@ -4513,11 +4683,9 @@ var CraftNoodle = (function (_super) {
                     t = "选个大大的碗吧，可以装多多的面条";
                 }
                 break;
-            case CraftNoodleState.PutTare:
-                {
-                    t = "做个什么味道为主的面呢？";
-                }
-                break;
+            // case CraftNoodleState.PutTare:{
+            // 	t = "做个什么味道为主的面呢？"
+            // }break;
             case CraftNoodleState.SoupToBroth:
                 {
                     t = "汤底可是面的灵魂啊！";
@@ -4554,12 +4722,12 @@ var CraftNoodle = (function (_super) {
         this.Label_HintText.text = t;
     };
     //根据当前tare数量给tarebutton改写text
-    CraftNoodle.prototype.TareListButtonTextSynchronize = function () {
-        this.Button_TareList.label =
-            "调料清单\n(" +
-                this.craftingRamen.tare.length.toString() + "/" +
-                this.craftingRamen.bowl.model.tareLimit.toString() + ")"; //TODO 调味料最多6个
-    };
+    // private TareListButtonTextSynchronize(){
+    // 	this.Button_TareList.label = 
+    // 		"调料清单\n(" + 
+    // 		this.craftingRamen.tare.length.toString() + "/" + 
+    // 		this.craftingRamen.bowl.model.tareLimit.toString() + ")"; //TODO 调味料最多6个
+    // }
     CraftNoodle.prototype.ClearIngredientBoxes = function () {
         if (this.ingredientPage && this.ingredientPage.length > 0) {
             for (var i = 0; i < this.ingredientPage.length; i++) {
@@ -4593,7 +4761,8 @@ var CraftNoodle = (function (_super) {
         for (var i = 0; i < pageI.length; i++) {
             var pis = new Array();
             for (var j = 0; j < pageI[i].length; j++) {
-                pis.push(new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].Icon(), me, me.ClickOnIngredientIcon));
+                var sel = this.craftingRamen.bowl && this.craftingRamen.bowl.model.id == pageI[i][j].id;
+                pis.push(new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].Icon(), sel, me, me.ClickOnIngredientIcon));
             }
             var ip = new IngredientBox(pis);
             this.ingredientPage.push(ip);
@@ -4623,7 +4792,8 @@ var CraftNoodle = (function (_super) {
         for (var i = 0; i < pageI.length; i++) {
             var pis = new Array();
             for (var j = 0; j < pageI[i].length; j++) {
-                var iInB = new IngredientIconInBox(pageI[i][j].id, pageI[i][j], this.craftingRamen.bowl.model.img, me, me.ClickOnIngredientIcon, pageI[i][j]);
+                var sel = this.craftingRamen.broth && this.craftingRamen.broth.model.id == pageI[i][j].id;
+                var iInB = new IngredientIconInBox(pageI[i][j].id, pageI[i][j], this.craftingRamen.bowl.model.img, sel, me, me.ClickOnIngredientIcon, pageI[i][j]);
                 pis.push(iInB);
             }
             var ip = new IngredientBox(pis);
@@ -4634,8 +4804,9 @@ var CraftNoodle = (function (_super) {
     /**
      * 设置Ingredient盒子
      * @param {IngredientUseType} type 要设置盒子的材料是什么类型的
+     * @param {IngredientObj} selectedOne 在返回的时候，因为已经有选中的，所以要显示一下钩子，可以是null，就不显示了
      */
-    CraftNoodle.prototype.ResetIngredientBox = function (type) {
+    CraftNoodle.prototype.ResetIngredientBox = function (type, selectedOne) {
         this.ClearIngredientBoxes();
         var me = this;
         //先把所有的列出来了
@@ -4656,7 +4827,8 @@ var CraftNoodle = (function (_super) {
         for (var i = 0; i < pageI.length; i++) {
             var pis = new Array();
             for (var j = 0; j < pageI[i].length; j++) {
-                var iInB = new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].icon, me, me.ClickOnIngredientIcon);
+                var sel = selectedOne && selectedOne.model && pageI[i][j].id == selectedOne.model.id;
+                var iInB = new IngredientIconInBox(pageI[i][j].id, pageI[i][j], pageI[i][j].icon, sel, me, me.ClickOnIngredientIcon);
                 pis.push(iInB);
             }
             var ip = new IngredientBox(pis);
@@ -4731,25 +4903,25 @@ var CraftNoodle = (function (_super) {
                     caller.UpdateRamen();
                 }
                 break;
-            case CraftNoodleState.PutTare:
-                {
-                    if (!caller.craftingRamen.bowl)
-                        return;
-                    if (caller.craftingRamen.tare.length < caller.craftingRamen.bowl.model.tareLimit) {
-                        var im = ing;
-                        var randomX = im.liquid == true ? 0 : (Math.random() * 200 - 100);
-                        var randomY = im.liquid == true ? 0 : (Math.random() * 200 - 100);
-                        if (im.liquid == true) {
-                            caller.craftingRamen.tare.unshift(new IngredientObj(ing, randomX, randomY));
-                        }
-                        else {
-                            caller.craftingRamen.tare.push(new IngredientObj(ing, randomX, randomY));
-                        }
-                        caller.UpdateRamen();
-                        caller.TareListButtonTextSynchronize();
-                    }
-                }
-                break;
+            // case CraftNoodleState.PutTare:{
+            // 	if (!caller.craftingRamen.bowl) return;
+            // 	if (caller.craftingRamen.tare.length < caller.craftingRamen.bowl.model.tareLimit){
+            // 		let im = (ing as IngredientModel);
+            // 		let randomX = im.liquid == true ? 0 :(Math.random() * 200 - 100);
+            // 		let randomY = im.liquid == true ? 0 :(Math.random() * 200 - 100);
+            // 		if (im.liquid == true){
+            // 			caller.craftingRamen.tare.unshift(
+            // 				new IngredientObj(ing, randomX, randomY)
+            // 			);
+            // 		}else{
+            // 			caller.craftingRamen.tare.push(
+            // 				new IngredientObj(ing, randomX, randomY)
+            // 			);
+            // 		}
+            // 		caller.UpdateRamen();
+            // 		caller.TareListButtonTextSynchronize();
+            // 	}
+            // }break;
             case CraftNoodleState.SoupToBroth:
                 {
                     var bm = ing;
@@ -4790,7 +4962,7 @@ var CraftNoodle = (function (_super) {
         //先全部去掉
         this.Group_GameLayer.removeChildren();
         //根据状态确定要画什么
-        var drawTare = false;
+        //let drawTare = false;
         var drawBroth = false;
         var drawBrothHL = false;
         var drawNoodle = false;
@@ -4807,14 +4979,12 @@ var CraftNoodle = (function (_super) {
                     bowlChanged = true;
                 }
                 break;
-            case CraftNoodleState.PutTare:
-                {
-                    drawTare = true;
-                }
-                break;
+            // case CraftNoodleState.PutTare:{
+            // 	drawTare = true;
+            // }break;
             case CraftNoodleState.SoupToBroth:
                 {
-                    drawTare = true;
+                    //drawTare = true;
                     drawBroth = true;
                     drawBrothHL = true;
                     brothChanged = true;
@@ -4846,6 +5016,14 @@ var CraftNoodle = (function (_super) {
                     drawSteam = true;
                 }
                 break;
+            case CraftNoodleState.ShowPhoto:
+                {
+                    drawBroth = true;
+                    drawNoodle = true;
+                    drawTopping = true;
+                    drawSteam = true;
+                }
+                break;
         }
         //面碗
         if (this.craftingRamen.bowl) {
@@ -4862,12 +5040,12 @@ var CraftNoodle = (function (_super) {
             this.bowlImage.y = this.ramenCenterY;
         }
         //着味
-        if (drawTare == true) {
-            for (var i = 0; i < this.craftingRamen.tare.length; i++) {
-                var tp = this.craftingRamen.tare[i];
-                var img = tp.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
-            }
-        }
+        // if (drawTare == true){
+        // 	for (let i = 0; i < this.craftingRamen.tare.length; i++){
+        // 		let tp = this.craftingRamen.tare[i];
+        // 		let img = tp.GatherImage(this.Group_GameLayer, this.ramenCenterX, this.ramenCenterY);
+        // 	}
+        // }
         //汤底
         var brothAnimInTime = 350; //in ms
         if (this.craftingRamen.broth && drawBroth == true) {
@@ -4996,6 +5174,8 @@ var HorizontalFoodCourt = (function (_super) {
         _this.hungry = 0;
         _this.hungerMax = 0;
         _this.canControl = true;
+        _this.eating = false; //角色们是否正在吃东西
+        _this.groundY = 400; //街道的地面坐标
         _this.uiPosY = 450; //下方UI的y坐标
         _this.uiOrderPosY = 650; //点菜的菜单y坐标
         _this.teamChaDis = 80; //角色之间距离
@@ -5013,14 +5193,9 @@ var HorizontalFoodCourt = (function (_super) {
         var _this = this;
         this.canControl = false;
         this.NewGame();
-        this.Button_Go.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            if (_this.canControl == false)
-                return;
-            if (_this.hungry <= 0)
-                return;
-            _this.MoveToStepIndex(_this.stepIndex + 1);
-        }, this);
-        var t = new egret.Timer(90);
+        // this.Button_Go.addEventListener(egret.TouchEvent.TOUCH_TAP, ()=>{
+        // },this);
+        var t = new egret.Timer(Utils.TickTime);
         t.addEventListener(egret.TimerEvent.TIMER, function () {
             _this.Update();
         }, this);
@@ -5033,7 +5208,6 @@ var HorizontalFoodCourt = (function (_super) {
         this.lastLearnedIngId = new Array();
         this.stepIndex = -1;
         this.hungry = 0;
-        this.ingredientExp = new Array();
         this.hungerMax = PlayerBaseHunger;
         for (var i = 0; i < this.buddies.length; i++) {
             this.hungerMax += this.buddies[i].hunger;
@@ -5059,14 +5233,15 @@ var HorizontalFoodCourt = (function (_super) {
     //角色走进场地，然后开始游戏，当然这时候UI也出来了
     HorizontalFoodCourt.prototype.ChaEnterSceneAndStartGame = function () {
         var _this = this;
+        this.Group_Street.x = 0;
         var inTime = Math.abs(this.mainCharacter.x - this.stage.stageWidth / 2) / 400 * 1000;
         var _loop_2 = function (i) {
-            this_2.teamSpr[i].character.ChangeAction(Direction.Right, CharacterAction.Walk);
+            this_2.teamSpr[i].ChangeAction(Direction.Right, CharacterAction.Walk);
             egret.Tween.removeTweens(this_2.teamSpr[i]);
             egret.Tween.get(this_2.teamSpr[i])
-                .to({ x: this_2.stage.stageWidth / 2 - i * this_2.teamChaDis }, inTime)
+                .to({ x: this_2.CharacterTeamPosX(i) }, inTime)
                 .call(function () {
-                _this.teamSpr[i].character.ChangeAction(Direction.Down, CharacterAction.Stand);
+                _this.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Stand);
                 if (i == 0) {
                     _this.canControl = true;
                 }
@@ -5077,12 +5252,23 @@ var HorizontalFoodCourt = (function (_super) {
             _loop_2(i);
         }
         if (!this.uiNormalMenu) {
-            this.uiNormalMenu = new FoodCourt_NormalMenu();
+            this.uiNormalMenu = new FoodCourt_NormalMenu(this);
             this.addChild(this.uiNormalMenu);
+            this.uiNormalMenu.width = this.stage.stageWidth;
             this.uiNormalMenu.height = this.stage.stageHeight - this.uiPosY;
+            this.uiNormalMenu.y = this.stage.stageHeight;
             //TODO 进入的动画
-            this.uiNormalMenu.y = this.uiPosY;
+            egret.Tween.removeTweens(this.uiNormalMenu);
+            egret.Tween.get(this.uiNormalMenu)
+                .to({ y: this.uiPosY }, 300, egret.Ease.quadOut)
+                .call(function () {
+                _this.uiNormalMenu.ShowIngredientExp(_this.ingredientExp);
+            });
         }
+    };
+    //一个角色应该处于街道的X坐标
+    HorizontalFoodCourt.prototype.CharacterTeamPosX = function (chaIndex) {
+        return this.stage.stageWidth / 2 - chaIndex * this.teamChaDis;
     };
     /**
      * 根据食物类型，获得对应事物的喜好者们
@@ -5111,11 +5297,25 @@ var HorizontalFoodCourt = (function (_super) {
             this.mainCharacter.parent.removeChild(this.mainCharacter);
         }
         this.Group_Street.removeChildren();
-        //店铺
-        this.storeX = new Array();
+        //相关数据
         var startAt = 700;
         var storeDis = 350;
-        var storeY = 400;
+        var storeY = this.groundY;
+        //背景
+        var bkg = new eui.Image(RES.getRes("bkg_shanghai"));
+        this.Group_Street.addChild(bkg);
+        bkg.width = startAt * 2 + storeDis * this.store.length;
+        bkg.height = storeY + 50;
+        bkg.fillMode = egret.BitmapFillMode.REPEAT;
+        //小吃店地面floor, TODO 今后应该随着店铺变化的吧
+        var flr = new eui.Image(RES.getRes("floor_shanghai"));
+        this.Group_Street.addChild(flr);
+        flr.y = bkg.height;
+        flr.width = bkg.width;
+        flr.height = this.uiOrderPosY - storeY - 50;
+        flr.fillMode = egret.BitmapFillMode.REPEAT;
+        //店铺
+        this.storeX = new Array();
         for (var i = 0; i < this.store.length; i++) {
             var img = new eui.Image();
             img.texture = RES.getRes(this.store[i].source);
@@ -5128,14 +5328,19 @@ var HorizontalFoodCourt = (function (_super) {
             this.storeX.push(img.x);
         }
         //主角
-        var mc = new CharacterObj(GetCharacterActionInfoByKey("schoolgirl"), -100, this.Group_Street.y + storeY, new CharacterProperty());
+        var chaStartX = -80;
+        var mc = new CharacterObj("schoolgirl", new FoodCourtBuddy(true));
         this.mainCharacter = new CharacterSprite(mc);
+        this.mainCharacter.x = chaStartX;
+        this.mainCharacter.y = this.groundY;
         this.addChild(this.mainCharacter);
         this.teamSpr = new Array();
         this.teamSpr.push(this.mainCharacter);
         for (var i = 0; i < this.buddies.length; i++) {
-            var cha = new CharacterObj(GetCharacterActionInfoByKey(this.buddies[i].body), -(i + 1) * this.teamChaDis - 100, storeY, new CharacterProperty(this.buddies[i]));
+            var cha = new CharacterObj(this.buddies[i].body, this.buddies[i]);
             var chaSpr = new CharacterSprite(cha);
+            chaSpr.x = chaStartX - (i + 1) * this.teamChaDis;
+            chaSpr.y = this.groundY;
             this.addChild(chaSpr);
             this.teamSpr.push(chaSpr);
         }
@@ -5145,15 +5350,42 @@ var HorizontalFoodCourt = (function (_super) {
         for (var i = 0; i < sPosX.length; i++) {
             seats.push(new DiningSeatInfo("wooden_chair", sPosX[i], -50, sPosX[i], -24));
         }
-        this.dTable = new DiningTableSprite(new DiningTableObj(new DiningTableModel("wooden_single_table", seats, 580, new egret.Rectangle(30, 0, 10, 10))));
+        this.dTable = new DiningTableSprite(new DiningTableObj(new DiningTableModel("wooden_single_table", seats, 580, new egret.Rectangle(30, 0, 10, 10))), EatGameType.FoodCourt);
         this.addChild(this.dTable);
         this.dTable.x = this.stage.stageWidth / 2;
         this.dTable.y = this.dtPosY;
         this.dTable.visible = false;
+        this.dtStagePos = new egret.Point(this.dTable.x, this.dTable.y);
         //学习的东西列表
-        this.Group_Ing.removeChildren();
-        this.IngHint = new Array();
+        this.Scroller_IngLearn.y = this.stage.stageHeight;
+        //this.Group_Ing.removeChildren();
+        this.ingredientExp = new Array();
+        //TEST
+        // let img = new eui.Image("ui_craft_selected");
+        // img.x = 100;
+        // img.y = 100;
+        // this.addChild(img);
+        // this.Group_Street.addChild(img);
+        // this.Group_Test.addChild(img);
     };
+    HorizontalFoodCourt.prototype.ButtonGoEvent = function () {
+        var _this = this;
+        if (this.canControl == false)
+            return;
+        if (this.hungry <= 0)
+            return;
+        this.canControl = false;
+        this.MoveToStepIndex(this.stepIndex + 1);
+        if (this.uiNormalMenu) {
+            egret.Tween.removeTweens(this.uiNormalMenu);
+            egret.Tween.get(this.uiNormalMenu)
+                .to({ y: this.uiOrderPosY }, 150, egret.Ease.quadOut)
+                .call(function () {
+                _this.uiNormalMenu.ShowIngredientExp(_this.ingredientExp);
+            });
+        }
+    };
+    //角色移动到某个格子
     HorizontalFoodCourt.prototype.MoveToStepIndex = function (index) {
         var _this = this;
         this.canControl = false;
@@ -5162,13 +5394,13 @@ var HorizontalFoodCourt = (function (_super) {
         var moveLen = tarX + this.Group_Street.x;
         var inTime = moveLen / 400 * 1000; //每秒移动400pixel
         for (var i = 0; i < this.teamSpr.length; i++) {
-            this.teamSpr[i].character.ChangeAction(Direction.Right, CharacterAction.Walk);
+            this.teamSpr[i].ChangeAction(Direction.Right, CharacterAction.Walk);
         }
         egret.Tween.removeTweens(this.Group_Street);
         egret.Tween.get(this.Group_Street).to({ x: this.Group_Street.x - moveLen }, inTime)
             .call(function () {
             for (var i = 0; i < _this.teamSpr.length; i++) {
-                _this.teamSpr[i].character.ChangeAction(Direction.Down, CharacterAction.Stand);
+                _this.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Stand);
             }
             //进入店铺的UI切换了
             _this.EnterTheStall(_this.store[_this.stepIndex]);
@@ -5180,7 +5412,6 @@ var HorizontalFoodCourt = (function (_super) {
     HorizontalFoodCourt.prototype.EnterTheStall = function (store) {
         var _this = this;
         this.dTable.visible = true;
-        this.Button_Go.visible = false;
         var _loop_3 = function (i) {
             var seatInfo = this_3.dTable.GetSeatInfoByIndex(i);
             if (seatInfo == null) {
@@ -5193,16 +5424,16 @@ var HorizontalFoodCourt = (function (_super) {
             egret.Tween.removeTweens(this_3.teamSpr[i]);
             egret.Tween.get(this_3.teamSpr[i])
                 .call(function () {
-                _this.teamSpr[i].character.ChangeAction(seatX > _this.teamSpr[i].x ? Direction.Right : Direction.Left, CharacterAction.Walk);
+                _this.teamSpr[i].ChangeAction(seatX > _this.teamSpr[i].x ? Direction.Right : Direction.Left, CharacterAction.Walk);
             })
                 .to({ x: seatX }, hMoveTime)
                 .call(function () {
-                _this.teamSpr[i].character.ChangeAction(Direction.Down, CharacterAction.Walk);
+                _this.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Walk);
             })
                 .to({ y: seatY }, vMoveTime)
                 .call(function () {
                 _this.teamSpr[i].visible = false;
-                _this.dTable.SetCharacterToSeat(i, _this.teamSpr[i].character, false); //TODO....第三个参数
+                _this.dTable.SetCharacterToSeat(i, _this.teamSpr[i].character, EatGameType.FoodCourt); //TODO....第三个参数
                 //TODO 走到以后出菜单
                 if (i == _this.teamSpr.length - 1) {
                     if (_this.uiNormalMenu) {
@@ -5220,11 +5451,76 @@ var HorizontalFoodCourt = (function (_super) {
             });
         };
         var this_3 = this;
+        //this.Button_Go.visible = false;
         for (var i = 0; i < this.teamSpr.length; i++) {
             var state_1 = _loop_3(i);
             if (state_1 === "break")
                 break;
         }
+    };
+    //吃完了，离开这家店
+    HorizontalFoodCourt.prototype.LeaveTheStore = function () {
+        var _this = this;
+        //先清理桌子
+        this.dTable.RemoveAllEatings();
+        var _loop_4 = function (i) {
+            this_4.teamSpr[i].visible = true;
+            var teamX = this_4.CharacterTeamPosX(i);
+            var teamY = this_4.groundY + this_4.Group_Street.y;
+            var hMoveTime = Math.abs(teamX - this_4.teamSpr[i].x) / 400 * 1000;
+            var vMoveTime = Math.abs(teamY - this_4.teamSpr[i].y) / 400 * 1000;
+            egret.Tween.removeTweens(this_4.teamSpr[i]);
+            egret.Tween.get(this_4.teamSpr[i])
+                .call(function () {
+                _this.teamSpr[i].ChangeAction(Direction.Up, CharacterAction.Walk);
+            })
+                .to({ y: teamY }, vMoveTime)
+                .call(function () {
+                _this.teamSpr[i].ChangeAction(teamX > _this.teamSpr[i].x ? Direction.Right : Direction.Left, CharacterAction.Walk);
+            })
+                .to({ x: teamX }, hMoveTime)
+                .call(function () {
+                _this.teamSpr[i].ChangeAction(Direction.Down, CharacterAction.Stand);
+                //出现等待移动的状态，以及界面更替
+                if (i == _this.teamSpr.length - 1) {
+                    _this.dTable.visible = false;
+                    //面板退出
+                    egret.Tween.removeTweens(_this.uiEatingState);
+                    egret.Tween.get(_this.uiEatingState)
+                        .to({ y: _this.stage.stageHeight }, 300, egret.Ease.quadIn);
+                    //面板进入
+                    egret.Tween.removeTweens(_this.uiNormalMenu);
+                    egret.Tween.get(_this.uiNormalMenu)
+                        .to({ y: _this.uiPosY }, 300, egret.Ease.quadOut)
+                        .call(function () {
+                        _this.uiNormalMenu.ShowIngredientExp(_this.ingredientExp);
+                        _this.BackToStreet();
+                    });
+                }
+            });
+        };
+        var this_4 = this;
+        //每个角色还原
+        for (var i = 0; i < this.teamSpr.length; i++) {
+            _loop_4(i);
+        }
+    };
+    //进入正常的等待状态
+    HorizontalFoodCourt.prototype.BackToStreet = function () {
+        if (this.IsGameOver() == false) {
+            //this.Button_Go.visible = true;
+            this.canControl = true;
+        }
+        else {
+            //TODO game over了，该退出这个玩法了
+            this.canControl = false;
+            this.addChild(new HorizontalFoodCourt_EndToChallenge(this, this.ingredientExp));
+        }
+    };
+    //判断是否结束了
+    HorizontalFoodCourt.prototype.IsGameOver = function () {
+        return (this.hungry <= 0 ||
+            this.stepIndex >= this.store.length);
     };
     //进入店铺，菜单出现
     HorizontalFoodCourt.prototype.StoreMenuIn = function (store) {
@@ -5242,23 +5538,51 @@ var HorizontalFoodCourt = (function (_super) {
             _this.canControl = true;
         });
     };
-    //给ui调用的不吃了的事件
-    HorizontalFoodCourt.prototype.CancelEat = function (caller) {
-        caller.hungry -= 5;
-        caller.hungry = Math.max(caller.hungry, 0);
-        caller.canControl = true;
-        caller.Update();
-    };
     //给ui调用的吃的事件
     HorizontalFoodCourt.prototype.EatDish = function (caller, dish) {
+        caller.canControl = false;
         //Show Dialog就完了
-        caller.hungry += dish.model.feed;
-        var favourC = caller.GetFavourGuyByDishType(dish.model.type).length;
-        for (var i = 0; i < dish.model.reward.length; i++) {
-            caller.AddIngredientExp(dish.model.reward[i], favourC);
+        caller._StartEatDish(dish);
+    };
+    /**
+     * 点菜的菜单退出屏幕，食材经验条进入屏幕，然后开始吃
+     */
+    HorizontalFoodCourt.prototype._StartEatDish = function (dish) {
+        var _this = this;
+        this.canControl = false;
+        var toHun = Math.max(this.hungry - dish.model.feed, 0);
+        this.HungerBarTweenTo(this.hungry, toHun);
+        this.hungry = toHun;
+        var tweenTime = 250;
+        egret.Tween.removeTweens(this.uiStoreMenu);
+        egret.Tween.get(this.uiStoreMenu)
+            .to({ y: this.stage.stageHeight }, tweenTime, egret.Ease.quadIn)
+            .call(function () {
+            egret.Tween.removeTweens(_this.Scroller_IngLearn);
+            egret.Tween.get(_this.Scroller_IngLearn)
+                .to({ y: _this.stage.stageHeight - _this.Scroller_IngLearn.height }, 100, egret.Ease.quadOut)
+                .call(function () {
+                //真正开始吃了
+                _this.dTable.StartEat();
+                _this.eating = true;
+                if (_this.uiStoreMenu.parent)
+                    _this.uiStoreMenu.parent.removeChild(_this.uiStoreMenu);
+                _this.uiStoreMenu = null;
+            });
+        });
+        if (!this.uiEatingState) {
+            this.uiEatingState = new FoodCourt_EatingState(this);
+            this.addChild(this.uiEatingState);
+            this.uiEatingState.y = this.stage.stageHeight;
+            this.uiEatingState.width = this.stage.stageWidth;
+            this.uiEatingState.height = this.stage.stageHeight - this.uiOrderPosY;
         }
-        caller.canControl = true;
-        caller.Update();
+        egret.Tween.removeTweens(this.uiEatingState);
+        egret.Tween.get(this.uiEatingState)
+            .to({ y: this.uiOrderPosY }, tweenTime, egret.Ease.quadOut)
+            .call(function () {
+            _this.uiEatingState.ShowIngredientExp(_this.ingredientExp);
+        });
     };
     /**
      * 给其他ui用的，选中一个dish，显示反应
@@ -5268,41 +5592,85 @@ var HorizontalFoodCourt = (function (_super) {
     HorizontalFoodCourt.prototype.SelectDish = function (caller, dish) {
         caller.SetHungerBar(caller.hungry, Math.max(0, caller.hungry - dish.model.feed));
         if (caller.dTable) {
-            caller.dTable.PlaceRamenToAllCharacter(dish.dish);
+            caller.dTable.PlaceDishToAllCharacter(dish);
         }
-        for (var i = 0; i < caller.teamSpr.length; i++) {
-            if (caller.teamSpr[i].character.property.buddyInfo) {
-                var favColor = caller.teamSpr[i].character.property.buddyInfo.favourType;
-                if (favColor == dish.model.type) {
-                    //喜欢的
-                    caller.teamSpr[i].character.ChangeAction(Direction.Down, CharacterAction.Clap);
-                }
-                else {
-                    //一般般
-                    caller.teamSpr[i].character.ChangeAction(Direction.Down, CharacterAction.Stand);
-                }
+        for (var i = 0; i < caller.dTable.eatingCha.length; i++) {
+            var ec = caller.dTable.eatingCha[i];
+            if (ec.hasCha == false || !ec.chaSpr)
+                continue; //没有角色就下一个
+            if (ec.CharacterFavourDish() == false) {
+                ec.chaSpr.ChangeAction(Direction.Down, CharacterAction.Stand);
             }
             else {
-                //主角，所以没有buddyInfo
-                caller.teamSpr[i].character.ChangeAction(Direction.Down, CharacterAction.Stand);
+                ec.chaSpr.ChangeAction(Direction.Down, CharacterAction.Clap);
             }
         }
     };
-    HorizontalFoodCourt.prototype.AddIngredientExp = function (ing, favourCount) {
-        for (var i = 0; i < this.ingredientExp.length; i++) {
-            if (this.ingredientExp[i].broth == ing.broth && this.ingredientExp[i].ingredientId == ing.ingredientId) {
-                //修改存在的
-                this.ingredientExp[i].exp += Math.ceil(ing.exp * (1 + favourCount * 0.3));
-                return;
+    //每一帧检查，看看是不是要添加经验了
+    HorizontalFoodCourt.prototype.CheckForIngredientLearn = function () {
+        for (var i = 0; i < this.dTable.eatingCha.length; i++) {
+            var li = this.dTable.eatingCha[i].CurrentTurnGatherIngredient();
+            if (li) {
+                var fX = this.dTable.eatingCha[i].seatInfo.x + this.dtStagePos.x;
+                var fY = this.dTable.eatingCha[i].seatInfo.y + this.dtStagePos.y;
+                this.AddIngredientExp(li, fX, fY);
             }
         }
-        //添加新的
-        var newIng = new FoodCourtIngredient(ing.ingredientId, ing.exp, ing.broth);
-        this.ingredientExp.push(newIng);
-        var iHint = new HorizontalFoodCourt_IngredientExp(newIng);
-        this.IngHint.push(iHint);
-        this.Group_Ing.addChild(iHint);
-        this.Update();
+    };
+    // 在界面上添加Ingredient的经验值
+    HorizontalFoodCourt.prototype.AddIngredientExp = function (ing, fromX, fromY) {
+        var _this = this;
+        var iHint = this.TryAddNewIngHint(ing.ingredientId, ing.broth); //不管新老，先找到
+        //创建一个图标飞过去
+        var ic;
+        if (ing.broth == true) {
+            var bm = GetBrothModelById(ing.ingredientId);
+            ic = bm.IconShape(0, 0, 30);
+            this.addChild(ic);
+            ic.x = fromX;
+            ic.y = fromY;
+        }
+        else {
+            var im = GetIngredientModelById(ing.ingredientId);
+            ic = new eui.Image();
+            ic.texture = RES.getRes(im.icon);
+            this.addChild(ic);
+            ic.width = ic.height = 60;
+            ic.anchorOffsetX = ic.width / 2;
+            ic.anchorOffsetY = ic.height / 2;
+            ic.x = fromX;
+            ic.y = fromY;
+        }
+        var tarX = iHint.IconStageX();
+        var tarY = iHint.IconStageY();
+        var dis = Math.sqrt(Math.pow(tarX - fromX, 2) + Math.pow(tarY - fromY, 2));
+        var inTime = dis / 300 * 1000;
+        egret.Tween.get(ic)
+            .to({ x: tarX, y: tarY }, inTime, egret.Ease.quartIn)
+            .call(function () {
+            iHint.IncreaseExp(ing.exp);
+            _this.removeChild(ic);
+            ic = null;
+        });
+    };
+    //找到IngHint中对应ingredientId的那个，如果是Null就是还没有
+    HorizontalFoodCourt.prototype.GetIngHintByIngredientId = function (ingId, broth) {
+        for (var i = 0; i < this.ingredientExp.length; i++) {
+            if (this.ingredientExp[i].ingredientInfo.ingredientId == ingId && this.ingredientExp[i].ingredientInfo.broth == broth) {
+                return this.ingredientExp[i];
+            }
+        }
+        return null;
+    };
+    //添加一个新的ingredient的hint，并且设置经验值为0
+    HorizontalFoodCourt.prototype.TryAddNewIngHint = function (ingId, broth) {
+        var oldOne = this.GetIngHintByIngredientId(ingId, broth);
+        if (oldOne)
+            return oldOne; //已经有了
+        var ingh = new HorizontalFoodCourt_IngredientExp(new FoodCourtIngredient(ingId, 0, broth));
+        this.ingredientExp.push(ingh);
+        this.uiEatingState.AddIngredientExp(ingh);
+        return ingh;
     };
     //满腹条
     HorizontalFoodCourt.prototype.HungerBarLength = function (v) {
@@ -5341,15 +5709,28 @@ var HorizontalFoodCourt = (function (_super) {
         }
     };
     HorizontalFoodCourt.prototype.Update = function () {
-        this.Label_Hungry.text = "满腹度：" + this.hungry.toString() + "/" + this.hungerMax.toString();
-        //主角
+        //所有角色
         for (var i = 0; i < this.teamSpr.length; i++) {
-            this.teamSpr[i].character.Update();
+            this.teamSpr[i].Update();
         }
-        //学习的东西
-        for (var i = 0; i < this.IngHint.length; i++) {
-            this.IngHint[i].Update();
+        // //学习的东西
+        // for (let i = 0; i < this.ingredientExp.length; i++){
+        // 	this.ingredientExp[i].Update();
+        // }
+        //桌子
+        if (this.dTable) {
+            this.dTable.Update();
         }
+        if (this.eating == true) {
+            if (this.dTable.AllFinished() == true) {
+                this.eating = false;
+                this.LeaveTheStore();
+            }
+            else {
+                this.CheckForIngredientLearn();
+            }
+        }
+        //饱食度条子
         if (this.Rect_HungerMinus) {
             if (this.Rect_HungerMinus.alpha > 0) {
                 this.Rect_HungerMinus.alpha -= 0.05;
@@ -5372,501 +5753,6 @@ var FoodCourtGameState;
     FoodCourtGameState[FoodCourtGameState["Eating"] = 5] = "Eating";
     FoodCourtGameState[FoodCourtGameState["BackToStreet"] = 6] = "BackToStreet";
 })(FoodCourtGameState || (FoodCourtGameState = {}));
-var Street = (function (_super) {
-    __extends(Street, _super);
-    function Street(startTick, cityJson) {
-        if (startTick === void 0) { startTick = 0; }
-        if (cityJson === void 0) { cityJson = "city_shanghai_json"; }
-        var _this = _super.call(this) || this;
-        _this.toUpdateTicker = 0;
-        _this.tick = 0;
-        _this.chaRefTicker = 0;
-        _this.zOrderBase = 10000; //在重新计算zOrder时，加上这个数字
-        _this.cityJsonFileName = cityJson;
-        _this.tick = startTick;
-        return _this;
-    }
-    Street.prototype.partAdded = function (partName, instance) {
-        _super.prototype.partAdded.call(this, partName, instance);
-    };
-    Street.prototype.childrenCreated = function () {
-        _super.prototype.childrenCreated.call(this);
-        this.init();
-    };
-    Street.prototype.init = function () {
-        var _this = this;
-        //初始化数组
-        this.sprites = new Array();
-        this.characterSprites = new Array();
-        this.diningTableSprites = new Array();
-        this.trafficLightSprites = new Array();
-        this.characters = new Array();
-        this.diningTables = new Array();
-        this.diningChairs = new Array();
-        this.trafficLights = new Array();
-        //获得json配置
-        var jsonF = RES.getRes(this.cityJsonFileName);
-        //先加载ground，顺便的，把一些读取json的麻烦丢给ground
-        this.ground = new StreetGround(jsonF);
-        this.ground.x = 0;
-        this.ground.y = 0;
-        this.gameLayer.addChild(this.ground);
-        console.log("GroundTop", this.ground.groundTop);
-        this.PaintFixedTerrainByJson(jsonF);
-        //小车可以先添加
-        this.PlaceBusAndMainCharacter("bus_default_json");
-        //开始添加精灵层的固定原件，比如桌子、花坛、椅子等
-        //TODO 桌子椅子应该来自文件，而不是写死的
-        var putTableHere = [
-            { x: 1, y: 2 }, { x: 3, y: 2 }, { x: 5, y: 2 }, { x: 7, y: 2 },
-            { x: 2, y: 5 }, { x: 4, y: 5 }, { x: 6, y: 5 }, { x: 8, y: 5 }
-        ];
-        for (var i = 0; i < putTableHere.length; i++) {
-            var putInfo = putTableHere[i];
-            var gX = putInfo["x"];
-            var gY = putInfo["y"];
-            var slot = i < 4 ?
-                new DiningTableSeatSlot(0, 0, 38, 55, 0, -1, Direction.Down, 1, 0, Direction.Left) :
-                new DiningTableSeatSlot(0, 0, 38, 55, 0, -1, Direction.Down, -1, 0, Direction.Right);
-            // this.PlaceTable(
-            // 	new DiningTableModel(1,1,"wooden_single_table", [slot]),gX, gY
-            // )
-        }
-        //红绿灯
-        this.PlaceTrafficLight(0, GameMapHeight + this.ground.roadHeightInGrid - 1);
-        //测试角色
-        this.PlaceDebugCharacter();
-        //测试clip
-        // let clip:SpriteClip = new SpriteClip();
-        // clip.texture = RES.getRes("wooden_chair");
-        // clip.x = 100;
-        // clip.y = 800;
-        // this.gameLayer.addChild(clip);
-        // this.sprites.push(clip);
-        //开启一个update和fixedUpdate的计时器
-        var t = new egret.Timer(30);
-        t.addEventListener(egret.TimerEvent.TIMER, function () {
-            _this.FixedUpdate();
-            if (_this.toUpdateTicker == 0)
-                _this.Update();
-            _this.RearrangeSpritesZOrder(); //ZOrder每个逻辑tick都会重新排列，所以FixedUpdate中可以不用
-            _this.tick += 1;
-            _this.toUpdateTicker = (_this.toUpdateTicker + 1) % 3;
-        }, this);
-        t.start();
-    };
-    //用于动画刷新的Update
-    Street.prototype.Update = function () {
-        //角色的
-        // for (let i = 0; i < this.characters.length; i++){
-        // 	let cha = this.characters[i];
-        // 	if (cha.Update){
-        // 		cha.Update();
-        // 	}
-        // }
-        //红绿灯绘制
-        // for (let i = 0; i < this.trafficLights.length; i++){
-        // 	let tl = this.trafficLights[i];
-        // 	tl.Draw();
-        // }
-        //主角
-        if (this.mainCharacter && this.mainCharacter.Update) {
-            this.mainCharacter.Update();
-        }
-        //其他精灵
-        for (var i = 0; i < this.sprites.length; i++) {
-            this.sprites[i].Update();
-        }
-    };
-    //用于逻辑刷新的Update
-    Street.prototype.FixedUpdate = function () {
-        //主角
-        if (this.mainCharacterSprite) {
-            this.mainCharacterSprite.FixedUpdate();
-        }
-        //红绿灯换色
-        var trafficLightState = this.GetTrafficLightState();
-        for (var i = 0; i < this.trafficLights.length; i++) {
-            var tl = this.trafficLights[i];
-            tl.LightOn(trafficLightState["light"]);
-        }
-        //所有精灵的
-        for (var i = 0; i < this.sprites.length; i++) {
-            this.sprites[i].FixedUpdate();
-        }
-        //检查是否删除角色角色的
-        var idx = 0;
-        while (idx < this.characters.length) {
-            var cha = this.characters[idx];
-            //TODO 一个角色AI执行完毕就删除
-            if (cha.ai.plan.length <= 0) {
-                this.RemoveCharacter(cha);
-            }
-            else {
-                // if (cha.FixedUpdate){
-                // 	if (cha.FixedUpdate() === true && cha.Update){
-                // 		cha.Update();
-                // 	};
-                // }
-                idx++;
-            }
-        }
-        //刷角色
-        if (this.chaRefTicker <= 0) {
-            if (this.characters.length < 80) {
-                this.RandomGatherNPC();
-            }
-            this.chaRefTicker = Math.floor(Math.random() * 8) + 22;
-        }
-        else {
-            this.chaRefTicker--;
-        }
-    };
-    //重新排序zOrder
-    Street.prototype.RearrangeSpritesZOrder = function () {
-        if (!this.sprites || this.sprites.length <= 0)
-            return;
-        this.sprites.sort(function (a, b) {
-            var needBack = a.NeedToSendMeBack(b);
-            return (needBack == true) ? -1 : 1;
-        });
-        for (var i = 0; i < this.sprites.length; i++) {
-            var ts = this.sprites[i];
-            ts.zIndex = i + this.zOrderBase;
-        }
-        this.gameLayer.sortChildren();
-    };
-    //从sprites里找到对应的SpriteGroup
-    Street.prototype.GetSprite = function (sprGroup, spliceFromSprites) {
-        if (spliceFromSprites === void 0) { spliceFromSprites = true; }
-        for (var i = 0; i < this.sprites.length; i++) {
-            if (this.sprites[i] == sprGroup) {
-                if (spliceFromSprites == true) {
-                    return this.sprites.splice(i, 1)[0];
-                }
-                else {
-                    return this.sprites[i];
-                }
-            }
-        }
-        return null;
-    };
-    //根据json信息放置地面层元素和精灵层元素
-    Street.prototype.PaintFixedTerrainByJson = function (json) {
-        //初始化地图
-        this.gridCanPass = new Array();
-        for (var i = 0; i < GameMapWidth; i++) {
-            var thisLine = new Array();
-            for (var j = 0; j < GameMapHeight + this.ground.roadHeightInGrid; j++) {
-                thisLine.push(true);
-            }
-            this.gridCanPass.push(thisLine);
-        }
-        //对应的数组初始化
-        if (this.fixedImage) {
-            for (var i = 0; i < this.fixedImage.length; i++) {
-                if (this.fixedImage[i] && this.fixedImage[i].parent)
-                    this.fixedImage[i].parent.removeChild(this.fixedImage[i]);
-            }
-        }
-        this.fixedImage = new Array();
-        //地面层
-        var fg = json["fixed_grounds"];
-        if (fg) {
-            for (var i = 0; i < fg.length; i++) {
-                var fi = fg[i];
-                var gX = fi["x"];
-                var gY = fi["y"];
-                var img = new eui.Image();
-                img.texture = RES.getRes(fi["img"]);
-                img.width = Math.ceil(img.width + 1);
-                img.height = Math.ceil(img.height + 1);
-                img.fillMode = egret.BitmapFillMode.SCALE;
-                var iPos = this.GetPixelPosByGridPos(gX, gY);
-                img.x = iPos["x"];
-                img.y = iPos["y"];
-                if (!fi["canPass"]) {
-                    this.gridCanPass[gX][gY] = false;
-                }
-                this.gameLayer.addChild(img);
-                this.fixedImage.push(img);
-            }
-        }
-        //精灵层
-        var fs = json["fixed_sprites"];
-        if (fs) {
-            for (var i = 0; i < fs.length; i++) {
-                var fi = fs[i];
-                var gX = fi["x"];
-                var gY = fi["y"];
-                var img = new eui.Image();
-                img.texture = RES.getRes(fi["img"]);
-                img.width = Math.ceil(img.width + 1);
-                img.height = Math.ceil(img.height + 1);
-                img.fillMode = egret.BitmapFillMode.SCALE;
-                var iPos = this.GetPixelPosByGridPos(gX, gY);
-                img.x = iPos["x"];
-                img.y = iPos["y"];
-                if (!fi["canPass"]) {
-                    this.gridCanPass[gX][gY] = false;
-                }
-                this.gameLayer.addChild(img);
-                //this.sprites.push(img);		//TODO SpriteClip
-                this.fixedImage.push(img);
-            }
-        }
-        //广告牌
-        var adb = json["advboard"];
-        if (adb) {
-            this.advBoardGridX = adb["x"];
-            this.advBoardGridY = adb["y"];
-            this.advBoardWidth = adb["width"] ? adb["width"] : 2;
-        }
-    };
-    //把汽车和主角放上去
-    Street.prototype.PlaceBusAndMainCharacter = function (busJsonFileName) {
-        var bJsonF = RES.getRes(busJsonFileName);
-        var bJson = bJsonF["data"];
-        //初始化
-        if (this.busImage) {
-            for (var i = 0; i < this.busImage.length; i++) {
-                if (this.busImage[i] && this.busImage[i].parent) {
-                    this.busImage[i].parent.removeChild(this.busImage[i]);
-                }
-            }
-        }
-        this.busImage = new Array();
-        if (this.mainCharacter) {
-            if (this.mainCharacter.head && this.mainCharacter.head.parent)
-                this.mainCharacter.head.parent.removeChild(this.mainCharacter.head);
-            if (this.mainCharacter.body && this.mainCharacter.body.parent)
-                this.mainCharacter.body.parent.removeChild(this.mainCharacter.body);
-        }
-        //读取数据
-        if (bJson) {
-            //共用参数
-            var busPos = this.GetPixelPosByGridPos(BusLeftInGrid, BusBottomInGrid);
-            var busSX = busPos["x"];
-            var busSY = busPos["y"] - BusAreaHeight + GridHeight;
-            //最先绘制body
-            var bodyInfo = bJson["body"];
-            if (bodyInfo) {
-                var img = new eui.Image();
-                img.texture = RES.getRes(bodyInfo["img"]);
-                var offX = bodyInfo["offsetX"] ? bodyInfo["offsetX"] : 0;
-                var offY = bodyInfo["offsetY"] ? bodyInfo["offsetY"] : 0;
-                img.x = busSX + offX;
-                img.y = busSY + offY;
-                this.gameLayer.addChild(img);
-                this.busImage.push(img);
-                this.mainCharacterZoneFloor = busSY + (bodyInfo["characterAreaOffsetY"] ? bodyInfo["characterAreaOffsetY"] : 0);
-                this.mainCharacterZoneLeft = busSX + (bodyInfo["characterAreaOffsetX"] ? bodyInfo["characterAreaOffsetX"] : 0);
-                this.mainCharacterZoneRight =
-                    this.mainCharacterZoneLeft + (bodyInfo["characterAreaWidth"] ? bodyInfo["characterAreaWidth"] : 0);
-            }
-            //然后绘制主角(TODO 写死了现在，今后要传递)
-            var mcX = (this.mainCharacterZoneRight - this.mainCharacterZoneLeft) / 2 + this.mainCharacterZoneLeft;
-            this.mainCharacter = new CharacterObj(GetCharacterActionInfoByKey("schoolgirl"), mcX, this.mainCharacterZoneFloor);
-            this.mainCharacterSprite = new CharacterSprite(this.mainCharacter);
-            this.gameLayer.addChild(this.mainCharacterSprite);
-            //接下来绘制车顶
-            var topInfo = bJson["top"];
-            var topImg = void 0;
-            var topAnchorX = 0;
-            var topAnchorY = 0;
-            if (topInfo) {
-                topImg = new eui.Image();
-                topImg.texture = RES.getRes(topInfo["img"]);
-                //这个坐标是要最后修的
-                this.gameLayer.addChild(topImg);
-                this.busImage.push(topImg);
-                topAnchorX = topInfo["offsetX"] ? topInfo["offsetX"] : 0;
-                topAnchorY = topInfo["offsetY"] ? topInfo["offsetY"] : 0;
-            }
-            //最后是车喷漆
-            var paintInfo = bJson["paint"];
-            if (paintInfo) {
-                var img = new eui.Image();
-                img.texture = RES.getRes(paintInfo["img"]);
-                var offX = paintInfo["offsetX"] ? paintInfo["offsetX"] : 0;
-                var offY = paintInfo["offsetY"] ? paintInfo["offsetY"] : 0;
-                img.x = busSX + offX;
-                img.y = busSY + offY;
-                this.gameLayer.addChild(img);
-                this.busImage.push(img);
-                //车顶装潢位置
-                topImg.x = busSX + (paintInfo["topCenterX"] ? paintInfo["topCenterX"] : 0) - topAnchorX;
-                topImg.y = busSY + (paintInfo["topCenterY"] ? paintInfo["topCenterY"] : 0) - topAnchorY;
-                //其他装潢
-                var oInfo = paintInfo["addon"];
-                if (oInfo) {
-                    for (var i = 0; i < oInfo.length; i++) {
-                        var thisAddonInfo = oInfo[i];
-                        var imgName = thisAddonInfo["img"];
-                        var imgOffX = thisAddonInfo["offsetX"] ? thisAddonInfo["offsetX"] : 0;
-                        var imgOffY = thisAddonInfo["offsetY"] ? thisAddonInfo["offsetY"] : 0;
-                        var addonImg = new eui.Image();
-                        addonImg.texture = RES.getRes(imgName);
-                        addonImg.x = busSX + imgOffX;
-                        addonImg.y = busSY + imgOffY;
-                        this.gameLayer.addChild(addonImg);
-                        this.busImage.push(addonImg);
-                    }
-                }
-            }
-        }
-    };
-    //删除某个角色
-    Street.prototype.RemoveCharacter = function (cha) {
-        if (cha) {
-            for (var i = 0; i < this.characterSprites.length; i++) {
-                if (this.characterSprites[i].IsCharacter(cha) == true) {
-                    var sg = this.characterSprites[i];
-                    var spr = this.GetSprite(sg);
-                    if (spr && spr.parent) {
-                        spr.parent.removeChild(spr);
-                    }
-                    this.characterSprites.splice(i, 1);
-                    break;
-                }
-            }
-            //角色列表删除
-            for (var i = 0; i < this.characters.length; i++) {
-                if (this.characters[i] == cha) {
-                    this.characters.splice(i, 1);
-                    break;
-                }
-            }
-        }
-    };
-    //TODO 放一套桌子，这里可不管能不能放的下，只管放上去的
-    Street.prototype.PlaceTable = function (table, gridX, gridY) {
-        // let tPos = this.GetPixelPosByGridPos(gridX, gridY, true);
-        // let t:DiningTableObj = new DiningTableObj(table, tPos["x"], tPos["y"]);
-        // let tSpr:DiningTableSprite = new DiningTableSprite();
-        // tSpr.x = tPos["x"];
-        // tSpr.y = tPos["y"];
-        // this.gameLayer.addChild(tSpr);
-        // this.sprites.push(tSpr);	
-        // this.diningTables.push(t);
-        // this.diningTableSprites.push(tSpr);
-        //TODO桌子椅子连接状态等
-    };
-    //放红绿灯
-    Street.prototype.PlaceTrafficLight = function (gridX, gridY) {
-        var tPos = this.GetPixelPosByGridPos(gridX, gridY);
-        var tl = new TrafficLight();
-        var tlSpr = new TrafficLightSprite(tl);
-        this.gameLayer.addChild(tlSpr);
-        this.sprites.push(tlSpr);
-        this.trafficLightSprites.push(tlSpr);
-        this.trafficLights.push(tl);
-        tlSpr.x = tPos["x"] + GridWidth / 2;
-        tlSpr.y = tPos["y"] + GridHeight / 2;
-        tl.LightOn(this.GetTrafficLightState()["light"]);
-        tl.Draw();
-    };
-    //放一个角色，这里的x,y都是像素级
-    Street.prototype.PlaceCharacter = function (key, x, y) {
-        if (key === void 0) { key = "schoolgirl"; }
-        var cha = new CharacterObj(GetCharacterActionInfoByKey(key), x, y, new CharacterProperty());
-        var chaSpr = new CharacterSprite(cha);
-        this.gameLayer.addChild(chaSpr);
-        this.sprites.push(chaSpr);
-        this.characterSprites.push(chaSpr);
-        this.characters.push(cha);
-        return cha;
-    };
-    //TODO 随机产生一个npc
-    Street.prototype.RandomGatherNPC = function () {
-        var sLocation = [
-            { x: -3, y: Math.floor(Math.random() * this.ground.roadHeightInGrid - 2) + GameMapHeight + 3 },
-            { x: GameMapWidth + 3, y: Math.floor(Math.random() * this.ground.roadHeightInGrid - 2) + GameMapHeight + 3 },
-            { x: Math.floor(Math.random() * 3), y: GameMapHeight + this.ground.roadHeightInGrid + 5 }
-        ];
-        var slIndex = Math.floor(Math.random() * sLocation.length);
-        var slRes = sLocation[slIndex];
-        var slPos = this.GetPixelPosByGridPos(slRes["x"], slRes["y"], true);
-        var startX = slPos["x"];
-        var startY = slPos["y"] - Math.floor(Math.random() * GridHeight / 2);
-        var chaKeyMay = ["schoolgirl"];
-        var chaKey = chaKeyMay[Math.floor(Math.random() * chaKeyMay.length)];
-        var cha = this.PlaceCharacter(chaKey, startX, startY);
-        cha.property.speed = Math.floor(Math.random() * 3) + 4;
-        var aiScr = [
-            AIScripts.JustPassThroughFromRoad(cha, (GameMapWidth + 3) * GridWidth),
-            AIScripts.JustPassThroughFromRoad(cha, -3 * GridWidth),
-            AIScripts.JustPassThroughFromTrafficLight(this, cha)
-        ];
-        cha.ai.SetScripts(aiScr[slIndex]);
-    };
-    //测试用的角色
-    Street.prototype.PlaceDebugCharacter = function () {
-        var pos = this.GetPixelPosByGridPos(2, 0, true);
-        var cha = this.PlaceCharacter("schoolgirl", pos["x"], pos["y"]);
-        cha.property.speed = Math.floor(Math.random() * 3) + 4;
-        cha.ai.SetScripts(AIScripts.DebugWalkForDirection(cha));
-        for (var i = 0; i < 10; i++) {
-            cha.ai.AddScripts(AIScripts.DebugWalkForDirection(cha));
-        }
-        var cha1 = this.PlaceCharacter("schoolgirl", pos["x"] + 150, pos["y"] + 75);
-        cha1.property.speed = Math.floor(Math.random() * 3) + 4;
-        cha1.ai.SetScripts(AIScripts.DebugDoAllAction(cha));
-        for (var i = 0; i < 10; i++) {
-            cha1.ai.AddScripts(AIScripts.DebugDoAllAction(cha));
-        }
-    };
-    /**
-     * 根据单元格坐标，获得在gameLayer上的坐标
-     * @param {number} gridX 单元格坐标x
-     * @param {number} gridY 单元格坐标y
-     * @param {boolean} forCharacter 这个坐标是不是为角色准备的
-     * @returns 返回坐标{x:number, y:number};
-     */
-    Street.prototype.GetPixelPosByGridPos = function (gridX, gridY, forCharacter) {
-        if (forCharacter === void 0) { forCharacter = false; }
-        var res = { x: -1, y: -1 };
-        if (!this.ground)
-            return res;
-        res["x"] = Math.round(gridX * GridWidth + (forCharacter == true ? GridWidth / 2 : 0));
-        res["y"] = Math.round(gridY * GridHeight + this.ground.groundTop + (forCharacter == true ? (GridHeight - 10) : 0));
-        return res;
-    };
-    /**
-     * 根据tick获得红绿灯的状态
-     * @returns {Object} ["light":TrafficLightState, "toGreen":距离绿灯的tick数]
-     */
-    Street.prototype.GetTrafficLightState = function () {
-        var greenTick = 150;
-        var gShineTick = 30;
-        var yellowTick = 30;
-        var redTick = 150;
-        var totalTick = greenTick + gShineTick + yellowTick + redTick;
-        var cTick = this.tick % totalTick;
-        var tls = TrafficLightState.Red;
-        var toGreen = 0;
-        if (cTick < greenTick) {
-            tls = TrafficLightState.Green;
-        }
-        else if (cTick < greenTick + gShineTick) {
-            tls = TrafficLightState.GreenShine;
-            toGreen = totalTick - cTick;
-        }
-        else if (cTick < greenTick + gShineTick + yellowTick) {
-            tls = TrafficLightState.Yellow;
-            toGreen = totalTick - cTick;
-        }
-        else {
-            toGreen = totalTick - cTick;
-        }
-        return {
-            "light": tls,
-            "toGreen": toGreen
-        };
-    };
-    return Street;
-}(eui.Component));
-__reflect(Street.prototype, "Street", ["eui.UIComponent", "egret.DisplayObject"]);
 var TestScene = (function (_super) {
     __extends(TestScene, _super);
     function TestScene(ramen) {
@@ -5892,12 +5778,12 @@ var TestScene = (function (_super) {
     TestScene.prototype.init = function () {
         //this.PlaceCharacter("schoolgirl", 150, 450);
         var _this = this;
-        this.actor = new CharacterObj(GetCharacterActionInfoByKey("schoolgirl"), 0, 0, new CharacterProperty());
+        this.actor = new CharacterObj("schoolgirl", new FoodCourtBuddy());
         this.PlaceTable(350, 500);
         for (var i = 0; i < 3; i++) {
-            var _actor = new CharacterObj(GetCharacterActionInfoByKey("schoolgirl"), 0, 0, new CharacterProperty());
+            var _actor = new CharacterObj("schoolgirl", new FoodCourtBuddy());
             var _ramen = this.ramenObj.Clone(false);
-            this.diningTable.SetCharacterToSeat(i, _actor);
+            this.diningTable.SetCharacterToSeat(i, _actor, EatGameType.EatNoodle);
             this.diningTable.PlaceRamenToSeat(i, _ramen);
         }
         this.RearrangeSpritesZOrder();
@@ -5911,12 +5797,14 @@ var TestScene = (function (_super) {
                 _this.diningTable.StartEat();
             }
         }, this);
+        this.Button_Back.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            Utils.UIRoot.addChild(new FoodCourtTeamBuild());
+            _this.parent.removeChild(_this);
+        }, this);
         //开启一个update和fixedUpdate的计时器
-        var t = new egret.Timer(30 * this.timeScale);
+        var t = new egret.Timer(Utils.TickTime * this.timeScale);
         t.addEventListener(egret.TimerEvent.TIMER, function () {
-            _this.FixedUpdate();
-            if (_this.toUpdateTicker == 0)
-                _this.Update();
+            _this.Update();
             _this.RearrangeSpritesZOrder(); //ZOrder每个逻辑tick都会重新排列，所以FixedUpdate中可以不用
             _this.tick += 1;
             _this.toUpdateTicker = (_this.toUpdateTicker + 1) % 3;
@@ -5937,14 +5825,6 @@ var TestScene = (function (_super) {
             this.diningTable.Update();
         }
     };
-    //用于逻辑刷新的Update
-    TestScene.prototype.FixedUpdate = function () {
-        //角色的
-        //this.actor.FixedUpdate();
-        if (this.diningTable) {
-            this.diningTable.FixedUpdate();
-        }
-    };
     //重新排序zOrder
     TestScene.prototype.RearrangeSpritesZOrder = function () {
         if (!this.sprites || this.sprites.length <= 0)
@@ -5962,7 +5842,7 @@ var TestScene = (function (_super) {
     //放一个角色，这里的x,y都是像素级
     TestScene.prototype.PlaceCharacter = function (key, x, y) {
         if (key === void 0) { key = "schoolgirl"; }
-        this.actor = new CharacterObj(GetCharacterActionInfoByKey(key), x, y, new CharacterProperty());
+        this.actor = new CharacterObj("schoolgirl", new FoodCourtBuddy());
         var aImg = new CharacterSprite(this.actor);
         aImg.x = x;
         aImg.y = y;
@@ -5975,7 +5855,7 @@ var TestScene = (function (_super) {
             new DiningSeatInfo("wooden_chair", 0, -50, 0, -24),
             new DiningSeatInfo("wooden_chair", -75, -50, -75, -24),
             new DiningSeatInfo("wooden_chair", 75, -50, 75, -24),
-        ], 240, new egret.Rectangle(30, 0, 10, 10))));
+        ], 240, new egret.Rectangle(30, 0, 10, 10))), EatGameType.EatNoodle);
         this.gameLayer.addChild(this.diningTable);
         this.diningTable.x = x;
         this.diningTable.y = y;
@@ -6005,10 +5885,7 @@ var WelcomeScene = (function (_super) {
     WelcomeScene.prototype.init = function () {
         var _this = this;
         this.Button_Ramen.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            if (!GameScene_CraftNoodle) {
-                GameScene_CraftNoodle = new CraftNoodle();
-            }
-            Utils.UIRoot.addChild(GameScene_CraftNoodle);
+            Utils.UIRoot.addChild(new CraftNoodle());
             _this.parent.removeChild(_this);
         }, this);
         this.Button_Street.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
@@ -6159,9 +6036,9 @@ var FoodCourtTeamBuild = (function (_super) {
     function FoodCourtTeamBuild() {
         var _this = _super.call(this) || this;
         _this.canControl = false;
-        _this.floorY = 400;
-        _this.carHeight = 20;
-        _this.uiPosY = 480; //下方UI的y坐标
+        _this.floorY = 430;
+        _this.carHeight = 40;
+        _this.uiPosY = 430; //下方UI的y坐标
         _this.team = new Array();
         return _this;
     }
@@ -6190,6 +6067,14 @@ var FoodCourtTeamBuild = (function (_super) {
     };
     FoodCourtTeamBuild.prototype.InitBKG = function () {
         var storeY = this.floorY;
+        //背景
+        var bkg = new eui.Image();
+        this.addChild(bkg);
+        bkg.texture = RES.getRes("bkg_shanghai");
+        bkg.fillMode = egret.BitmapFillMode.REPEAT;
+        // bkg.width = this.stage.stageWidth;
+        // bkg.height = storeY;
+        //小汽车
         this.car = new eui.Image();
         this.car.texture = RES.getRes("bus_default_paint");
         this.addChild(this.car);
@@ -6197,12 +6082,14 @@ var FoodCourtTeamBuild = (function (_super) {
         this.car.anchorOffsetY = this.car.height;
         this.car.scaleX = -1; //TODO 就先转转
         this.car.x = this.stage.stageWidth / 2;
-        this.car.y = storeY;
+        this.car.y = storeY + 30;
         this.carDoorX = this.stage.stageWidth / 2 - 80;
         this.Rect_Hunger.width = 0;
         //主角
-        this.mc = new CharacterObj(GetCharacterActionInfoByKey("schoolgirl"), this.stage.stageWidth / 2, this.Group_Street.y + storeY, new CharacterProperty());
+        this.mc = new CharacterObj("schoolgirl", new FoodCourtBuddy(true));
         this.mainCharacter = new CharacterSprite(this.mc);
+        this.mainCharacter.x = this.stage.stageWidth / 2;
+        this.mainCharacter.y = this.floorY;
         this.addChild(this.mainCharacter);
         //饱食度条子
         this.HungerBarTweens();
@@ -6244,22 +6131,25 @@ var FoodCourtTeamBuild = (function (_super) {
         var chaStartX = -100;
         var carHeight = this.carHeight;
         var inTime = (this.carDoorX - chaStartX) / 400 * 1000; //每秒移动400像素
-        this.npc = new CharacterObj(GetCharacterActionInfoByKey(buddy.body), chaStartX, this.Group_Street.y + this.floorY, new CharacterProperty(buddy));
-        var chaSpr = new CharacterSprite(this.npc);
-        this.addChild(chaSpr);
-        egret.Tween.get(chaSpr)
+        this.npc = new CharacterObj(buddy.body, buddy);
+        this.npcSpr = new CharacterSprite(this.npc);
+        this.npcSpr.x = chaStartX;
+        this.npcSpr.y = this.floorY;
+        this.addChild(this.npcSpr);
+        egret.Tween.get(this.npcSpr)
             .call(function () {
-            _this.npc.ChangeAction(Direction.Right, CharacterAction.Walk);
+            _this.npcSpr.ChangeAction(Direction.Right, CharacterAction.Walk);
         })
             .to({ x: this.carDoorX }, inTime)
             .call(function () {
-            _this.npc.ChangeAction(Direction.Up, CharacterAction.Walk);
+            _this.npcSpr.ChangeAction(Direction.Up, CharacterAction.Walk);
         })
             .to({ y: this.floorY - carHeight }, 250)
             .call(function () {
             _this.HungerBarTweens();
-            _this.removeChild(chaSpr);
+            _this.removeChild(_this.npcSpr);
             _this.npc = null;
+            _this.npcSpr = null;
             _this.canControl = true;
         });
     };
@@ -6272,21 +6162,24 @@ var FoodCourtTeamBuild = (function (_super) {
         var chaStartX = -100;
         var carHeight = this.carHeight;
         var inTime = (this.carDoorX - chaStartX) / 400 * 1000; //每秒移动400像素
-        this.npc = new CharacterObj(GetCharacterActionInfoByKey(buddy.body), this.carDoorX, this.Group_Street.y + this.floorY - carHeight, new CharacterProperty(buddy));
-        var chaSpr = new CharacterSprite(this.npc);
-        this.addChild(chaSpr);
-        egret.Tween.get(chaSpr)
+        this.npc = new CharacterObj(buddy.body, buddy);
+        this.npcSpr = new CharacterSprite(this.npc);
+        this.npcSpr.x = this.carDoorX;
+        this.npcSpr.y = this.floorY - this.carHeight;
+        this.addChild(this.npcSpr);
+        egret.Tween.get(this.npcSpr)
             .call(function () {
-            _this.npc.ChangeAction(Direction.Down, CharacterAction.Walk);
+            _this.npcSpr.ChangeAction(Direction.Down, CharacterAction.Walk);
         })
             .to({ y: this.floorY }, 250)
             .call(function () {
-            _this.npc.ChangeAction(Direction.Left, CharacterAction.Walk);
+            _this.npcSpr.ChangeAction(Direction.Left, CharacterAction.Walk);
         })
             .to({ x: chaStartX }, inTime)
             .call(function () {
             _this.HungerBarTweens();
-            _this.removeChild(chaSpr);
+            _this.removeChild(_this.npcSpr);
+            _this.npcSpr = null;
             _this.npc = null;
             _this.canControl = true;
         });
@@ -6334,11 +6227,11 @@ var FoodCourtTeamBuild = (function (_super) {
         egret.Tween.removeTweens(this.mainCharacter);
         egret.Tween.get(this.mainCharacter)
             .call(function () {
-            _this.mc.ChangeAction(_this.carDoorX > _this.mainCharacter.x ? Direction.Right : Direction.Left, CharacterAction.Walk);
+            _this.mainCharacter.ChangeAction(_this.carDoorX > _this.mainCharacter.x ? Direction.Right : Direction.Left, CharacterAction.Walk);
         })
             .to({ x: this.carDoorX }, mInTime)
             .call(function () {
-            _this.mc.ChangeAction(Direction.Up, CharacterAction.Walk);
+            _this.mainCharacter.ChangeAction(Direction.Up, CharacterAction.Walk);
         })
             .to({ y: this.floorY - this.carHeight }, 150)
             .call(function () {
@@ -6350,25 +6243,73 @@ var FoodCourtTeamBuild = (function (_super) {
                 .to({ x: 1500 }, inTime, egret.Ease.quadIn)
                 .call(function () {
                 //离开场景，进入履行了
-                if (!GameScene_FoodCourt) {
-                    GameScene_FoodCourt = new HorizontalFoodCourt(_this.team);
-                }
-                Utils.UIRoot.addChild(GameScene_FoodCourt);
+                Utils.UIRoot.addChild(new HorizontalFoodCourt(_this.team));
                 _this.parent.removeChild(_this);
             });
         });
     };
     FoodCourtTeamBuild.prototype.Update = function () {
-        if (this.npc) {
-            this.npc.Update();
+        if (this.npcSpr) {
+            this.npcSpr.Update();
         }
-        if (this.mc) {
-            this.mc.Update();
+        if (this.mainCharacter) {
+            this.mainCharacter.Update();
         }
     };
     return FoodCourtTeamBuild;
 }(eui.Component));
 __reflect(FoodCourtTeamBuild.prototype, "FoodCourtTeamBuild", ["eui.UIComponent", "egret.DisplayObject"]);
+var HorizontalFoodCourt_EndToChallenge = (function (_super) {
+    __extends(HorizontalFoodCourt_EndToChallenge, _super);
+    function HorizontalFoodCourt_EndToChallenge(caller, ingExp) {
+        var _this = _super.call(this) || this;
+        _this.caller = caller;
+        _this.ingExp = ingExp;
+        return _this;
+    }
+    HorizontalFoodCourt_EndToChallenge.prototype.partAdded = function (partName, instance) {
+        _super.prototype.partAdded.call(this, partName, instance);
+    };
+    HorizontalFoodCourt_EndToChallenge.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        this.init();
+    };
+    HorizontalFoodCourt_EndToChallenge.prototype.init = function () {
+        var _this = this;
+        //TODO 拉面的需求，现在写死
+        this.questRequire = new RamenRequirement("做一碗带上海味道的重庆小面吧", [
+            new RequiredSubject(new IngredientSubject("bean_product", "tofu", "venetian_pouch"), "ingredient_venetian_pouch", "上海味道就要百叶包"),
+            new RequiredSubject(new IngredientSubject("bean_product", "tofu", "venetian_pouch"), "ingredient_venetian_pouch", "既然是双档就再来个百叶包")
+        ], [], new RequiredBroth("broth1", "麻辣汤底是重庆小面的核心"));
+        //显示经验
+        for (var i = 0; i < this.ingExp.length; i++) {
+            this.Group_IngExp.addChild(this.ingExp[i]);
+        }
+        //显示任务需求
+        if (this.questRequire.requireBroth) {
+            var qr = new FoodCourt_QuestListItem(this.questRequire.requireBroth, RamenRequirmentType.Broth);
+            this.Group_Quest.addChild(qr);
+        }
+        for (var i = 0; i < this.questRequire.requireSubject.length; i++) {
+            var qr = new FoodCourt_QuestListItem(this.questRequire.requireSubject[i], RamenRequirmentType.Subject);
+            this.Group_Quest.addChild(qr);
+        }
+        for (var i = 0; i < this.questRequire.requireMutual.length; i++) {
+            var qr = new FoodCourt_QuestListItem(this.questRequire.requireMutual[i], RamenRequirmentType.Mutual);
+            this.Group_Quest.addChild(qr);
+        }
+        //开始按钮
+        this.Button_Start.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            if (_this.caller && _this.caller.parent) {
+                _this.caller.parent.removeChild(_this.caller);
+            }
+            Utils.UIRoot.addChild(new CraftNoodle());
+            _this.parent.removeChild(_this);
+        }, this);
+    };
+    return HorizontalFoodCourt_EndToChallenge;
+}(eui.Component));
+__reflect(HorizontalFoodCourt_EndToChallenge.prototype, "HorizontalFoodCourt_EndToChallenge", ["eui.UIComponent", "egret.DisplayObject"]);
 var HorizontalFoodCourt_BuddyInfo = (function (_super) {
     __extends(HorizontalFoodCourt_BuddyInfo, _super);
     function HorizontalFoodCourt_BuddyInfo(buddy, caller, func) {
@@ -6469,7 +6410,7 @@ var HorizontalFoodCourt_IngredientExp = (function (_super) {
     __extends(HorizontalFoodCourt_IngredientExp, _super);
     function HorizontalFoodCourt_IngredientExp(ing) {
         var _this = _super.call(this) || this;
-        _this.ing = ing;
+        _this.ingredientInfo = ing;
         return _this;
     }
     HorizontalFoodCourt_IngredientExp.prototype.partAdded = function (partName, instance) {
@@ -6480,9 +6421,9 @@ var HorizontalFoodCourt_IngredientExp = (function (_super) {
         this.init();
     };
     HorizontalFoodCourt_IngredientExp.prototype.init = function () {
-        this.Label_Exp.text = this.ing.exp.toString();
-        if (this.ing.broth == true) {
-            var bm = GetBrothModelById(this.ing.ingredientId);
+        this.Label_Exp.text = this.ingredientInfo.exp.toString();
+        if (this.ingredientInfo.broth == true) {
+            var bm = GetBrothModelById(this.ingredientInfo.ingredientId);
             this.Img_Icon.visible = false;
             var ic = bm.IconShape(0, 0, 30);
             this.addChild(ic);
@@ -6490,14 +6431,27 @@ var HorizontalFoodCourt_IngredientExp = (function (_super) {
             ic.y = this.Img_Icon.y + 30;
         }
         else {
-            var im = GetIngredientModelById(this.ing.ingredientId);
+            var im = GetIngredientModelById(this.ingredientInfo.ingredientId);
             this.Img_Icon.visible = true;
-            this.Img_Icon.source = im.icon;
+            this.Img_Icon.texture = RES.getRes(im.icon);
         }
+    };
+    HorizontalFoodCourt_IngredientExp.prototype.IconStageX = function () {
+        return Utils.GetEuiScreenPos(this.Img_Icon)["x"] + this.Img_Icon.width / 2;
+    };
+    HorizontalFoodCourt_IngredientExp.prototype.IconStageY = function () {
+        return Utils.GetEuiScreenPos(this.Img_Icon)["y"] + this.Img_Icon.height / 2;
+    };
+    /**
+     * 添加经验，应该有个tween才对
+     */
+    HorizontalFoodCourt_IngredientExp.prototype.IncreaseExp = function (num) {
+        this.ingredientInfo.exp += num;
+        this.Update();
     };
     HorizontalFoodCourt_IngredientExp.prototype.Update = function () {
         if (this.Label_Exp)
-            this.Label_Exp.text = this.ing.exp.toString();
+            this.Label_Exp.text = this.ingredientInfo.exp.toString();
     };
     return HorizontalFoodCourt_IngredientExp;
 }(eui.Component));
@@ -6541,7 +6495,7 @@ var HorizontalFoodCourt_StoreUI = (function (_super) {
             this.Group_Window.addChild(b);
         }
         this.Button_Cancel.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            _this.caller.CancelEat(_this.caller);
+            //this.caller.CancelEat(this.caller);
             if (_this.parent)
                 _this.parent.removeChild(_this);
         }, this);

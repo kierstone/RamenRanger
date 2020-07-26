@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="HorizontalFoodCourt_EndToChallengeSkin" width="750" height="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="173789fd097" ></w:Config>
+	<e:Rect width="100%" height="100%" horizontalCenter="0" verticalCenter="0" fillAlpha="0.5" locked="true"/>
+	<e:Group anchorOffsetX="0" width="500" top="250" horizontalCenter="0">
+		<e:Image width="500" height="910" y="0" source="ui_dialog_back" scale9Grid="45,47,11,12" x="0"/>
+		<e:Image height="260" top="80" left="30" right="30" source="ui_dialog_text_back" scale9Grid="32,39,19,16"/>
+		<e:Group id="Group_IngExp" left="30" right="30" top="80" width="420" height="260">
+			<e:layout>
+			<e:TileLayout horizontalGap="5" verticalGap="5" requestedColumnCount="3" columnWidth="135" rowHeight="60"/>
+			</e:layout>
+		</e:Group>
+		<e:Image height="360" top="420" left="30" right="30" source="ui_dialog_text_back" scale9Grid="32,39,19,16"/>
+		<e:Group id="Group_Quest" left="30" right="30" top="420">
+			<e:layout>
+				<e:VerticalLayout gap="0"/>
+			</e:layout>
+		</e:Group>
+		<e:Label text="探索结束" y="30" stroke="2" horizontalCenter="0"/>
+		<e:Label text="拉面挑战" stroke="2" horizontalCenter="0" top="360"/>
+		<e:Button id="Button_Start" label="开始拉面挑战" skinName="GameButtonYellow" height="80" left="30" right="30" bottom="30"/>
+	</e:Group>
+</e:Skin>

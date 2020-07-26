@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="RamenQuest_RequirementListItemSkin" width="300" height="40" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="1735a109eb1" ></w:Config>
+	<e:Image id="Img_Icon" width="40" height="40" left="0" verticalCenter="0"/>
+	<e:Image id="Img_DoneSign" width="40" height="40" source="ui_craft_selected" right="0" verticalCenter="0"/>
+	<e:Group id="Group_Broth" width="2" height="2" verticalCenter="0" left="19"/>
+	<e:Label id="Label_Desc" text="Label" y="0" size="20" anchorOffsetX="0" width="220" anchorOffsetY="0" height="40" horizontalCenter="0" verticalAlign="middle" stroke="1"/>
+</e:Skin>

@@ -10,7 +10,7 @@ r.prototype = e.prototype, t.prototype = new r();
 };
 var IngredientIconInBox = (function (_super) {
     __extends(IngredientIconInBox, _super);
-    function IngredientIconInBox(id, ingredient, icon, caller, func, broth) {
+    function IngredientIconInBox(id, ingredient, icon, defaultSelected, caller, func, broth) {
         if (broth === void 0) { broth = null; }
         var _this = _super.call(this) || this;
         _this.selected = false;
@@ -20,6 +20,7 @@ var IngredientIconInBox = (function (_super) {
         _this.eveFunc = func;
         _this.icon = icon;
         _this.bModel = broth;
+        _this.selected = defaultSelected;
         return _this;
     }
     IngredientIconInBox.prototype.partAdded = function (partName, instance) {

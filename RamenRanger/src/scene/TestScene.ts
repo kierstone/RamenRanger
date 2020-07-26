@@ -2,6 +2,7 @@ class TestScene extends eui.Component implements  eui.UIComponent {
 	private HSilder_Size:eui.HSlider;
 	private Label_Size:eui.Label;
 	private Button_Start:eui.Button;
+	private Button_Back:eui.Button;
 
 	//From Street
 	private toUpdateTicker:number = 0;
@@ -64,6 +65,11 @@ class TestScene extends eui.Component implements  eui.UIComponent {
 			if (this.diningTable){
 				this.diningTable.StartEat();
 			}
+		},this);
+
+		this.Button_Back.addEventListener(egret.TouchEvent.TOUCH_TAP, ()=>{
+			Utils.UIRoot.addChild(new FoodCourtTeamBuild());
+			this.parent.removeChild(this);
 		},this);
 
 		//开启一个update和fixedUpdate的计时器

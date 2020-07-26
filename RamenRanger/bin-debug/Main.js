@@ -193,6 +193,6 @@ var Main = (function (_super) {
 __reflect(Main.prototype, "Main");
 var GameUserInfo; //游戏账号信息，来自各个平台的
 var playerInfo;
-var GameScene_FoodCourt;
-var GameScene_CraftNoodle;
+// var GameScene_FoodCourt:HorizontalFoodCourt;
+// var GameScene_CraftNoodle:CraftNoodle
 //# sourceMappingURL=Main.js.map

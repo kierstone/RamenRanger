@@ -145,10 +145,10 @@ class EatingRamen {
 		);
 	}
 	private ThisTurnIngGatherInFoodCourt(turnId:number, eatIng:IngredientObj, isNoodle:boolean){
-		let favPlus = Utils.RandomInt(7, 14);
+		let favPlus = Utils.RandomInt(5, 10);
 		let learnedChance = (this.dishInfo && this.buddyInfo.favourType == this.dishInfo.model.type) ?
-			(this.buddyInfo.favourLevel * favPlus + 30) : 30;	//基础习得率30%，喜欢吃就提高概率
-		if (Utils.RandomInt(0, 100) + learnedChance < 100) return; //概率不够学会
+			(this.buddyInfo.favourLevel * favPlus + 50) : 50;	//基础习得率50%，喜欢吃就提高概率
+		//if (Utils.RandomInt(0, 100) + learnedChance < 100) return; //概率不够学会	//TODO 必定学会
 		if (isNoodle == true){
 			//有可能学到汤底或者面条
 			let mayLearn = new Array<FoodCourtIngredient>();
@@ -160,10 +160,21 @@ class EatingRamen {
 			if (nod) mayLearn.push(nod);
 			//随机获得
 			if (mayLearn.length <= 0) return;
-			this.learnedIngredientInfo.push(new EatGameIngredientGatherInfo(turnId, mayLearn[Utils.GetRandomIndexFromArray(mayLearn.length, 1)[0]] ))
+
+			let ingInfo = mayLearn[Utils.GetRandomIndexFromArray(mayLearn.length, 1)[0]] ;
+			ingInfo.exp = 
+				(this.dishInfo && this.buddyInfo.favourType == this.dishInfo.model.type) ?
+				(this.buddyInfo.favourLevel + 5) : 3
+			this.learnedIngredientInfo.push(new EatGameIngredientGatherInfo(turnId,  ingInfo));
 		}else{
 			let ingInfo = this.dishInfo.IngredientInReward(eatIng.model.id);
-			if (ingInfo) this.learnedIngredientInfo.push(new EatGameIngredientGatherInfo(turnId, ingInfo));
+			if (ingInfo){
+				ingInfo.exp = 
+					(this.dishInfo && this.buddyInfo.favourType == this.dishInfo.model.type) ?
+					(this.buddyInfo.favourLevel + 5) : 3
+				this.learnedIngredientInfo.push(new EatGameIngredientGatherInfo(turnId, ingInfo));
+			}
+			
 		}
 
 	}

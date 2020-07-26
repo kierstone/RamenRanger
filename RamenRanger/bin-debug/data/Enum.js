@@ -45,7 +45,7 @@ var SpriteClipLayer;
 var CraftNoodleState;
 (function (CraftNoodleState) {
     CraftNoodleState[CraftNoodleState["ChooseBowl"] = 0] = "ChooseBowl";
-    CraftNoodleState[CraftNoodleState["PutTare"] = 1] = "PutTare";
+    //PutTare = 1,
     CraftNoodleState[CraftNoodleState["SoupToBroth"] = 2] = "SoupToBroth";
     CraftNoodleState[CraftNoodleState["Noodles"] = 3] = "Noodles";
     CraftNoodleState[CraftNoodleState["SelectTopping"] = 4] = "SelectTopping";

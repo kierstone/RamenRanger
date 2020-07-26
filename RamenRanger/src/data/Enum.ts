@@ -45,7 +45,7 @@ enum SpriteClipLayer{
 //拉面制作界面状态
 enum CraftNoodleState{
 	ChooseBowl = 0,
-	PutTare = 1,
+	//PutTare = 1,
 	SoupToBroth = 2,
 	Noodles = 3,
 	SelectTopping = 4,

@@ -117,8 +117,7 @@ var DiningTableSprite = (function (_super) {
         this.RemoveCharacter(seatIndex);
         if (seatIndex < 0 || seatIndex >= this.eatingCha.length)
             return;
-        var eCha = this.eatingCha[seatIndex];
-        eCha.SetCharacter(cha);
+        this.eatingCha[seatIndex].SetCharacter(cha);
         this.ResetZOrder();
     };
     /**
@@ -187,6 +186,7 @@ var DiningTableSprite = (function (_super) {
         for (var i = 0; i < this.eatingCha.length; i++) {
             this.eatingCha[i].Update();
         }
+        this.ResetZOrder(); //TODO 开销大的话，有必要换位置
     };
     return DiningTableSprite;
 }(SpriteGroup));
@@ -207,6 +207,15 @@ var EatingCharacterSpr = (function () {
         this.eatGameType = eatGameType;
         this._p = p;
     }
+    /**
+     * 当前座位上的角色是否喜欢座位上的美食
+     * 注意：如果端上来的是拉面而不是美食，则不会喜欢
+     */
+    EatingCharacterSpr.prototype.CharacterFavourDish = function () {
+        if (!this.cha || !this.dishInfo)
+            return false;
+        return this.cha.buddyInfo.isPlayer == true ? false : (this.cha.buddyInfo.favourType == this.dishInfo.model.type);
+    };
     /**
      * 角色坐到这个座位上
      * @param {CharacterObj} cha 要坐上来的角色
@@ -249,7 +258,7 @@ var EatingCharacterSpr = (function () {
         if (this.chaSpr.body) {
             var idx = this._p.bodies.indexOf(this.chaSpr.body);
             if (idx >= 0)
-                this._p.heads.splice(idx, 1);
+                this._p.bodies.splice(idx, 1);
             if (this.chaSpr.body.parent)
                 this.chaSpr.body.parent.removeChild(this.chaSpr.body);
         }
@@ -275,7 +284,7 @@ var EatingCharacterSpr = (function () {
         this.hasRamen = true;
         var atTableX = this.seatInfo.ramenX;
         var atTableY = this.seatInfo.ramenY;
-        this.ramenObj = ramen;
+        this.ramenObj = ramen.Clone(false);
         this.ramenSpr = new RamenSprite(this.ramenObj);
         if (this.ramenSpr) {
             this._p.addChild(this.ramenSpr);
@@ -291,10 +300,11 @@ var EatingCharacterSpr = (function () {
     EatingCharacterSpr.prototype.SetDish = function (dish) {
         if (!dish || !dish.dish)
             return;
+        this.dishInfo = dish;
         this.hasRamen = true;
         var atTableX = this.seatInfo.ramenX;
         var atTableY = this.seatInfo.ramenY;
-        this.ramenObj = dish.dish;
+        this.ramenObj = dish.dish.Clone(false);
         this.ramenSpr = new RamenSprite(this.ramenObj);
         if (this.ramenSpr) {
             this._p.addChild(this.ramenSpr);
@@ -328,6 +338,7 @@ var EatingCharacterSpr = (function () {
             this.ramenSpr.parent.removeChild(this.ramenSpr);
             this.ramenSpr = null;
         }
+        this.dishInfo = null; //dishInfo会被一起清空
         this.ramenObj = null;
         this.hasRamen = false;
     };
@@ -343,7 +354,11 @@ var EatingCharacterSpr = (function () {
      * 本回合将要学到的食材信息
      */
     EatingCharacterSpr.prototype.CurrentTurnGatherIngredient = function () {
-        if (!this.eatGame || !this.eatGame.learnedIngredientInfo || this.eatGame.learnedIngredientInfo.length <= 0)
+        if (!this.eatGame ||
+            !this.eatGame.learnedIngredientInfo ||
+            this.eatGame.learnedIngredientInfo.length <= 0 ||
+            this.runningActionIndex > 0 ||
+            this.runningTick > 0)
             return null;
         for (var i = 0; i < this.eatGame.learnedIngredientInfo.length; i++) {
             if (i == this.runningTurnIndex) {
@@ -360,17 +375,6 @@ var EatingCharacterSpr = (function () {
                 if (this.runningTick <= 0) {
                     if (this.runningActionIndex <= 0) {
                         //进入新的回合的第一个动作的第一帧，弄一下吃掉的东西
-                        //碗里面的变化
-                        if (tTurn.isEatingNoodles == true) {
-                            this.ramenObj.noodlePercentage -= tTurn.noodleReducePercentage; //吃面条
-                        }
-                        else {
-                            var ingIdx = this.ramenObj.topping.indexOf(tTurn.eatIngredient);
-                            if (ingIdx >= 0) {
-                                this.ramenObj.topping.splice(ingIdx, 1);
-                            }
-                        }
-                        this.ramenSpr.UpdateRamen();
                         //正在吃的东西变化
                         this.eatingNoodle = tTurn.isEatingNoodles;
                         if (this.eatingNoodle == true) {
@@ -399,10 +403,20 @@ var EatingCharacterSpr = (function () {
                                 }
                             }
                             this.eatingIngImg = tTurn.eatIngredient.GatherSceneImage(this._p, this.ramenSpr.x + tTurn.eatIngredient.x, this.ramenSpr.BrothOffsetY() + tTurn.eatIngredient.y);
-                            this.eatingIngImg.scaleX = tTurn.eatIngredient.size * (tTurn.eatIngredient.xFlip == false ? 1 : -1);
-                            this.eatingIngImg.scaleY = tTurn.eatIngredient.size;
+                            this._p.eatIngs.push(this.eatingIngImg);
                         }
                         this.eatingIngImg.visible = false;
+                        //碗里面的变化
+                        if (tTurn.isEatingNoodles == true) {
+                            this.ramenObj.noodlePercentage -= tTurn.noodleReducePercentage; //吃面条
+                        }
+                        else {
+                            var ingIdx = this.ramenObj.topping.indexOf(tTurn.eatIngredient);
+                            if (ingIdx >= 0) {
+                                this.ramenObj.topping.splice(ingIdx, 1);
+                            }
+                        }
+                        this.ramenSpr.UpdateRamen();
                     }
                     //每回合的每一个action都要做的，而不是只在第一个action做的
                     //角色的动作也变化了

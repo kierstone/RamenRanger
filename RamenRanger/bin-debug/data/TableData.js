@@ -8,6 +8,8 @@ var GameData_Broth;
 var GameData_CharacterAction;
 //旅行模式的小吃们
 var GameData_FoodCourtDish;
+//食材的组合
+var GameData_IngredientMutual;
 //读取数据
 var LoadGameData = function () {
     var catalog = RES.getRes("catalog_json");
@@ -82,6 +84,14 @@ var LoadGameData = function () {
     if (jsFile && jsFile["data"]) {
         for (var i = 0; i < jsFile["data"].length; i++) {
             GameData_FoodCourtDish.push(new FoodCourtDishModel(jsFile["data"][i]));
+        }
+    }
+    //食材组合
+    GameData_IngredientMutual = new Array();
+    var ingMutualFile = RES.getRes("ingredient_mutual_json");
+    if (ingMutualFile && ingMutualFile["data"]) {
+        for (var i = 0; i < ingMutualFile["data"].length; i++) {
+            GameData_IngredientMutual.push(new IngredientMutual(ingMutualFile["data"][i]));
         }
     }
 };

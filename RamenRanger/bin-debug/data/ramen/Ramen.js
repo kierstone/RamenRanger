@@ -4,7 +4,7 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 //虽然叫model，但并不来自表，这个model是玩家制作的时候调整出来的，生成RamenObj用的
 var RamenModel = (function () {
     function RamenModel() {
-        this.tare = new Array();
+        //this.tare = new Array<IngredientObj>();
         this.topping = new Array();
         this.reciptId = "";
     }
@@ -73,42 +73,34 @@ var RamenModel = (function () {
      * @param {boolean} removeTouchOne 是否从tare里面移除掉这个
      * @returns {IngredientObj} 点中的那个，null代表没有
      */
-    RamenModel.prototype.TouchedTare = function (x, y, thisX, thisY, removeTouchOne) {
-        if (!this.tare || this.tare.length <= 0)
-            return null;
-        //越后面的在越上面，越容易被点到
-        for (var i = this.tare.length - 1; i >= 0; i--) {
-            var tp = this.tare[i];
-            if (tp.TouchOnMe(x, y, thisX, thisY) == true) {
-                if (removeTouchOne == true) {
-                    return this.tare.splice(i, 1)[0];
-                }
-                else {
-                    return tp;
-                }
-            }
-        }
-        return null;
-    };
+    // public TouchedTare(x:number, y:number, thisX:number, thisY:number, removeTouchOne:boolean):IngredientObj{
+    // 	if (!this.tare || this.tare.length <= 0) return null;
+    // 	//越后面的在越上面，越容易被点到
+    // 	for (let i = this.tare.length - 1; i >= 0; i--){
+    // 		let tp = this.tare[i];
+    // 		if (tp.TouchOnMe(x, y, thisX, thisY) == true){
+    // 			if (removeTouchOne == true){
+    // 				return this.tare.splice(i, 1)[0];
+    // 			}else{
+    // 				return tp;
+    // 			}
+    // 		}
+    // 	}
+    // 	return null;
+    // }
     /**
      * 随机创建一碗“拉面”
      * @param {BowlModel} bowl 用的碗的model，这个必须有
      * @param {BrothModel} broth 用的汤底，可以是null
-     * @param {Array<IngredientModel>} tare 着味，可以是null
      * @param {IngredientModel} noodles 用的面条，可以是null
      * @param {Array<IngredientModel>} toppings 盖浇，当然也可以是null
      */
-    RamenModel.prototype.RandomRamen = function (bowl, broth, tare, noodles, toppings) {
+    RamenModel.prototype.RandomRamen = function (bowl, broth, noodles, toppings) {
         if (!bowl)
             return;
         this.bowl = new BowlObj(bowl);
         if (broth) {
             this.broth = new BrothObj(broth);
-        }
-        if (tare) {
-            for (var i = 0; i < tare.length; i++) {
-                this.tare.push(new IngredientObj(tare[i]));
-            }
         }
         if (noodles) {
             this.noodles = new IngredientObj(noodles);
@@ -130,6 +122,61 @@ var RamenModel = (function () {
                 }
             });
         }
+    };
+    /**
+     * 返回满足类型的食材的个数，包含汤底里的
+     * @param {IngredientSubject} ingSubject 需要找的类型
+     * @returns {number} 符合的个数
+     */
+    RamenModel.prototype.GetIngredientCountBySubject = function (ingSubject) {
+        var res = 0;
+        if (this.broth && this.broth.tare) {
+            for (var i = 0; i < this.broth.tare.length; i++) {
+                if (this.broth.tare[i].model.subject.Fit(ingSubject) == true) {
+                    res += 1;
+                }
+            }
+        }
+        for (var i = 0; i < this.topping.length; i++) {
+            if (this.topping[i].model.subject.Fit(ingSubject) == true) {
+                res += 1;
+            }
+        }
+        return res;
+    };
+    /**
+     * 获得这碗拉面解锁的组合的索引
+     * @param {IngredientModel} withIng 可以是null，如果有这个食材的话，满足的组合有哪些。
+     * @returns {Array<IngredientMutual>} 符合的组合索引数组
+     */
+    RamenModel.prototype.GetMutuals = function (withIng) {
+        var res = new Array();
+        if (!GameData_IngredientMutual)
+            return res;
+        var checkIng = new Array();
+        if (this.broth && this.broth.tare) {
+            for (var i = 0; i < this.broth.tare.length; i++) {
+                checkIng.push(this.broth.tare[i].model);
+            }
+        }
+        for (var i = 0; i < this.topping.length; i++) {
+            checkIng.push(this.topping[i].model);
+        }
+        if (withIng) {
+            checkIng.push(withIng);
+        }
+        for (var i = 0; i < checkIng.length - 1; i++) {
+            for (var j = i + 1; j < checkIng.length; j++) {
+                for (var n = 0; n < GameData_IngredientMutual.length; n++) {
+                    if (res.indexOf(GameData_IngredientMutual[n]) < 0) {
+                        if (GameData_IngredientMutual[n].FitThisMutual(checkIng[i], checkIng[j]) == true) {
+                            res.push(GameData_IngredientMutual[n]);
+                        }
+                    }
+                }
+            }
+        }
+        return res;
     };
     return RamenModel;
 }());

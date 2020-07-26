@@ -21,10 +21,7 @@ class WelcomeScene extends eui.Component implements  eui.UIComponent {
 	
 	private init(){
 		this.Button_Ramen.addEventListener(egret.TouchEvent.TOUCH_TAP, ()=>{
-			if (!GameScene_CraftNoodle){
-			    GameScene_CraftNoodle = new CraftNoodle();
-			}
-			Utils.UIRoot.addChild(GameScene_CraftNoodle);
+			Utils.UIRoot.addChild(new CraftNoodle());
 			this.parent.removeChild(this);
 		},this);
 		this.Button_Street.addEventListener(egret.TouchEvent.TOUCH_TAP, ()=>{

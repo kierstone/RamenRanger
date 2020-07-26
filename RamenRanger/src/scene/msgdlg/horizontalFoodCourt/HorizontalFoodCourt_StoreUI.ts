@@ -53,7 +53,7 @@ class HorizontalFoodCourt_StoreUI extends eui.Component implements  eui.UICompon
 			this.Group_Window.addChild(b);
 		}
 		this.Button_Cancel.addEventListener(egret.TouchEvent.TOUCH_TAP, ()=>{
-			this.caller.CancelEat(this.caller);
+			//this.caller.CancelEat(this.caller);
 			if (this.parent) this.parent.removeChild(this);
 		},this);
 
